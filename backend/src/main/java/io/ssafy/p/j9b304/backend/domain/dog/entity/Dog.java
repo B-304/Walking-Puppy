@@ -1,10 +1,12 @@
 package io.ssafy.p.j9b304.backend.domain.dog.entity;
 
+import io.ssafy.p.j9b304.backend.domain.dog.dto.DogModifyRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -47,5 +49,10 @@ public class Dog {
         this.createdAt = createdAt;
 //        this.user = user;
         this.dogLevelId = dogLevelId;
+    }
+
+    public void modifyDog(DogModifyRequestDto dogModifyRequestDto) {
+        if (StringUtils.hasText(dogModifyRequestDto.getName()))
+            this.name = dogModifyRequestDto.getName();
     }
 }
