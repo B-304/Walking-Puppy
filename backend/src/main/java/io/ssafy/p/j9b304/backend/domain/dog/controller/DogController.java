@@ -1,5 +1,6 @@
 package io.ssafy.p.j9b304.backend.domain.dog.controller;
 
+import io.ssafy.p.j9b304.backend.domain.dog.dto.DogGetResponseDto;
 import io.ssafy.p.j9b304.backend.domain.dog.dto.DogModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.dog.service.DogService;
 import io.ssafy.p.j9b304.backend.domain.user.entity.User;
@@ -30,4 +31,11 @@ public class DogController {
 
         dogService.modifyDog(user, dogId, dogModifyRequestDto);
     }
+
+    @GetMapping("/{dogId}")
+    @ApiResponse(responseCode = "200", description = "강아지 단건 조회")
+    public DogGetResponseDto dogGet(@PathVariable Long dogId) {
+        return dogService.getDog(dogId);
+    }
+
 }

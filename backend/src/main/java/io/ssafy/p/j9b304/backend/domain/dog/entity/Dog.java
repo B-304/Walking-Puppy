@@ -1,5 +1,6 @@
 package io.ssafy.p.j9b304.backend.domain.dog.entity;
 
+import io.ssafy.p.j9b304.backend.domain.dog.dto.DogGetResponseDto;
 import io.ssafy.p.j9b304.backend.domain.dog.dto.DogModifyRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,5 +55,14 @@ public class Dog {
     public void modifyDog(DogModifyRequestDto dogModifyRequestDto) {
         if (StringUtils.hasText(dogModifyRequestDto.getName()))
             this.name = dogModifyRequestDto.getName();
+    }
+
+    public DogGetResponseDto toResponse() {
+        return DogGetResponseDto.builder()
+                .dogId(this.dogId)
+                .name(this.name)
+                .exp(this.exp)
+                .createdAt(this.createdAt)
+                .build();
     }
 }
