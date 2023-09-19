@@ -29,7 +29,7 @@ public class Walk {
 
     // '0' : 산책 시작 전, '1' : 산책 완료, '2' : 산책 저장
     @Column(name = "state", length = 1)
-    private String state;
+    private char state;
 
     // decimal(18,10)
     @Column(name = "start_latitude", precision = 18, scale = 10)
