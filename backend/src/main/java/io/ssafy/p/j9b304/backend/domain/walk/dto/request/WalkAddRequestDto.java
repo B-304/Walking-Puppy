@@ -45,7 +45,7 @@ public class WalkAddRequestDto {
 
     public Walk toEntity(/*User user, */ WalkAddRequestDto walkAddRequestDto, Theme theme) {
         return Walk.builder()
-                .state("0")
+                .state('0')
                 .startLatitude(walkAddRequestDto.getStartLatitude())
                 .startLongitude(walkAddRequestDto.getStartLongitude())
                 .endLatitude(walkAddRequestDto.getEndLatitude())

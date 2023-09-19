@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,5 +31,11 @@ public class WalkService {
 
         Walk newWalk = walkRepository.save(walk);
         return newWalk;
+    }
+
+
+    public List<Walk> getWalkList(/* User user, */) {
+        // todo user id에 해당하는 산책 리스트만 가져오기
+        return walkRepository.findByState('2');
     }
 }

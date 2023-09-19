@@ -1,6 +1,8 @@
 package io.ssafy.p.j9b304.backend.domain.walk.controller;
 
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetListResponseDto;
+import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
 import io.ssafy.p.j9b304.backend.domain.walk.service.WalkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -8,6 +10,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +28,17 @@ public class WalkController {
     public void walkNewPathAdd(/* User user, */@RequestBody WalkAddRequestDto walkAddRequestDto) {
         // todo : request check validation
         walkService.addWalkNewPath(/* user, */ walkAddRequestDto);
+    }
+
+    @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "200", description = "내 산책 목록 조회 성공")
+    @Operation(summary = "내 산책 목록 조회", description = "산책 경로 스크랩과 저장된 산책 경로에서 사용되는 내 산책 목록")
+    public List<WalkGetListResponseDto> walkGetList(/* User user */) {
+        List<Walk> walkList = walkService.getWalkList(/* user */);
+        List<WalkGetListResponseDto> walkGetListResponseDtoList = walkList.stream()
+                .map(w -> new WalkGetListResponseDto(w))
+                .collect(Collectors.toList());
+        return walkGetListResponseDtoList;
     }
 }
