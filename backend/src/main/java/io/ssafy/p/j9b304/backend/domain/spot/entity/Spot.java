@@ -1,10 +1,12 @@
 package io.ssafy.p.j9b304.backend.domain.spot.entity;
 
+import io.ssafy.p.j9b304.backend.domain.spot.dto.SpotModifyRequestDto;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -53,5 +55,12 @@ public class Spot {
         this.deletedAt = deletedAt;
         this.state = state;
         this.open = open;
+    }
+
+    public void modifySpot(SpotModifyRequestDto spotModifyRequestDto) {
+        if (StringUtils.hasText(spotModifyRequestDto.getName()))
+            this.name = spotModifyRequestDto.getName();
+
+        // todo : open 데이터 변화가 있다면 수정하는 메서드
     }
 }

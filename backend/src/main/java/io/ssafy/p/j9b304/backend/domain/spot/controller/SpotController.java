@@ -1,6 +1,7 @@
 package io.ssafy.p.j9b304.backend.domain.spot.controller;
 
 import io.ssafy.p.j9b304.backend.domain.spot.dto.SpotAddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.spot.dto.SpotModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.spot.service.SpotService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,5 +23,13 @@ public class SpotController {
     @Operation(summary = "스팟 생성", description = "스팟 생성을 위한 사용자 입력 데이터")
     public void dogAdd(@RequestBody SpotAddRequestDto spotAddRequestDto) {
         spotService.addSpot(spotAddRequestDto);
+    }
+
+    @PatchMapping("{spotId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponse(responseCode = "201", description = "스팟 수정 성공")
+    @Operation(summary = "스팟 수정", description = "스팟 수정을 위한 사용자 입력 데이터")
+    public void dogModify(@PathVariable Long spotId, @RequestBody SpotModifyRequestDto spotModifyRequestDto) {
+        spotService.modifySpot(spotId, spotModifyRequestDto);
     }
 }
