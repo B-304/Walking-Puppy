@@ -1,6 +1,7 @@
 package io.ssafy.p.j9b304.backend.domain.walk.service;
 
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetDetailResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Route;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Theme;
@@ -32,7 +33,7 @@ public class WalkService {
         Theme theme = optionalTheme.get();
         Walk walk = walkAddRequestDto.toEntity(theme);
 //        walk.setUser(user);
-        
+
         return walkRepository.save(walk);
     }
 
@@ -50,5 +51,14 @@ public class WalkService {
         List<Route> routeList = routeRepository.findByWalkAndState(walk, '1');
         WalkGetDetailResponseDto walkGetDetailResponseDto = new WalkGetDetailResponseDto(walk, routeList);
         return walkGetDetailResponseDto;
+    }
+
+    public Walk modifyWalk(WalkModifyRequestDto walkModifyRequestDto) {
+        // todo user와 산책을 저장한 사용자가 같은지 확인
+        Walk walk = walkRepository.findById(walkModifyRequestDto.getWalkId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
+        walk.setName(walkModifyRequestDto.getName());
+
+        return walk;
     }
 }

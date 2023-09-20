@@ -1,6 +1,7 @@
 package io.ssafy.p.j9b304.backend.domain.walk.controller;
 
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetDetailResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetListResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
@@ -50,5 +51,13 @@ public class WalkController {
     public WalkGetDetailResponseDto walkGetDetail(/* User user, */@PathVariable Long walkId) {
         WalkGetDetailResponseDto walkGetDetailResponseDto = walkService.getWalkDetail(/* user, */walkId);
         return walkGetDetailResponseDto;
+    }
+
+    @PatchMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponse(responseCode = "201", description = "산책 수정 성공")
+    @Operation(summary = "산책 수정", description = "산책로명 수정")
+    public void walkModify(/* User user, */@RequestBody WalkModifyRequestDto walkModifyRequestDto) {
+        walkService.modifyWalk(/* user, */ walkModifyRequestDto);
     }
 }
