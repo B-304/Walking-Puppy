@@ -3,7 +3,6 @@ package io.ssafy.p.j9b304.backend.domain.walk.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -11,7 +10,6 @@ import java.math.BigDecimal;
 
 @Entity
 @Getter
-@Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,7 +21,7 @@ public class Route {
 
     // '0' : 추천 산책 경로, '1' : 사용자 산책 경로
     @Column(name = "state")
-    private char state;
+    private Character state;
 
     @Column(name = "sequence")
     private Integer sequence;
@@ -38,4 +36,9 @@ public class Route {
     @ManyToOne
     @JoinColumn(name = "walk_id")
     private Walk walk;
+
+    @PrePersist
+    public void prePersist() {
+        this.state = this.state == null ? '0' : this.state;
+    }
 }

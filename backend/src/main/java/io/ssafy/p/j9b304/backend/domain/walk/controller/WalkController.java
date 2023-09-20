@@ -2,8 +2,10 @@ package io.ssafy.p.j9b304.backend.domain.walk.controller;
 
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetDetailResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetListResponseDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkSaveResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
 import io.ssafy.p.j9b304.backend.domain.walk.service.WalkService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,5 +69,15 @@ public class WalkController {
     @Operation(summary = "산책 삭제", description = "스크랩에 저장된 산책 삭제")
     public void walkRemove(/* User user, */@PathVariable Long walkId) {
         walkService.removeWalk(/* user, */ walkId);
+    }
+
+    @PostMapping("/over")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponse(responseCode = "201", description = "사용자 산책 데이터 저장 성공")
+    @Operation(summary = "산책 종료시 기록 조회", description = "산책 종료 시 사용자 산책 데이터를 저장하고 결과를 조회")
+    public WalkSaveResponseDto walkSave(/* User user, */@RequestBody WalkSaveRequestDto walkSaveRequestDto) {
+        // 산책 종료 시각을 저장
+        WalkSaveResponseDto walkSaveResponseDto = walkService.saveWalk(/* user, */ walkSaveRequestDto);
+        return walkSaveResponseDto;
     }
 }
