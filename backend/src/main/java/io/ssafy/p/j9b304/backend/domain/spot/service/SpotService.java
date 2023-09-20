@@ -1,12 +1,16 @@
 package io.ssafy.p.j9b304.backend.domain.spot.service;
 
 import io.ssafy.p.j9b304.backend.domain.spot.dto.AddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.spot.dto.GetResponseDto;
 import io.ssafy.p.j9b304.backend.domain.spot.dto.ModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.spot.entity.Spot;
 import io.ssafy.p.j9b304.backend.domain.spot.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,5 +43,11 @@ public class SpotService {
         // todo : 사용자 검증
 
         spotRepository.delete(spot);
+    }
+
+    public List<GetResponseDto> getSpotList() {
+        List<Spot> spotList = spotRepository.findAll();
+
+        return spotList.stream().map(Spot::toDto).collect(Collectors.toList());
     }
 }
