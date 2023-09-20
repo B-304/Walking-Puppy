@@ -50,4 +50,11 @@ public class SpotService {
 
         return spotList.stream().map(Spot::toDto).collect(Collectors.toList());
     }
+
+    public GetResponseDto getSpotDetail(Long spotId) {
+        Spot spot = spotRepository.findById(spotId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스팟이 없습니다."));
+
+        return spot.toDto();
+    }
 }
