@@ -66,7 +66,8 @@ public class Spot {
         if (StringUtils.hasText(spotModifyRequestDto.getName()))
             this.name = spotModifyRequestDto.getName();
 
-        // todo : open 데이터 변화가 있다면 수정하는 메서드
+        if (spotModifyRequestDto.getOpen() != 0)
+            this.open = spotModifyRequestDto.getOpen();
     }
 
     public GetResponseDto toSpotDto() {
