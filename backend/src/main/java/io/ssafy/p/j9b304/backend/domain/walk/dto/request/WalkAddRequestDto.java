@@ -43,17 +43,15 @@ public class WalkAddRequestDto {
         this.estimatedTime = estimatedTime;
     }
 
-    public Walk toEntity(/*User user, */ WalkAddRequestDto walkAddRequestDto, Theme theme) {
+    public Walk toEntity(Theme theme) {
         return Walk.builder()
                 .state('0')
-                .startLatitude(walkAddRequestDto.getStartLatitude())
-                .startLongitude(walkAddRequestDto.getStartLongitude())
-                .endLatitude(walkAddRequestDto.getEndLatitude())
-                .endLongitude(walkAddRequestDto.getEndLongitude())
+                .startLatitude(this.startLatitude)
+                .startLongitude(this.startLongitude)
+                .endLatitude(this.endLatitude)
+                .endLongitude(this.endLongitude)
                 .theme(theme)
-                .estimatedTime(walkAddRequestDto.getEstimatedTime())
-                // todo : user 추가
-//                .user(user);
+                .estimatedTime(this.estimatedTime)
                 .build();
     }
 

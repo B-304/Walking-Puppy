@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -21,8 +19,5 @@ public class Theme {
 
     @Column(name = "name", length = 10)
     private String name;
-
-    @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL)
-    List<Walk> walkList = new ArrayList<>();
 
 }
