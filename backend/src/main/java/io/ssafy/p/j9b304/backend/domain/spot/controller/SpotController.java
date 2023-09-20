@@ -51,4 +51,12 @@ public class SpotController {
     public List<GetResponseDto> spotGetList() {
         return spotService.getSpotList();
     }
+
+    @GetMapping("{spotId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "200", description = "스팟 단건 조회 성공")
+    @Operation(summary = "스팟 단건 조회")
+    public GetResponseDto spotGetDetial(@PathVariable Long spotId) {
+        return spotService.getSpotDetail(spotId);
+    }
 }
