@@ -1,6 +1,7 @@
 package io.ssafy.p.j9b304.backend.domain.spot.service;
 
 import io.ssafy.p.j9b304.backend.domain.spot.dto.AddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.spot.dto.GetHotSpotResponseDto;
 import io.ssafy.p.j9b304.backend.domain.spot.dto.GetResponseDto;
 import io.ssafy.p.j9b304.backend.domain.spot.dto.ModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.spot.entity.Spot;
@@ -56,5 +57,11 @@ public class SpotService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 스팟이 없습니다."));
 
         return spot.toDto();
+    }
+
+    public List<GetHotSpotResponseDto> getHotSpotList() {
+        List<Spot> spotList = spotRepository.findHotSpotAll();
+
+        return spotList.stream().map(Spot::toHotSpotDto).collect(Collectors.toList());
     }
 }

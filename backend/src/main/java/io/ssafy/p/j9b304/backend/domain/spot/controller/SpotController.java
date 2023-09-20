@@ -1,6 +1,7 @@
 package io.ssafy.p.j9b304.backend.domain.spot.controller;
 
 import io.ssafy.p.j9b304.backend.domain.spot.dto.AddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.spot.dto.GetHotSpotResponseDto;
 import io.ssafy.p.j9b304.backend.domain.spot.dto.GetResponseDto;
 import io.ssafy.p.j9b304.backend.domain.spot.dto.ModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.spot.service.SpotService;
@@ -58,5 +59,13 @@ public class SpotController {
     @Operation(summary = "스팟 단건 조회")
     public GetResponseDto spotGetDetial(@PathVariable Long spotId) {
         return spotService.getSpotDetail(spotId);
+    }
+
+    @GetMapping("/hot")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "200", description = "인기스팟 목록 조회 성공")
+    @Operation(summary = "인기스팟 목록 조회")
+    public List<GetHotSpotResponseDto> hotSpotGetList() {
+        return spotService.getHotSpotList();
     }
 }
