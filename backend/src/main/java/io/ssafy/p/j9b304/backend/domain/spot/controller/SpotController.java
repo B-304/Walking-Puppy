@@ -28,7 +28,7 @@ public class SpotController {
         spotService.addSpot(addRequestDto);
     }
 
-    @PatchMapping("{spotId}")
+    @PatchMapping("/{spotId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponse(responseCode = "201", description = "스팟 수정 성공")
     @Operation(summary = "스팟 수정", description = "스팟 수정을 위한 사용자 입력 데이터")
@@ -36,7 +36,7 @@ public class SpotController {
         spotService.modifySpot(spotId, modifyRequestDto);
     }
 
-    @DeleteMapping("{spotId}")
+    @DeleteMapping("/{spotId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponse(responseCode = "204", description = "스팟 삭제 성공")
     @Operation(summary = "스팟 삭제")
@@ -52,7 +52,7 @@ public class SpotController {
         return spotService.getSpotList();
     }
 
-    @GetMapping("{spotId}")
+    @GetMapping("/{spotId}")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "스팟 단건 조회 성공")
     @Operation(summary = "스팟 단건 조회")
