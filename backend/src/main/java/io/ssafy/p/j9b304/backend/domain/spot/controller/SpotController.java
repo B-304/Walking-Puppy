@@ -21,7 +21,7 @@ public class SpotController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "스팟 생성 성공")
     @Operation(summary = "스팟 생성", description = "스팟 생성을 위한 사용자 입력 데이터")
-    public void dogAdd(@RequestBody SpotAddRequestDto spotAddRequestDto) {
+    public void spotAdd(@RequestBody SpotAddRequestDto spotAddRequestDto) {
         spotService.addSpot(spotAddRequestDto);
     }
 
@@ -29,7 +29,15 @@ public class SpotController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponse(responseCode = "201", description = "스팟 수정 성공")
     @Operation(summary = "스팟 수정", description = "스팟 수정을 위한 사용자 입력 데이터")
-    public void dogModify(@PathVariable Long spotId, @RequestBody SpotModifyRequestDto spotModifyRequestDto) {
+    public void spotModify(@PathVariable Long spotId, @RequestBody SpotModifyRequestDto spotModifyRequestDto) {
         spotService.modifySpot(spotId, spotModifyRequestDto);
+    }
+
+    @DeleteMapping("{spotId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponse(responseCode = "204", description = "스팟 삭제 성공")
+    @Operation(summary = "스팟 삭제")
+    public void spotRemove(@PathVariable Long spotId) {
+        spotService.removeSpot(spotId);
     }
 }

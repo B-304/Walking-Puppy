@@ -30,4 +30,14 @@ public class SpotService {
 
         originalSpot.modifySpot(spotModifyRequestDto);
     }
+
+    @Transactional
+    public void removeSpot(Long spotId) {
+        Spot spot = spotRepository.findById(spotId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스팟이 없습니다."));
+
+        // todo : 사용자 검증
+
+        spotRepository.delete(spot);
+    }
 }
