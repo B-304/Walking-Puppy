@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @Table(name = "spot")
-@SQLDelete(sql = "UPDATE spot SET deleted_at = now WHEN spot_id = ?;")
+@SQLDelete(sql = "UPDATE spot SET deleted_at = now() WHERE spot_id = ?")
 public class Spot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
