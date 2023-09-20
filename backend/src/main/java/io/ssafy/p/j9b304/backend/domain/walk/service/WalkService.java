@@ -61,4 +61,14 @@ public class WalkService {
 
         return walk;
     }
+
+    public Walk removeWalk(/* User user, */Long walkId) {
+
+        Walk walk = walkRepository.findById(walkId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
+
+        // todo user와 산책을 저장한 사용자가 같은지 확인
+        walk.setState('1');
+        return walk;
+    }
 }

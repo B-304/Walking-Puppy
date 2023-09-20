@@ -60,4 +60,12 @@ public class WalkController {
     public void walkModify(/* User user, */@RequestBody WalkModifyRequestDto walkModifyRequestDto) {
         walkService.modifyWalk(/* user, */ walkModifyRequestDto);
     }
+
+    @DeleteMapping("/{walkId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponse(responseCode = "204", description = "산책 삭제 성공")
+    @Operation(summary = "산책 삭제", description = "스크랩에 저장된 산책 삭제")
+    public void walkRemove(/* User user, */@PathVariable Long walkId) {
+        walkService.removeWalk(/* user, */ walkId);
+    }
 }
