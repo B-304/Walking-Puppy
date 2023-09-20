@@ -1,7 +1,7 @@
 package io.ssafy.p.j9b304.backend.domain.spot.service;
 
-import io.ssafy.p.j9b304.backend.domain.spot.dto.SpotAddRequestDto;
-import io.ssafy.p.j9b304.backend.domain.spot.dto.SpotModifyRequestDto;
+import io.ssafy.p.j9b304.backend.domain.spot.dto.AddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.spot.dto.ModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.spot.entity.Spot;
 import io.ssafy.p.j9b304.backend.domain.spot.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,20 +15,20 @@ public class SpotService {
     private final SpotRepository spotRepository;
 
     @Transactional
-    public void addSpot(SpotAddRequestDto spotAddRequestDto) {
-        Spot spot = spotAddRequestDto.toEntity();
+    public void addSpot(AddRequestDto addRequestDto) {
+        Spot spot = addRequestDto.toEntity();
 
         spotRepository.save(spot);
     }
 
     @Transactional
-    public void modifySpot(Long spotId, SpotModifyRequestDto spotModifyRequestDto) {
+    public void modifySpot(Long spotId, ModifyRequestDto modifyRequestDto) {
         Spot originalSpot = spotRepository.findById(spotId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 스팟이 없습니다."));
 
         // todo : 사용자 검증
 
-        originalSpot.modifySpot(spotModifyRequestDto);
+        originalSpot.modifySpot(modifyRequestDto);
     }
 
     @Transactional

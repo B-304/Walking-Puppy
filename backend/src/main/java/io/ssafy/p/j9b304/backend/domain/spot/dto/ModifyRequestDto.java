@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 @NoArgsConstructor
 @Getter
-public class SpotModifyRequestDto {
+public class ModifyRequestDto {
     @NotNull(message = "이름을 입력해주세요.")
     @Size(min = 1)
     private String name;

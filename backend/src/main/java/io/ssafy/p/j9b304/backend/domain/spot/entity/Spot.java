@@ -1,6 +1,6 @@
 package io.ssafy.p.j9b304.backend.domain.spot.entity;
 
-import io.ssafy.p.j9b304.backend.domain.spot.dto.SpotModifyRequestDto;
+import io.ssafy.p.j9b304.backend.domain.spot.dto.ModifyRequestDto;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -57,7 +57,7 @@ public class Spot {
         this.open = open;
     }
 
-    public void modifySpot(SpotModifyRequestDto spotModifyRequestDto) {
+    public void modifySpot(ModifyRequestDto spotModifyRequestDto) {
         if (StringUtils.hasText(spotModifyRequestDto.getName()))
             this.name = spotModifyRequestDto.getName();
 

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @NoArgsConstructor
 @Getter
-public class SpotAddRequestDto {
+public class AddRequestDto {
     @NotNull(message = "이름을 입력해주세요.")
     @Size(min = 1)
     private String name;
