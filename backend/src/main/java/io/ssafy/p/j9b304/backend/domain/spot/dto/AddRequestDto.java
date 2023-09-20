@@ -20,7 +20,7 @@ public class AddRequestDto {
     @NotNull(message = "경도를 입력해주세요.")
     private BigDecimal longtitude;
 
-    private boolean open;
+    private char open;
 
     // todo : 이미지 업로드
 

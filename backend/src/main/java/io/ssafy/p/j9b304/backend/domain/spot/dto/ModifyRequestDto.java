@@ -12,6 +12,6 @@ public class ModifyRequestDto {
     @NotNull(message = "이름을 입력해주세요.")
     @Size(min = 1)
     private String name;
-    private boolean open;
+    private char open;
 
 }
