@@ -1,5 +1,6 @@
 package io.ssafy.p.j9b304.backend.domain.walk.entity;
 
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
+
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,12 +25,13 @@ public class Walk {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long walkId;
 
+    @Setter
     @Column(name = "name", length = 20)
     private String name;
 
     // '0' : 산책 시작 전, '1' : 산책 완료, '2' : 산책 저장
     @Column(name = "state")
-    private char state;
+    private Character state;
 
     // decimal(18,10)
     @Column(name = "start_latitude", precision = 18, scale = 10)
@@ -77,11 +79,27 @@ public class Walk {
 
     @PrePersist
     public void prePersist() {
+        this.state = this.state == null ? '0' : this.state;
         this.estimatedDistance = this.estimatedDistance == null ? 0 : this.estimatedDistance;
         this.distance = this.distance == null ? 0 : this.distance;
         this.walkCount = this.walkCount == null ? 0 : this.walkCount;
         this.calorie = this.calorie == null ? 0 : this.calorie;
     }
 
-    // todo : updateStatus
+    // 산책 종료 시 데이터 저장
+    public void walkOver(WalkSaveRequestDto walkSaveRequestDto) {
+        this.state = '1';
+        this.distance = walkSaveRequestDto.getDistance();
+        this.walkCount = walkSaveRequestDto.getWalkCount();
+        this.calorie = walkSaveRequestDto.getCalorie();
+        this.endTime = LocalDateTime.now();
+    }
+
+    public void scrap() {
+        this.state = '2';
+    }
+
+    public void removeScrap() {
+        this.state = '1';
+    }
 }
