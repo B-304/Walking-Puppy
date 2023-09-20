@@ -57,7 +57,7 @@ public class SpotController {
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "스팟 단건 조회 성공")
     @Operation(summary = "스팟 단건 조회")
-    public GetResponseDto spotGetDetial(@PathVariable Long spotId) {
+    public GetResponseDto spotGetDetail(@PathVariable Long spotId) {
         return spotService.getSpotDetail(spotId);
     }
 

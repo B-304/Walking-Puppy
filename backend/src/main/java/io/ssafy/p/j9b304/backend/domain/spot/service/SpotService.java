@@ -47,16 +47,16 @@ public class SpotService {
     }
 
     public List<GetResponseDto> getSpotList() {
-        List<Spot> spotList = spotRepository.findAll();
+        List<Spot> spotList = spotRepository.findSpotAll();
 
-        return spotList.stream().map(Spot::toDto).collect(Collectors.toList());
+        return spotList.stream().map(Spot::toSpotDto).collect(Collectors.toList());
     }
 
     public GetResponseDto getSpotDetail(Long spotId) {
-        Spot spot = spotRepository.findById(spotId)
+        Spot spot = spotRepository.findSpotById(spotId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 스팟이 없습니다."));
 
-        return spot.toDto();
+        return spot.toSpotDto();
     }
 
     public List<GetHotSpotResponseDto> getHotSpotList() {

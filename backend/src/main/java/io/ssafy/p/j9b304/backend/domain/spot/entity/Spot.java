@@ -69,7 +69,7 @@ public class Spot {
         // todo : open 데이터 변화가 있다면 수정하는 메서드
     }
 
-    public GetResponseDto toDto() {
+    public GetResponseDto toSpotDto() {
         return GetResponseDto.builder()
                 .spotId(spotId)
                 .name(name)
