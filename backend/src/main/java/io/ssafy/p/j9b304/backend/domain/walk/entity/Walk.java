@@ -28,21 +28,21 @@ public class Walk {
     private String name;
 
     // '0' : 산책 시작 전, '1' : 산책 완료, '2' : 산책 저장
-    @Column(name = "state", length = 1)
+    @Column(name = "state")
     private char state;
 
     // decimal(18,10)
     @Column(name = "start_latitude", precision = 18, scale = 10)
-    BigDecimal startLatitude;
+    private BigDecimal startLatitude;
 
     @Column(name = "start_longitude", precision = 18, scale = 10)
-    BigDecimal startLongitude;
+    private BigDecimal startLongitude;
 
     @Column(name = "end_latitude", precision = 18, scale = 10)
-    BigDecimal endLatitude;
+    private BigDecimal endLatitude;
 
     @Column(name = "end_longitude", precision = 18, scale = 10)
-    BigDecimal endLongitude;
+    private BigDecimal endLongitude;
 
     @CreatedDate
     @Column(name = "start_time")
@@ -53,23 +53,23 @@ public class Walk {
 
     // tinyint
     @Column(name = "estimated_time")
-    Byte estimatedTime;
+    private Byte estimatedTime;
 
     @Column(name = "estimated_distance")
-    Float estimatedDistance;
+    private Float estimatedDistance;
 
     @Column(name = "distance")
-    Float distance;
+    private Float distance;
 
     @Column(name = "walk_count")
-    Integer walkCount;
+    private Integer walkCount;
 
     // smallint
     @Column(name = "calorie")
-    Short calorie;
+    private Short calorie;
 
     @Column(name = "image_id")
-    Integer imageId;
+    private Integer imageId;
 
     @ManyToOne
     @JoinColumn(name = "theme_id")
@@ -83,6 +83,5 @@ public class Walk {
         this.calorie = this.calorie == null ? 0 : this.calorie;
     }
 
-    // todo : toResponse
     // todo : updateStatus
 }

@@ -1,8 +1,11 @@
 package io.ssafy.p.j9b304.backend.domain.walk.service;
 
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetDetailResponseDto;
+import io.ssafy.p.j9b304.backend.domain.walk.entity.Route;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Theme;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
+import io.ssafy.p.j9b304.backend.domain.walk.repository.RouteRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.ThemeRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ import java.util.Optional;
 public class WalkService {
     private final WalkRepository walkRepository;
     private final ThemeRepository themeRepository;
+    private final RouteRepository routeRepository;
 
     public Walk addWalkNewPath(/* User user, */ WalkAddRequestDto walkAddRequestDto) {
         Optional<Theme> optionalTheme = themeRepository.findById(walkAddRequestDto.getThemeId());
@@ -26,16 +30,25 @@ public class WalkService {
         }
 
         Theme theme = optionalTheme.get();
-        Walk walk = walkAddRequestDto.toEntity(walkAddRequestDto, theme);
+        Walk walk = walkAddRequestDto.toEntity(theme);
 //        walk.setUser(user);
-
-        Walk newWalk = walkRepository.save(walk);
-        return newWalk;
+        
+        return walkRepository.save(walk);
     }
 
 
     public List<Walk> getWalkList(/* User user, */) {
         // todo user id에 해당하는 산책 리스트만 가져오기
         return walkRepository.findByState('2');
+    }
+
+    public WalkGetDetailResponseDto getWalkDetail(/* User user, */Long walkId) {
+        // todo user와 산책을 저장한 사용자가 같은지 확인
+        Walk walk = walkRepository.findById(walkId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
+
+        List<Route> routeList = routeRepository.findByWalkAndState(walk, '1');
+        WalkGetDetailResponseDto walkGetDetailResponseDto = new WalkGetDetailResponseDto(walk, routeList);
+        return walkGetDetailResponseDto;
     }
 }
