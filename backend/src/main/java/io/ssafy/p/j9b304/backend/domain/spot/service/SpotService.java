@@ -66,7 +66,8 @@ public class SpotService {
     }
 
     public GetHotSpotResponseDto getHotSpotDetail(Long spotId) {
-        Spot spot = spotRepository.findHotSpotByID(spotId);
+        Spot spot = spotRepository.findHotSpotByID(spotId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스팟이 없습니다."));
 
         return spot.toHotSpotDto();
     }
