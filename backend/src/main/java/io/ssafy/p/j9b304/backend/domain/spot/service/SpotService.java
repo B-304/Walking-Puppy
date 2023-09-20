@@ -64,4 +64,10 @@ public class SpotService {
 
         return spotList.stream().map(Spot::toHotSpotDto).collect(Collectors.toList());
     }
+
+    public GetHotSpotResponseDto getHotSpotDetail(Long spotId) {
+        Spot spot = spotRepository.findHotSpotByID(spotId);
+
+        return spot.toHotSpotDto();
+    }
 }

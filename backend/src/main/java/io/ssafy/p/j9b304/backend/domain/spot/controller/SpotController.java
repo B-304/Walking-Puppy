@@ -68,4 +68,12 @@ public class SpotController {
     public List<GetHotSpotResponseDto> hotSpotGetList() {
         return spotService.getHotSpotList();
     }
+
+    @GetMapping("/hot/{spotId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "200", description = "인기스팟 단건 조회 성공")
+    @Operation(summary = "인기스팟 단건 조회")
+    public GetHotSpotResponseDto hotSpotGetDetail(@PathVariable Long spotId) {
+        return spotService.getHotSpotDetail(spotId);
+    }
 }

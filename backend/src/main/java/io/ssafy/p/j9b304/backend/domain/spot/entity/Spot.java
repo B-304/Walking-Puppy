@@ -1,5 +1,6 @@
 package io.ssafy.p.j9b304.backend.domain.spot.entity;
 
+import io.ssafy.p.j9b304.backend.domain.spot.dto.GetHotSpotResponseDto;
 import io.ssafy.p.j9b304.backend.domain.spot.dto.GetResponseDto;
 import io.ssafy.p.j9b304.backend.domain.spot.dto.ModifyRequestDto;
 import lombok.Builder;
@@ -76,6 +77,15 @@ public class Spot {
                 .longitude(longitude)
                 .open(open)
                 .createdAt(createdAt)
+                .build();
+    }
+
+    public GetHotSpotResponseDto toHotSpotDto() {
+        return GetHotSpotResponseDto.builder()
+                .spotId(spotId)
+                .name(name)
+                .latitude(latitude)
+                .longitude(longitude)
                 .build();
     }
 }
