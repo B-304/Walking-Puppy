@@ -88,4 +88,19 @@ public class WalkService {
         WalkSaveResponseDto walkSaveResponseDto = new WalkSaveResponseDto(walk, addedRoute, exp);
         return walkSaveResponseDto;
     }
+
+    public Walk modifyWalkState(Long walkId) {
+        // todo user와 산책을 저장한 사용자가 같은지 확인
+        Walk walk = walkRepository.findById(walkId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
+
+        if (walk.getState() != '1') {
+            // todo 예외 처리 (산책 완료되지 않은 경우 또는 이미 스크랩 된 경우)
+            throw new RuntimeException();
+        }
+
+        walk.scrap();
+
+        return walk;
+    }
 }
