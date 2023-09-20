@@ -42,11 +42,12 @@ public class Spot {
     @Column(name = "state")
     private char state;
 
+    @ColumnDefault("0")
     @Column(name = "open")
-    private boolean open;
+    private char open;
 
     @Builder
-    public Spot(Long spotId, String name, BigDecimal latitude, BigDecimal longitude, LocalDateTime createdAt, LocalDateTime deletedAt, char state, boolean open) {
+    public Spot(Long spotId, String name, BigDecimal latitude, BigDecimal longitude, LocalDateTime createdAt, LocalDateTime deletedAt, char state, char open) {
         this.spotId = spotId;
         this.name = name;
         this.latitude = latitude;
