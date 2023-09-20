@@ -14,11 +14,12 @@ public class AddRequestDto {
     @NotNull(message = "이름을 입력해주세요.")
     @Size(min = 1)
     private String name;
+
     @NotNull(message = "위도를 입력해주세요.")
     private BigDecimal latitude;
 
     @NotNull(message = "경도를 입력해주세요.")
-    private BigDecimal longtitude;
+    private BigDecimal longitude;
 
     private char open;
 
@@ -28,7 +29,7 @@ public class AddRequestDto {
         return Spot.builder()
                 .name(name)
                 .latitude(latitude)
-                .longitude(longtitude)
+                .longitude(longitude)
                 .open(open)
                 .state('0')
                 .build();
