@@ -1,6 +1,7 @@
 package io.ssafy.p.j9b304.backend.domain.spot.controller;
 
 import io.ssafy.p.j9b304.backend.domain.spot.dto.AddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.spot.dto.GetResponseDto;
 import io.ssafy.p.j9b304.backend.domain.spot.dto.ModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.spot.service.SpotService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/spot")
@@ -39,5 +42,13 @@ public class SpotController {
     @Operation(summary = "스팟 삭제")
     public void spotRemove(@PathVariable Long spotId) {
         spotService.removeSpot(spotId);
+    }
+
+    @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "200", description = "스팟 목록 조회 성공")
+    @Operation(summary = "스팟 목록 조회")
+    public List<GetResponseDto> spotGetList() {
+        return spotService.getSpotList();
     }
 }
