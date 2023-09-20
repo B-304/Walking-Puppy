@@ -9,4 +9,7 @@ import java.util.List;
 public interface SpotRepository extends JpaRepository<Spot, Long> {
     @Query("SELECT s FROM Spot s WHERE s.deletedAt IS NULL AND s.state = 1")
     List<Spot> findHotSpotAll();
+
+    @Query("SELECT s FROM Spot s WHERE s.deletedAt IS NULL AND s.state = 1 AND s.spotId =?1")
+    Spot findHotSpotByID(Long spotId);
 }
