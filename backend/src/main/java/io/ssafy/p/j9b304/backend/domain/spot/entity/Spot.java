@@ -29,10 +29,10 @@ public class Spot {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "latitude", nullable = false)
+    @Column(name = "latitude", precision = 18, scale = 10, nullable = false)
     private BigDecimal latitude;
 
-    @Column(name = "longitude", nullable = false)
+    @Column(name = "longitude", precision = 18, scale = 10, nullable = false)
     private BigDecimal longitude;
 
     @CreationTimestamp
