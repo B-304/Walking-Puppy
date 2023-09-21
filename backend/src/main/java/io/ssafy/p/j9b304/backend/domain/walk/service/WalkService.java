@@ -28,14 +28,17 @@ public class WalkService {
     private final ThemeRepository themeRepository;
     private final RouteRepository routeRepository;
 
-    public Walk addWalkNewPath(/* User user, */ WalkAddRequestDto walkAddRequestDto) {
+    public WalkInitialInfoResponseDto addWalkNewPath(/* User user, */ WalkAddRequestDto walkAddRequestDto) {
         Theme theme = themeRepository.findById(walkAddRequestDto.getThemeId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 테마가 없습니다."));
 
         Walk walk = walkAddRequestDto.toEntity(theme);
+        Walk walkInit = walkRepository.save(walk);
 //        walk.setUser(user);
 
-        return walkRepository.save(walk);
+        // todo 추천 경로 생성 로직 추가
+        List<Route> routeList = routeRepository.findByWalkAndState(walkInit, '0');
+        return new WalkInitialInfoResponseDto(walkInit, routeList);
     }
 
     public WalkInitialInfoResponseDto addWalkExistPath(WalkExistPathAddRequestDto walkExistPathAddRequestDto) {

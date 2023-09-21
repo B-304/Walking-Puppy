@@ -31,9 +31,9 @@ public class WalkController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "산책 새로운 경로 생성 성공")
     @Operation(summary = "산책 새로운 경로 생성", description = "산책 새로운 경로 생성을 위한 사용자 입력 데이터")
-    public void walkNewPathAdd(/* User user, */@RequestBody WalkAddRequestDto walkAddRequestDto) {
+    public WalkInitialInfoResponseDto walkNewPathAdd(/* User user, */@RequestBody WalkAddRequestDto walkAddRequestDto) {
         // todo : request check validation
-        walkService.addWalkNewPath(/* user, */ walkAddRequestDto);
+        return walkService.addWalkNewPath(/* user, */ walkAddRequestDto);
     }
 
     @PostMapping("/exist-path")
