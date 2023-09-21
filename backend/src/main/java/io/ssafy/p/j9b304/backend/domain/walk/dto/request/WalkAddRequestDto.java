@@ -31,10 +31,10 @@ public class WalkAddRequestDto {
     Long themeId;
 
     @Schema(description = "예상 소요시간")
-    Byte estimatedTime;
+    Integer estimatedTime;
 
     @Builder
-    public WalkAddRequestDto(BigDecimal startLatitude, BigDecimal startLongitude, BigDecimal endLatitude, BigDecimal endLongitude, Long themeId, Byte estimatedTime) {
+    public WalkAddRequestDto(BigDecimal startLatitude, BigDecimal startLongitude, BigDecimal endLatitude, BigDecimal endLongitude, Long themeId, Integer estimatedTime) {
         this.startLatitude = startLatitude;
         this.startLongitude = startLongitude;
         this.endLatitude = endLatitude;

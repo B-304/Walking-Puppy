@@ -1,10 +1,12 @@
 package io.ssafy.p.j9b304.backend.domain.walk.controller;
 
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkExistPathAddRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetDetailResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetListResponseDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkInitialInfoResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkSaveResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
 import io.ssafy.p.j9b304.backend.domain.walk.service.WalkService;
@@ -34,16 +36,25 @@ public class WalkController {
         walkService.addWalkNewPath(/* user, */ walkAddRequestDto);
     }
 
+    @PostMapping("/exist-path")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponse(responseCode = "201", description = "산책 저장된 경로 생성 성공")
+    @Operation(summary = "산책 저장된 경로 생성", description = "저장된 경로로 산책하기 위한 데이터 저장")
+    public WalkInitialInfoResponseDto walkExistPathAdd(/* User user, */@RequestBody WalkExistPathAddRequestDto walkExistPathAddRequestDto) {
+        // todo : request check validation
+        return walkService.addWalkExistPath(/* user, */ walkExistPathAddRequestDto);
+    }
+
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "내 산책 목록 조회 성공")
     @Operation(summary = "내 산책 목록 조회", description = "산책 경로 스크랩과 저장된 산책 경로에서 사용되는 내 산책 목록")
     public List<WalkGetListResponseDto> walkGetList(/* User user */) {
         List<Walk> walkList = walkService.getWalkList(/* user */);
-        List<WalkGetListResponseDto> walkGetListResponseDtoList = walkList.stream()
+
+        return walkList.stream()
                 .map(w -> new WalkGetListResponseDto(w))
                 .collect(Collectors.toList());
-        return walkGetListResponseDtoList;
     }
 
     @GetMapping("/{walkId}")
@@ -51,8 +62,7 @@ public class WalkController {
     @ApiResponse(responseCode = "200", description = "내 산책 목록 조회 성공")
     @Operation(summary = "내 산책 목록 조회", description = "산책 경로 스크랩과 저장된 산책 경로에서 사용되는 내 산책 목록")
     public WalkGetDetailResponseDto walkGetDetail(/* User user, */@PathVariable Long walkId) {
-        WalkGetDetailResponseDto walkGetDetailResponseDto = walkService.getWalkDetail(/* user, */walkId);
-        return walkGetDetailResponseDto;
+        return walkService.getWalkDetail(/* user, */walkId);
     }
 
     @PatchMapping("")
@@ -77,8 +87,7 @@ public class WalkController {
     @Operation(summary = "산책 종료시 기록 조회", description = "산책 종료 시 사용자 산책 데이터를 저장하고 결과를 조회")
     public WalkSaveResponseDto walkSave(/* User user, */@RequestBody WalkSaveRequestDto walkSaveRequestDto) {
         // 산책 종료 시각을 저장
-        WalkSaveResponseDto walkSaveResponseDto = walkService.saveWalk(/* user, */ walkSaveRequestDto);
-        return walkSaveResponseDto;
+        return walkService.saveWalk(/* user, */ walkSaveRequestDto);
     }
 
     @PutMapping("/scrap/{walkId}")

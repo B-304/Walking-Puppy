@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Getter
@@ -53,9 +54,8 @@ public class Walk {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    // tinyint
     @Column(name = "estimated_time")
-    private Byte estimatedTime;
+    private Integer estimatedTime;
 
     @Column(name = "estimated_distance")
     private Float estimatedDistance;
@@ -101,5 +101,17 @@ public class Walk {
 
     public void removeScrap() {
         this.state = '1';
+    }
+
+    public void walkExistPath(Walk walkScrap, Route start, Route end) {
+        this.state = '0';
+        this.theme = walkScrap.theme;
+        Long walkDuration = ChronoUnit.MINUTES.between(walkScrap.getStartTime(), walkScrap.getEndTime());
+        this.estimatedTime = walkDuration.intValue();
+        this.estimatedDistance = walkScrap.getDistance();
+        this.startLatitude = start.getLatitude();
+        this.startLongitude = start.getLongitude();
+        this.endLatitude = end.getLatitude();
+        this.endLongitude = end.getLongitude();
     }
 }
