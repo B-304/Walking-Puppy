@@ -1,9 +1,11 @@
 package io.ssafy.p.j9b304.backend.domain.walk.service;
 
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkExistPathAddRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetDetailResponseDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkInitialInfoResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkSaveResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Route;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Theme;
@@ -36,6 +38,19 @@ public class WalkService {
         return walkRepository.save(walk);
     }
 
+    public WalkInitialInfoResponseDto addWalkExistPath(WalkExistPathAddRequestDto walkExistPathAddRequestDto) {
+        // todo user와 산책을 저장한 사용자가 같은지 확인
+        Walk walkScrap = walkRepository.findById(walkExistPathAddRequestDto.getWalkId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
+
+        Walk walk = new Walk();
+        List<Route> routeList = routeRepository.findByWalkAndState(walkScrap, '1');
+        Route start = routeList.get(0);
+        Route end = routeList.get(routeList.size() - 1);
+        walk.walkExistPath(walkScrap, start, end);
+        Walk walkInit = walkRepository.save(walk);
+        return new WalkInitialInfoResponseDto(walkInit, routeList);
+    }
 
     public List<Walk> getWalkList(/* User user, */) {
         // todo user id에 해당하는 산책 리스트만 가져오기
@@ -48,8 +63,8 @@ public class WalkService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
 
         List<Route> routeList = routeRepository.findByWalkAndState(walk, '1');
-        WalkGetDetailResponseDto walkGetDetailResponseDto = new WalkGetDetailResponseDto(walk, routeList);
-        return walkGetDetailResponseDto;
+
+        return new WalkGetDetailResponseDto(walk, routeList);
     }
 
     public Walk modifyWalk(WalkModifyRequestDto walkModifyRequestDto) {
@@ -85,8 +100,7 @@ public class WalkService {
         List<Route> addedRoute = routeRepository.saveAll(routeList);
 
         // todo 강아지 경험치 증가
-        WalkSaveResponseDto walkSaveResponseDto = new WalkSaveResponseDto(walk, addedRoute, exp);
-        return walkSaveResponseDto;
+        return new WalkSaveResponseDto(walk, addedRoute, exp);
     }
 
     public Walk modifyWalkState(Long walkId) {
