@@ -61,11 +61,17 @@ public class WalkService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
 
         Walk walk = new Walk();
+
         List<Route> routeList = routeRepository.findByWalkAndState(walkScrap, '1');
         Route start = routeList.get(0);
         Route end = routeList.get(routeList.size() - 1);
         walk.walkExistPath(walkScrap, start, end);
         Walk walkInit = walkRepository.save(walk);
+
+        List<WalkSpot> walkSpotList = walkSpotRepository.findByWalk(walkScrap);
+        for (WalkSpot walkSpot : walkSpotList) {
+            walkSpotRepository.save(WalkSpot.builder().walk(walkInit).spot(walkSpot.getSpot()).build());
+        }
         return new WalkInitialInfoResponseDto(walkInit, routeList);
     }
 
