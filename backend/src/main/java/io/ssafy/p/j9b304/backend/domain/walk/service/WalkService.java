@@ -1,5 +1,7 @@
 package io.ssafy.p.j9b304.backend.domain.walk.service;
 
+import io.ssafy.p.j9b304.backend.domain.spot.entity.Spot;
+import io.ssafy.p.j9b304.backend.domain.spot.repository.SpotRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkExistPathAddRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
@@ -10,9 +12,11 @@ import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkSaveResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Route;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Theme;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
+import io.ssafy.p.j9b304.backend.domain.walk.entity.WalkSpot;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.RouteRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.ThemeRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkRepository;
+import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkSpotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +31,8 @@ public class WalkService {
     private final WalkRepository walkRepository;
     private final ThemeRepository themeRepository;
     private final RouteRepository routeRepository;
+    private final SpotRepository spotRepository;
+    private final WalkSpotRepository walkSpotRepository;
 
     public WalkInitialInfoResponseDto addWalkNewPath(/* User user, */ WalkAddRequestDto walkAddRequestDto) {
         Theme theme = themeRepository.findById(walkAddRequestDto.getThemeId())
@@ -35,6 +41,14 @@ public class WalkService {
         Walk walk = walkAddRequestDto.toEntity(theme);
         Walk walkInit = walkRepository.save(walk);
 //        walk.setUser(user);
+
+        // 산책 스팟 저장
+        List<Long> spotIdList = walkAddRequestDto.getSpotList();
+        for (Long spotId : spotIdList) {
+            Spot spot = spotRepository.findSpotById(spotId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 스팟이 없습니다."));
+            walkSpotRepository.save(WalkSpot.builder().walk(walkInit).spot(spot).build());
+        }
 
         // todo 추천 경로 생성 로직 추가
         List<Route> routeList = routeRepository.findByWalkAndState(walkInit, '0');
