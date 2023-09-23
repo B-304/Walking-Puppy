@@ -59,8 +59,8 @@ public class WalkController {
 
     @GetMapping("/{walkId}")
     @ResponseStatus(HttpStatus.OK)
-    @ApiResponse(responseCode = "200", description = "내 산책 목록 조회 성공")
-    @Operation(summary = "내 산책 목록 조회", description = "산책 경로 스크랩과 저장된 산책 경로에서 사용되는 내 산책 목록")
+    @ApiResponse(responseCode = "200", description = "내 산책 단건 조회 성공")
+    @Operation(summary = "내 산책 단건 조회", description = "산책 경로 스크랩과 저장된 산책 경로에서 사용되는 내 산책 상세 장보")
     public WalkGetDetailResponseDto walkGetDetail(/* User user, */@PathVariable Long walkId) {
         return walkService.getWalkDetail(/* user, */walkId);
     }
