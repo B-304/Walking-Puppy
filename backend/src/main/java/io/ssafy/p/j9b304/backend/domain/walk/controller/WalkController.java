@@ -90,11 +90,11 @@ public class WalkController {
         return walkService.saveWalk(/* user, */ walkSaveRequestDto);
     }
 
-    @PutMapping("/scrap/{walkId}")
+    @PutMapping("/scrap")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "산책 스크랩 성공")
     @Operation(summary = "산책 스크랩", description = "산책 스크랩 (보관함에 저장)")
-    public void walkModify(/* User user, */ @PathVariable Long walkId) {
-        walkService.modifyWalkState(/* user, */ walkId);
+    public void walkScrap(/* User user, */ @RequestBody WalkModifyRequestDto walkModifyRequestDto) {
+        walkService.scrapWalk(/* user, */ walkModifyRequestDto);
     }
 }
