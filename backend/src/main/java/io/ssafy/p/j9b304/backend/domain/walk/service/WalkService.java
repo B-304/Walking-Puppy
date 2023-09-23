@@ -192,17 +192,18 @@ public class WalkService {
                 .build();
     }
 
-    public Walk modifyWalkState(Long walkId) {
+    public Walk scrapWalk(WalkModifyRequestDto walkModifyRequestDto) {
         // todo user와 산책을 저장한 사용자가 같은지 확인
-        Walk walk = walkRepository.findById(walkId)
+        Walk walk = walkRepository.findById(walkModifyRequestDto.getWalkId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
 
-        if (walk.getState() != '1') {
-            // todo 예외 처리 (산책 완료되지 않은 경우 또는 이미 스크랩 된 경우)
-            throw new RuntimeException();
+        if (walk.getState() == '0') {
+            throw new IllegalArgumentException("아직 완료되지 않은 산책입니다.");
+        } else if (walk.getState() == '2') {
+            throw new IllegalArgumentException("이미 스크랩 된 산책입니다.");
         }
 
-        walk.scrap();
+        walk.scrap(walkModifyRequestDto.getName());
 
         return walk;
     }

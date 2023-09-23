@@ -95,8 +95,9 @@ public class Walk {
         this.endTime = LocalDateTime.now();
     }
 
-    public void scrap() {
+    public void scrap(String name) {
         this.state = '2';
+        this.name = name;
     }
 
     public void removeScrap() {
