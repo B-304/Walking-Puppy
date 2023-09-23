@@ -1,8 +1,11 @@
 package io.ssafy.p.j9b304.backend.domain.walk.dto.response;
 
+import io.ssafy.p.j9b304.backend.domain.spot.dto.GetResponseDto;
+import io.ssafy.p.j9b304.backend.domain.spot.entity.Spot;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Route;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,10 +40,11 @@ public class WalkSaveResponseDto {
     @Schema(description = "산책 경로")
     List<RouteGetResponseDto> routeList;
 
-//    todo 스팟 리스트 추가
-//    @Schema(description = "스팟 리스트")
-    
-    public WalkSaveResponseDto(Walk walk, List<Route> routeList, Integer exp) {
+    @Schema(description = "스팟 리스트")
+    List<GetResponseDto> spotList;
+
+    @Builder
+    public WalkSaveResponseDto(Walk walk, List<Route> routeList, List<Spot> spotList, Integer exp) {
         this.walkId = walk.getWalkId();
         long walkDuration = ChronoUnit.MINUTES.between(walk.getStartTime(), walk.getEndTime());
         this.time = Long.valueOf(walkDuration).intValue();
@@ -48,8 +52,8 @@ public class WalkSaveResponseDto {
         this.walkCount = walk.getWalkCount();
         this.calorie = walk.getCalorie();
         this.themeName = walk.getTheme().getName();
-        this.exp = exp;
         this.routeList = routeList.stream().map(r -> new RouteGetResponseDto(r)).collect(Collectors.toList());
-
+        this.spotList = spotList.stream().map(Spot::toSpotDto).collect(Collectors.toList());
+        this.exp = exp;
     }
 }

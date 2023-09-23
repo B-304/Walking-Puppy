@@ -129,8 +129,19 @@ public class WalkService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
 
         List<Route> routeList = routeRepository.findByWalkAndState(walk, '1');
+        List<WalkSpot> walkSpotList = walkSpotRepository.findByWalk(walk);
+        List<Spot> spotList = new ArrayList<>();
+        for (WalkSpot walkSpot : walkSpotList) {
+            if (walkSpot.getSpot().getState() != '2') {
+                spotList.add(walkSpot.getSpot());
+            }
+        }
 
-        return new WalkGetDetailResponseDto(walk, routeList);
+        return WalkGetDetailResponseDto.builder()
+                .walk(walk)
+                .routeList(routeList)
+                .spotList(spotList)
+                .build();
     }
 
     public Walk modifyWalk(WalkModifyRequestDto walkModifyRequestDto) {
@@ -164,9 +175,21 @@ public class WalkService {
 
         List<Route> routeList = walkSaveRequestDto.getRoute().stream().map(r -> r.toEntity(walk, '1')).collect(Collectors.toList());
         List<Route> addedRoute = routeRepository.saveAll(routeList);
+        List<WalkSpot> walkSpotList = walkSpotRepository.findByWalk(walk);
+        List<Spot> spotList = new ArrayList<>();
+        for (WalkSpot walkSpot : walkSpotList) {
+            if (walkSpot.getSpot().getState() != '2') {
+                spotList.add(walkSpot.getSpot());
+            }
+        }
 
         // todo 강아지 경험치 증가
-        return new WalkSaveResponseDto(walk, addedRoute, exp);
+        return WalkSaveResponseDto.builder()
+                .walk(walk)
+                .routeList(addedRoute)
+                .spotList(spotList)
+                .exp(exp)
+                .build();
     }
 
     public Walk modifyWalkState(Long walkId) {
