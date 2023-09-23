@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,8 +52,26 @@ public class WalkService {
         }
 
         // todo 추천 경로 생성 로직 추가
+        // todo DB에 간식 스팟 추가
+
         List<Route> routeList = routeRepository.findByWalkAndState(walkInit, '0');
-        return new WalkInitialInfoResponseDto(walkInit, routeList);
+        List<WalkSpot> walkSpotList = walkSpotRepository.findByWalk(walkInit);
+        List<Spot> spotList = new ArrayList<>();
+        List<Spot> itemSpotList = new ArrayList<>();
+        for (WalkSpot walkSpot : walkSpotList) {
+            if (walkSpot.getSpot().getState() == '2') {
+                itemSpotList.add(walkSpot.getSpot());
+            } else {
+                spotList.add(walkSpot.getSpot());
+            }
+        }
+
+        return WalkInitialInfoResponseDto.builder()
+                .walk(walkInit)
+                .routeList(routeList)
+                .spotList(spotList)
+                .itemSpotList(itemSpotList)
+                .build();
     }
 
     public WalkInitialInfoResponseDto addWalkExistPath(WalkExistPathAddRequestDto walkExistPathAddRequestDto) {
@@ -63,16 +82,40 @@ public class WalkService {
         Walk walk = new Walk();
 
         List<Route> routeList = routeRepository.findByWalkAndState(walkScrap, '1');
+        if (routeList.isEmpty()) {
+            throw new IllegalArgumentException("해당 산책 기록이 없습니다.");
+        }
         Route start = routeList.get(0);
         Route end = routeList.get(routeList.size() - 1);
         walk.walkExistPath(walkScrap, start, end);
         Walk walkInit = walkRepository.save(walk);
 
-        List<WalkSpot> walkSpotList = walkSpotRepository.findByWalk(walkScrap);
-        for (WalkSpot walkSpot : walkSpotList) {
-            walkSpotRepository.save(WalkSpot.builder().walk(walkInit).spot(walkSpot.getSpot()).build());
+        List<WalkSpot> walkScrapSpotList = walkSpotRepository.findByWalk(walkScrap);
+        for (WalkSpot walkSpot : walkScrapSpotList) {
+            if (walkSpot.getSpot().getState() != '2') { // 간식 스팟이 아닌 경우 산책 스팟 저장
+                walkSpotRepository.save(WalkSpot.builder().walk(walkInit).spot(walkSpot.getSpot()).build());
+            }
+
         }
-        return new WalkInitialInfoResponseDto(walkInit, routeList);
+
+        // todo DB에 새로운 랜덤 간식 스팟 추가
+        List<WalkSpot> walkSpotList = walkSpotRepository.findByWalk(walkInit);
+        List<Spot> spotList = new ArrayList<>();
+        List<Spot> itemSpotList = new ArrayList<>();
+        for (WalkSpot walkSpot : walkSpotList) {
+            if (walkSpot.getSpot().getState() == '2') {
+                itemSpotList.add(walkSpot.getSpot());
+            } else {
+                spotList.add(walkSpot.getSpot());
+            }
+        }
+
+        return WalkInitialInfoResponseDto.builder()
+                .walk(walkInit)
+                .routeList(routeList)
+                .spotList(spotList)
+                .itemSpotList(itemSpotList)
+                .build();
     }
 
     public List<Walk> getWalkList(/* User user, */) {
