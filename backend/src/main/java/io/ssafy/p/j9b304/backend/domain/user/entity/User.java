@@ -43,11 +43,11 @@ public class User {
     private String email;
 
     // todo : 강아지
-    @Column(name = "image_id")
-    private String profileImage;
+//    @Column(name = "image_id")
+//    private String profileImage;
 
     @Builder
-    public User(Long userId, Long kakaoId, boolean state, LocalDateTime createdAt, LocalDateTime expiredAt, String nickname, int walkCount, String email, String profileImage) {
+    public User(Long userId, Long kakaoId, boolean state, LocalDateTime createdAt, LocalDateTime expiredAt, String nickname, int walkCount, String email) {
         this.userId = userId;
         this.kakaoId = kakaoId;
         this.state = state;
@@ -56,7 +56,6 @@ public class User {
         this.nickname = nickname;
         this.walkCount = walkCount;
         this.email = email;
-        this.profileImage = profileImage;
     }
 
     public User(String email, String nickname) {
