@@ -36,6 +36,17 @@ dependencies {
 
 	// 데이터베이스
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// swagger
+	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+
+	// @NotNull 의존성
+	implementation 'org.hibernate:hibernate-validator:7.0.5.Final'
+
+
+	//hadoop
+	implementation 'org.apache.hadoop:hadoop-common:3.3.0'
+	implementation 'org.apache.hadoop:hadoop-hdfs:3.3.0'
 }
 
 tasks.named('test') {
