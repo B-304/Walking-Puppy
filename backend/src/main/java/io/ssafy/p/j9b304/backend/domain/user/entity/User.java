@@ -49,8 +49,6 @@ public class User {
     private String email;
 
     // todo : 강아지
-//    @Column(name = "image_id")
-//    private String profileImage;
 
     @Builder
     public User(Long userId, Long kakaoId, boolean state, LocalDateTime createdAt, LocalDateTime expiredAt, String nickname, int walkCount, String email) {
@@ -62,9 +60,6 @@ public class User {
         this.nickname = nickname;
         this.walkCount = walkCount;
         this.email = email;
-    }
-
-    public User(String email, String nickname) {
     }
 
     public GetResponseDto toDto() {
