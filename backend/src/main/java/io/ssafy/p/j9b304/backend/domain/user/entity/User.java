@@ -28,6 +28,7 @@ public class User {
     @Column(name = "kakao_id")
     private Long kakaoId;
 
+    // false = 탈퇴 X, true = 탈퇴 O
     @Column(name = "state")
     private boolean state = false;
 
@@ -83,5 +84,10 @@ public class User {
 
     public void changeState() {
         this.state = true;
+    }
+
+    @PrePersist
+    public void prepersist() {
+        this.walkCount = this.walkCount == 0 ? 5000 : this.walkCount;
     }
 }
