@@ -3,10 +3,11 @@ package io.ssafy.p.j9b304.backend.domain.spot.entity;
 import io.ssafy.p.j9b304.backend.domain.spot.dto.GetHotSpotResponseDto;
 import io.ssafy.p.j9b304.backend.domain.spot.dto.GetResponseDto;
 import io.ssafy.p.j9b304.backend.domain.spot.dto.ModifyRequestDto;
+import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.springframework.util.StringUtils;
@@ -26,6 +27,11 @@ public class Spot {
     @Column(name = "spot_id")
     private Long spotId;
 
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -42,17 +48,18 @@ public class Spot {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @ColumnDefault("0")
+    // 0:사용자스팟, 1:인기스팟, 2:간식스팟
     @Column(name = "state")
     private char state;
 
-    @ColumnDefault("0")
+    // 0:전체공개, 1:나만보기
     @Column(name = "open")
     private char open;
 
     @Builder
-    public Spot(Long spotId, String name, BigDecimal latitude, BigDecimal longitude, LocalDateTime createdAt, LocalDateTime deletedAt, char state, char open) {
+    public Spot(Long spotId, User user, String name, BigDecimal latitude, BigDecimal longitude, LocalDateTime createdAt, LocalDateTime deletedAt, char state, char open) {
         this.spotId = spotId;
+        this.user = user;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -60,6 +67,11 @@ public class Spot {
         this.deletedAt = deletedAt;
         this.state = state;
         this.open = open;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.state = this.state == 0 ? '0' : this.state;
     }
 
     public void modifySpot(ModifyRequestDto spotModifyRequestDto) {
