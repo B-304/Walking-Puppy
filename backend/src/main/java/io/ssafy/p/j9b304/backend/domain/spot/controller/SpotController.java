@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -25,40 +26,40 @@ public class SpotController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "스팟 생성 성공")
     @Operation(summary = "스팟 생성", description = "스팟 생성을 위한 사용자 입력 데이터")
-    public void spotAdd(@RequestBody AddRequestDto addRequestDto) {
-        spotService.addSpot(addRequestDto);
+    public void spotAdd(HttpServletRequest httpServletRequest, @RequestBody AddRequestDto addRequestDto) {
+        spotService.addSpot(httpServletRequest, addRequestDto);
     }
 
     @PatchMapping("/{spotId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponse(responseCode = "201", description = "스팟 수정 성공")
-    @Operation(summary = "스팟 수정", description = "스팟 수정을 위한 사용자 입력 데이터")
-    public void spotModify(@PathVariable Long spotId, @RequestBody ModifyRequestDto modifyRequestDto) {
-        spotService.modifySpot(spotId, modifyRequestDto);
+    @Operation(summary = "스팟 수정", description = "스팟 수정을 위한 사용자 입력 데이터(스팟명, 공개여부)")
+    public void spotModify(HttpServletRequest httpServletRequest, @PathVariable Long spotId, @RequestBody ModifyRequestDto modifyRequestDto) {
+        spotService.modifySpot(httpServletRequest, spotId, modifyRequestDto);
     }
 
     @DeleteMapping("/{spotId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponse(responseCode = "204", description = "스팟 삭제 성공")
     @Operation(summary = "스팟 삭제")
-    public void spotRemove(@PathVariable Long spotId) {
-        spotService.removeSpot(spotId);
+    public void spotRemove(HttpServletRequest httpServletRequest, @PathVariable Long spotId) {
+        spotService.removeSpot(httpServletRequest, spotId);
     }
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "스팟 목록 조회 성공")
     @Operation(summary = "스팟 목록 조회")
-    public List<GetResponseDto> spotGetList() {
-        return spotService.getSpotList();
+    public List<GetResponseDto> spotGetList(HttpServletRequest httpServletRequest) {
+        return spotService.getSpotList(httpServletRequest);
     }
 
     @GetMapping("/{spotId}")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "스팟 단건 조회 성공")
     @Operation(summary = "스팟 단건 조회")
-    public GetResponseDto spotGetDetail(@PathVariable Long spotId) {
-        return spotService.getSpotDetail(spotId);
+    public GetResponseDto spotGetDetail(HttpServletRequest httpServletRequest, @PathVariable Long spotId) {
+        return spotService.getSpotDetail(httpServletRequest, spotId);
     }
 
     @GetMapping("/hot")
