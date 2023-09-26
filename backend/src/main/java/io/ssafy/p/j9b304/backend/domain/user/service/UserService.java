@@ -156,7 +156,7 @@ public class UserService {
     }
 
     public void removeUser(Long userId) {
-        User existUser = findByUser(userId);
+        User existUser = findUser(userId);
 
         checkUser(userId, existUser.getUserId());
 
@@ -166,7 +166,7 @@ public class UserService {
     }
 
     public GetResponseDto getUserDetail(Long userId) {
-        User existUser = findByUser(userId);
+        User existUser = findUser(userId);
 
         checkUser(userId, existUser.getUserId());
 
@@ -175,14 +175,14 @@ public class UserService {
 
     @Transactional
     public void modifyUser(Long userId, UserModifyRequestDto userModifyRequestDto) {
-        User existUser = findByUser(userId);
+        User existUser = findUser(userId);
 
         checkUser(userId, existUser.getUserId());
 
         existUser.mofidyUser(userModifyRequestDto);
     }
 
-    public User findByUser(Long userId) {
+    public User findUser(Long userId) {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
     }
