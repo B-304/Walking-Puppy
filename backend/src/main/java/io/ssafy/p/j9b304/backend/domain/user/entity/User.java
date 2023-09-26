@@ -1,12 +1,14 @@
 package io.ssafy.p.j9b304.backend.domain.user.entity;
 
 import io.ssafy.p.j9b304.backend.domain.user.dto.GetResponseDto;
+import io.ssafy.p.j9b304.backend.domain.user.dto.UserModifyRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -69,5 +71,13 @@ public class User {
                 .nickname(nickname)
                 .walkCount(walkCount)
                 .build();
+    }
+
+    public void mofidyUser(UserModifyRequestDto userModifyRequestDto) {
+        if (StringUtils.hasText(userModifyRequestDto.getNickname()))
+            this.nickname = userModifyRequestDto.getNickname();
+
+        if (userModifyRequestDto.getWalkCount() != 0)
+            this.walkCount = userModifyRequestDto.getWalkCount();
     }
 }
