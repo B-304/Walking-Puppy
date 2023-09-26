@@ -31,7 +31,6 @@ public class AddRequestDto {
                 .latitude(latitude)
                 .longitude(longitude)
                 .open(open)
-                .state('0')
                 .build();
     }
 }
