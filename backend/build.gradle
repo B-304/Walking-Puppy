@@ -39,6 +39,23 @@ dependencies {
 
     // swagger
     implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+
+    // @NotNull 의존성
+    implementation 'org.hibernate:hibernate-validator:7.0.5.Final'
+
+
+    // 카카오로그인
+    // 인가토큰 받기 위한 JSON 파싱 dependency
+    implementation 'com.google.code.gson:gson:2.8.7'
+
+    // 스프링 시큐리티
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    implementation group: 'com.auth0', name: 'java-jwt', version: '3.14.0'
 }
 
 tasks.named('test') {
