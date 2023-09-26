@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Arrays;
@@ -53,9 +54,12 @@ public class JwtTokenProvider {
 
         //Access Token 생성
         String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .claim("auth", authorities)
+                .claim("type", "ACCESS")
+                .claim("userId", authentication.getCredentials())
                 .setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 30))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -63,8 +67,11 @@ public class JwtTokenProvider {
 
         //Refresh Token 생성
         String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())
                 .setClaims(claims)
                 .setIssuedAt(now)
+                .claim("type", "ACCESS")
+                .claim("userId", authentication.getCredentials())
                 .setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 60 * 36))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -127,5 +134,13 @@ public class JwtTokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    public Long extractUserIdFromToken(HttpServletRequest httpServletRequest) {
+        String bearerToken = httpServletRequest.getHeader("Authorization");
+        String token = bearerToken.substring(7);
+
+
+        return Long.parseLong(parseClaims(token).get("userId").toString());
     }
 }
