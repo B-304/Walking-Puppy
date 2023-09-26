@@ -4,7 +4,10 @@ import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtToken;
 import io.ssafy.p.j9b304.backend.domain.security.oAuth.OauthToken;
 import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import io.ssafy.p.j9b304.backend.domain.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,5 +30,13 @@ public class UserController {
         JwtToken jwtToken = userService.createToken(user);
 
         return ResponseEntity.ok(jwtToken);
+    }
+
+    @DeleteMapping("/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponse(responseCode = "204", description = "회원 탈퇴 성공")
+    @Operation(summary = "회원 탈퇴")
+    public void userRemove(@PathVariable Long userId) {
+        userService.removeUser(userId);
     }
 }

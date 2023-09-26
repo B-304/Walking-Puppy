@@ -151,4 +151,16 @@ public class UserService {
 
         return user;
     }
+
+    public void removeUser(Long userId) {
+        System.out.println("요청된 유저 식별번호" + userId);
+
+        User existUser = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+
+        if (!userId.equals(existUser.getUserId()))
+            throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
+
+        userRepository.deleteById(userId);
+    }
 }

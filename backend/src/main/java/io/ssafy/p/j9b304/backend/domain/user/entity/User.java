@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @DynamicInsert
 @Table(name = "user")
-@SQLDelete(sql = "UPDATE user SET expired_at = now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE user SET expired_at = now() WHERE user_id = ?")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
