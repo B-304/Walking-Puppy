@@ -1,5 +1,6 @@
 package io.ssafy.p.j9b304.backend.domain.user.entity;
 
+import io.ssafy.p.j9b304.backend.domain.user.dto.GetResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -61,5 +62,12 @@ public class User {
     }
 
     public User(String email, String nickname) {
+    }
+
+    public GetResponseDto toDto() {
+        return GetResponseDto.builder()
+                .nickname(nickname)
+                .walkCount(walkCount)
+                .build();
     }
 }

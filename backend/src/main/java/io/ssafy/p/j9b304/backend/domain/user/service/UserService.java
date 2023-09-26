@@ -6,6 +6,7 @@ import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtToken;
 import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtTokenProvider;
 import io.ssafy.p.j9b304.backend.domain.security.oAuth.KakaoProfile;
 import io.ssafy.p.j9b304.backend.domain.security.oAuth.OauthToken;
+import io.ssafy.p.j9b304.backend.domain.user.dto.GetResponseDto;
 import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import io.ssafy.p.j9b304.backend.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,5 +163,15 @@ public class UserService {
             throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
 
         userRepository.deleteById(userId);
+    }
+
+    public GetResponseDto getUserDetail(Long userId) {
+        User existUser = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+
+        if (!userId.equals(existUser.getUserId()))
+            throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
+
+        return userRepository.findByUserId(existUser.getUserId()).get().toDto();
     }
 }
