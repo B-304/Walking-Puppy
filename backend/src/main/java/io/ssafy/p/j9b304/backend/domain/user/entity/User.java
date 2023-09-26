@@ -80,4 +80,8 @@ public class User {
         if (userModifyRequestDto.getWalkCount() != 0)
             this.walkCount = userModifyRequestDto.getWalkCount();
     }
+
+    public void changeState() {
+        this.state = true;
+    }
 }
