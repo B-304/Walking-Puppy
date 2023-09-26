@@ -3,6 +3,7 @@ package io.ssafy.p.j9b304.backend.domain.user.controller;
 import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtToken;
 import io.ssafy.p.j9b304.backend.domain.security.oAuth.OauthToken;
 import io.ssafy.p.j9b304.backend.domain.user.dto.GetResponseDto;
+import io.ssafy.p.j9b304.backend.domain.user.dto.UserModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import io.ssafy.p.j9b304.backend.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,5 +48,13 @@ public class UserController {
     @Operation(summary = "회원 정보 조회", description = "회원 정보 조회를 위한 사용자 식별번호")
     public GetResponseDto userGetDetail(@PathVariable Long userId) {
         return userService.getUserDetail(userId);
+    }
+
+    @PatchMapping("/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponse(responseCode = "201", description = "회원 정보 수정")
+    @Operation(summary = "회원 정보 수정", description = "회원 정보 수정을 위한 사용자 입력 데이터")
+    public void userModify(@PathVariable Long userId, @RequestBody UserModifyRequestDto userModifyRequestDto) {
+        userService.modifyUser(userId, userModifyRequestDto);
     }
 }
