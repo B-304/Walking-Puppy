@@ -156,11 +156,9 @@ public class UserService {
     }
 
     public void removeUser(Long userId) {
-        User existUser = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+        User existUser = findByUser(userId);
 
-        if (!userId.equals(existUser.getUserId()))
-            throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
+        checkUser(userId, existUser.getUserId());
 
         existUser.changeState();
 
@@ -168,23 +166,30 @@ public class UserService {
     }
 
     public GetResponseDto getUserDetail(Long userId) {
-        User existUser = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+        User existUser = findByUser(userId);
 
-        if (!userId.equals(existUser.getUserId()))
-            throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
+        checkUser(userId, existUser.getUserId());
 
         return userRepository.findByUserId(existUser.getUserId()).get().toDto();
     }
 
     @Transactional
     public void modifyUser(Long userId, UserModifyRequestDto userModifyRequestDto) {
-        User existUser = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+        User existUser = findByUser(userId);
 
-        if (!userId.equals(existUser.getUserId()))
-            throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
+        checkUser(userId, existUser.getUserId());
 
         existUser.mofidyUser(userModifyRequestDto);
+    }
+
+    public User findByUser(Long userId) {
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+    }
+
+
+    public void checkUser(Long userId, Long originalUserId) {
+        if (!userId.equals(originalUserId))
+            throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
     }
 }
