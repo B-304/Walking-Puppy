@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,9 +32,8 @@ public class WalkController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "산책 새로운 경로 생성 성공")
     @Operation(summary = "산책 새로운 경로 생성", description = "산책 새로운 경로 생성을 위한 사용자 입력 데이터")
-    public WalkInitialInfoResponseDto walkNewPathAdd(/* User user, */@RequestBody WalkAddRequestDto walkAddRequestDto) {
-        // todo : request check validation
-        return walkService.addWalkNewPath(/* user, */ walkAddRequestDto);
+    public WalkInitialInfoResponseDto walkNewPathAdd(HttpServletRequest httpServletRequest, @RequestBody WalkAddRequestDto walkAddRequestDto) {
+        return walkService.addWalkNewPath(httpServletRequest, walkAddRequestDto);
     }
 
     @PostMapping("/exist-path")
