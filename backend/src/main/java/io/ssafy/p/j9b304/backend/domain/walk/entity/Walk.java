@@ -1,5 +1,6 @@
 package io.ssafy.p.j9b304.backend.domain.walk.entity;
 
+import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -77,6 +78,11 @@ public class Walk {
     @JoinColumn(name = "theme_id")
     private Theme theme;
 
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @PrePersist
     public void prePersist() {
         this.state = this.state == null ? '0' : this.state;
@@ -115,4 +121,5 @@ public class Walk {
         this.endLatitude = end.getLatitude();
         this.endLongitude = end.getLongitude();
     }
+
 }
