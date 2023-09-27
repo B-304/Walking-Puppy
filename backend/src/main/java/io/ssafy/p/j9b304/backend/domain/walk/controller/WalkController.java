@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,26 +32,24 @@ public class WalkController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "산책 새로운 경로 생성 성공")
     @Operation(summary = "산책 새로운 경로 생성", description = "산책 새로운 경로 생성을 위한 사용자 입력 데이터")
-    public WalkInitialInfoResponseDto walkNewPathAdd(/* User user, */@RequestBody WalkAddRequestDto walkAddRequestDto) {
-        // todo : request check validation
-        return walkService.addWalkNewPath(/* user, */ walkAddRequestDto);
+    public WalkInitialInfoResponseDto walkNewPathAdd(HttpServletRequest httpServletRequest, @RequestBody WalkAddRequestDto walkAddRequestDto) {
+        return walkService.addWalkNewPath(httpServletRequest, walkAddRequestDto);
     }
 
     @PostMapping("/exist-path")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "산책 저장된 경로 생성 성공")
     @Operation(summary = "산책 저장된 경로 생성", description = "저장된 경로로 산책하기 위한 데이터 저장")
-    public WalkInitialInfoResponseDto walkExistPathAdd(/* User user, */@RequestBody WalkExistPathAddRequestDto walkExistPathAddRequestDto) {
-        // todo : request check validation
-        return walkService.addWalkExistPath(/* user, */ walkExistPathAddRequestDto);
+    public WalkInitialInfoResponseDto walkExistPathAdd(HttpServletRequest httpServletRequest, @RequestBody WalkExistPathAddRequestDto walkExistPathAddRequestDto) {
+        return walkService.addWalkExistPath(httpServletRequest, walkExistPathAddRequestDto);
     }
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "내 산책 목록 조회 성공")
     @Operation(summary = "내 산책 목록 조회", description = "산책 경로 스크랩과 저장된 산책 경로에서 사용되는 내 산책 목록")
-    public List<WalkGetListResponseDto> walkGetList(/* User user */) {
-        List<Walk> walkList = walkService.getWalkList(/* user */);
+    public List<WalkGetListResponseDto> walkGetList(HttpServletRequest httpServletRequest) {
+        List<Walk> walkList = walkService.getWalkList(httpServletRequest);
 
         return walkList.stream()
                 .map(w -> new WalkGetListResponseDto(w))
@@ -61,40 +60,40 @@ public class WalkController {
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "내 산책 단건 조회 성공")
     @Operation(summary = "내 산책 단건 조회", description = "산책 경로 스크랩과 저장된 산책 경로에서 사용되는 내 산책 상세 장보")
-    public WalkGetDetailResponseDto walkGetDetail(/* User user, */@PathVariable Long walkId) {
-        return walkService.getWalkDetail(/* user, */walkId);
+    public WalkGetDetailResponseDto walkGetDetail(HttpServletRequest httpServletRequest, @PathVariable Long walkId) {
+        return walkService.getWalkDetail(httpServletRequest, walkId);
     }
 
     @PatchMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "산책 수정 성공")
     @Operation(summary = "산책 수정", description = "산책로명 수정")
-    public void walkModify(/* User user, */@RequestBody WalkModifyRequestDto walkModifyRequestDto) {
-        walkService.modifyWalk(/* user, */ walkModifyRequestDto);
+    public void walkModify(HttpServletRequest httpServletRequest, @RequestBody WalkModifyRequestDto walkModifyRequestDto) {
+        walkService.modifyWalk(httpServletRequest, walkModifyRequestDto);
     }
 
     @DeleteMapping("/{walkId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponse(responseCode = "204", description = "산책 삭제 성공")
     @Operation(summary = "산책 삭제", description = "스크랩에 저장된 산책 삭제")
-    public void walkRemove(/* User user, */@PathVariable Long walkId) {
-        walkService.removeWalk(/* user, */ walkId);
+    public void walkRemove(HttpServletRequest httpServletRequest, @PathVariable Long walkId) {
+        walkService.removeWalk(httpServletRequest, walkId);
     }
 
     @PostMapping("/over")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "사용자 산책 데이터 저장 성공")
     @Operation(summary = "산책 종료시 기록 조회", description = "산책 종료 시 사용자 산책 데이터를 저장하고 결과를 조회")
-    public WalkSaveResponseDto walkSave(/* User user, */@RequestBody WalkSaveRequestDto walkSaveRequestDto) {
+    public WalkSaveResponseDto walkSave(HttpServletRequest httpServletRequest, @RequestBody WalkSaveRequestDto walkSaveRequestDto) {
         // 산책 종료 시각을 저장
-        return walkService.saveWalk(/* user, */ walkSaveRequestDto);
+        return walkService.saveWalk(httpServletRequest, walkSaveRequestDto);
     }
 
     @PutMapping("/scrap")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "산책 스크랩 성공")
     @Operation(summary = "산책 스크랩", description = "산책 스크랩 (보관함에 저장)")
-    public void walkScrap(/* User user, */ @RequestBody WalkModifyRequestDto walkModifyRequestDto) {
-        walkService.scrapWalk(/* user, */ walkModifyRequestDto);
+    public void walkScrap(HttpServletRequest httpServletRequest, @RequestBody WalkModifyRequestDto walkModifyRequestDto) {
+        walkService.scrapWalk(httpServletRequest, walkModifyRequestDto);
     }
 }
