@@ -1,4 +1,4 @@
-package io.ssafy.p.j9b304.backend.domain.user.dto;
+package io.ssafy.p.j9b304.backend.domain.user.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class GetResponseDto {
+public class UserGetDetailResponseDto {
     private String nickname;
     private int walkCount;
 
     @Builder
-    public GetResponseDto(String nickname, int walkCount) {
+    public UserGetDetailResponseDto(String nickname, int walkCount) {
         this.nickname = nickname;
         this.walkCount = walkCount;
     }
