@@ -97,4 +97,15 @@ public class WalkController {
     public void walkScrap(/* User user, */ @RequestBody WalkModifyRequestDto walkModifyRequestDto) {
         walkService.scrapWalk(/* user, */ walkModifyRequestDto);
     }
+
+
+    @GetMapping("/hadoopRoute")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponse(responseCode = "201", description = "경로 제공")
+    @Operation(summary = "산책 새로운 경로 생성", description = "산책 새로운 경로 생성을 위한 사용자 입력 데이터")
+    public void walkHadoop() {
+        double x = 127.2980536;
+        double y= 36.3491276;
+        walkService.addNewHadoopPath(x,y);
+    }
 }

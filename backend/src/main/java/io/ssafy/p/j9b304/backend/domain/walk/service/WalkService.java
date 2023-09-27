@@ -18,6 +18,9 @@ import io.ssafy.p.j9b304.backend.domain.walk.repository.ThemeRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkSpotRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +45,8 @@ public class WalkService {
         Walk walk = walkAddRequestDto.toEntity(theme);
         Walk walkInit = walkRepository.save(walk);
 //        walk.setUser(user);
+
+
 
         // 산책 스팟 저장
         List<Long> spotIdList = walkAddRequestDto.getSpotList();
@@ -207,4 +212,29 @@ public class WalkService {
 
         return walk;
     }
+
+    public void addNewHadoopPath(double x, double y) {
+
+        SparkSession spark = SparkSession.builder()
+                .appName("Springtest")
+                .master("spark://172.26.1.113:7077")
+                .getOrCreate();
+        System.out.println("=========================================================");
+        System.out.println(spark);
+
+        String dataFile = "hdfs://localhost:9000/data/CCTV_daejeon.csv";
+        Dataset<Row> df = spark.read().format("csv")
+                .option("header", "true")
+                .option("inferSchema", "true")
+                .load(dataFile);
+
+        df.createOrReplaceTempView("police");
+
+        long rowCount = df.count();
+        System.out.println("police_road_distance의 행 수: " + rowCount);
+
+        spark.stop();
+
+    }
 }
+

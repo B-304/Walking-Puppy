@@ -58,8 +58,16 @@ dependencies {
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.14.0'
 
 	//hadoop
-	implementation 'org.apache.hadoop:hadoop-common:3.3.0'
-	implementation 'org.apache.hadoop:hadoop-hdfs:3.3.0'
+//	implementation 'org.apache.hadoop:hadoop-common:3.3.0'
+//	implementation 'org.apache.hadoop:hadoop-hdfs:3.3.0'
+
+
+    // https://mvnrepository.com/artifact/org.apache.spark/spark-core
+    implementation group: 'org.apache.spark', name: 'spark-core_2.13', version: '3.4.1'
+
+    // https://mvnrepository.com/artifact/org.apache.spark/spark-sql
+    compileOnly group: 'org.apache.spark', name: 'spark-sql_2.13', version: '3.4.1'
+
 }
 
 tasks.named('test') {
