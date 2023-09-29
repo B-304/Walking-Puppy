@@ -4,10 +4,7 @@ import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkExistPathAddRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetDetailResponseDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetListResponseDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkInitialInfoResponseDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkSaveResponseDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.response.*;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
 import io.ssafy.p.j9b304.backend.domain.walk.service.WalkService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -95,5 +92,13 @@ public class WalkController {
     @Operation(summary = "산책 스크랩", description = "산책 스크랩 (보관함에 저장)")
     public void walkScrap(HttpServletRequest httpServletRequest, @RequestBody WalkModifyRequestDto walkModifyRequestDto) {
         walkService.scrapWalk(httpServletRequest, walkModifyRequestDto);
+    }
+
+    @GetMapping("/today")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "201", description = "오늘의 산책 기록 조회 성공")
+    @Operation(summary = "오늘의 산책 기록 조회")
+    public WalkGetTodayResponseDto walkGetToday(HttpServletRequest httpServletRequest) {
+        return walkService.getWalkToday(httpServletRequest);
     }
 }

@@ -6,10 +6,13 @@ import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtToken;
 import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtTokenProvider;
 import io.ssafy.p.j9b304.backend.domain.security.oAuth.KakaoProfile;
 import io.ssafy.p.j9b304.backend.domain.security.oAuth.OauthToken;
-import io.ssafy.p.j9b304.backend.domain.user.dto.GetResponseDto;
-import io.ssafy.p.j9b304.backend.domain.user.dto.UserModifyRequestDto;
+import io.ssafy.p.j9b304.backend.domain.user.dto.request.UserModifyRequestDto;
+import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetDetailResponseDto;
+import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetWalkDetailResponseDto;
 import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import io.ssafy.p.j9b304.backend.domain.user.repository.UserRepository;
+import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
+import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -27,6 +30,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -35,6 +40,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final BCryptPasswordEncoder encoder;
+    private final WalkRepository walkRepository;
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
@@ -43,11 +49,12 @@ public class UserService {
     private String redirectUri;
 
     @Autowired
-    public UserService(BCryptPasswordEncoder encoder, UserRepository userRepository, AuthenticationManagerBuilder authenticationManagerBuilder, JwtTokenProvider jwtTokenProvider) {
+    public UserService(BCryptPasswordEncoder encoder, UserRepository userRepository, AuthenticationManagerBuilder authenticationManagerBuilder, JwtTokenProvider jwtTokenProvider, WalkRepository walkRepository) {
         this.encoder = encoder;
         this.userRepository = userRepository;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.walkRepository = walkRepository;
     }
 
     public OauthToken getAccessToken(String code) {
@@ -170,7 +177,7 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    public GetResponseDto getUserDetail(Long userId) {
+    public UserGetDetailResponseDto getUserDetail(Long userId) {
         User existUser = findUser(userId);
 
         checkUser(userId, existUser.getUserId());
@@ -196,5 +203,13 @@ public class UserService {
     public void checkUser(Long userId, Long originalUserId) {
         if (!userId.equals(originalUserId))
             throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
+    }
+
+    public List<UserGetWalkDetailResponseDto> getUserWalkList(HttpServletRequest httpServletRequest) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+
+        List<Walk> walkList = walkRepository.findByUserAndState(walker, '1');
+
+        return walkList.stream().map(Walk::toUserGetWalkDetailResponseDto).collect(Collectors.toList());
     }
 }
