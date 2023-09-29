@@ -9,6 +9,7 @@ import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkExistPathAddRequest
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetDetailResponseDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetTodayResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkInitialInfoResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkSaveResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Route;
@@ -230,5 +231,28 @@ public class WalkService {
         walk.scrap(walkModifyRequestDto.getName());
 
         return walk;
+    }
+
+    public WalkGetTodayResponseDto getWalkToday(HttpServletRequest httpServletRequest) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+
+        List<Walk> walks = walkRepository.findByUser(walker);
+
+        int walkCount = 0;
+        float walkDistance = 0;
+        short walkCalorie = 0;
+
+        for (Walk w : walks) {
+            walkCount += w.getWalkCount();
+            walkDistance += w.getDistance();
+            walkCalorie += w.getCalorie();
+        }
+
+
+        return WalkGetTodayResponseDto.builder()
+                .walkCount(walkCount)
+                .distance(walkDistance)
+                .calorie(walkCalorie)
+                .build();
     }
 }

@@ -135,7 +135,6 @@ public class JwtTokenProvider {
     }
 
     public User extractUserFromToken(HttpServletRequest httpServletRequest) {
-        System.out.println(httpServletRequest + "===========토큰 출력================");
         String bearerToken = httpServletRequest.getHeader("Authorization");
 
         String token = bearerToken.substring(7);

@@ -1,7 +1,7 @@
 package io.ssafy.p.j9b304.backend.domain.user.entity;
 
-import io.ssafy.p.j9b304.backend.domain.user.dto.GetResponseDto;
-import io.ssafy.p.j9b304.backend.domain.user.dto.UserModifyRequestDto;
+import io.ssafy.p.j9b304.backend.domain.user.dto.request.UserModifyRequestDto;
+import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetDetailResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,7 +43,7 @@ public class User {
     private String nickname;
 
     @Column(name = "walk_count")
-    private int walkCount;
+    private Integer walkCount;
 
     @Column(name = "email")
     private String email;
@@ -51,7 +51,7 @@ public class User {
     // todo : 강아지
 
     @Builder
-    public User(Long userId, Long kakaoId, boolean state, LocalDateTime createdAt, LocalDateTime expiredAt, String nickname, int walkCount, String email) {
+    public User(Long userId, Long kakaoId, boolean state, LocalDateTime createdAt, LocalDateTime expiredAt, String nickname, Integer walkCount, String email) {
         this.userId = userId;
         this.kakaoId = kakaoId;
         this.state = state;
@@ -62,8 +62,8 @@ public class User {
         this.email = email;
     }
 
-    public GetResponseDto toDto() {
-        return GetResponseDto.builder()
+    public UserGetDetailResponseDto toDto() {
+        return UserGetDetailResponseDto.builder()
                 .nickname(nickname)
                 .walkCount(walkCount)
                 .build();
