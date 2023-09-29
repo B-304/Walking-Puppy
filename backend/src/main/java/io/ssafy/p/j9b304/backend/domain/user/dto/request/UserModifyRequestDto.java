@@ -1,4 +1,4 @@
-package io.ssafy.p.j9b304.backend.domain.user.dto;
+package io.ssafy.p.j9b304.backend.domain.user.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
