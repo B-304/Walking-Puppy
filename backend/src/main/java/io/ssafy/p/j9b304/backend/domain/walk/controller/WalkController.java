@@ -10,16 +10,19 @@ import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkInitialInfoRespons
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkSaveResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
 import io.ssafy.p.j9b304.backend.domain.walk.service.WalkService;
+import io.ssafy.p.j9b304.backend.global.entity.File;
+import io.ssafy.p.j9b304.backend.global.repository.FileRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 @Tag(name = "산책", description = "산책 API 문서")
 public class WalkController {
     private final WalkService walkService;
+    private final FileRepository fileRepository;
 
     @PostMapping("/new-path")
     @ResponseStatus(HttpStatus.CREATED)
@@ -51,9 +55,20 @@ public class WalkController {
     public List<WalkGetListResponseDto> walkGetList(HttpServletRequest httpServletRequest) {
         List<Walk> walkList = walkService.getWalkList(httpServletRequest);
 
-        return walkList.stream()
-                .map(w -> new WalkGetListResponseDto(w))
-                .collect(Collectors.toList());
+        List<WalkGetListResponseDto> walkGetListResponseDtos = new ArrayList<>();
+        for (Walk walk : walkList) {
+            WalkGetListResponseDto dto = new WalkGetListResponseDto(walk);
+            if (walk.getImageId() != null) {
+                File file = fileRepository.findById(walk.getImageId())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 파일이 없습니다."));
+                dto.setImageUrl(file.getUrl());
+            }
+            walkGetListResponseDtos.add(dto);
+        }
+//        return walkList.stream()
+//                .map(w -> new WalkGetListResponseDto(w))
+//                .collect(Collectors.toList());
+        return walkGetListResponseDtos;
     }
 
     @GetMapping("/{walkId}")
@@ -93,7 +108,7 @@ public class WalkController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "산책 스크랩 성공")
     @Operation(summary = "산책 스크랩", description = "산책 스크랩 (보관함에 저장)")
-    public void walkScrap(HttpServletRequest httpServletRequest, @RequestBody WalkModifyRequestDto walkModifyRequestDto) {
-        walkService.scrapWalk(httpServletRequest, walkModifyRequestDto);
+    public void walkScrap(HttpServletRequest httpServletRequest, @RequestPart WalkModifyRequestDto walkModifyRequestDto, @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+        walkService.scrapWalk(httpServletRequest, walkModifyRequestDto, multipartFile);
     }
 }
