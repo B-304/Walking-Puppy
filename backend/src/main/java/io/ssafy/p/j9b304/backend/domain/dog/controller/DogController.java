@@ -24,8 +24,8 @@ public class DogController {
     public void dogModify(/*User user,*/ @PathVariable Long dogId, @RequestBody DogModifyRequestDto dogModifyRequestDto) {
         User user = User.builder()
                 .state(true)
-                .createAt(LocalDateTime.now())
-                .nickName("testUser")
+                .createdAt(LocalDateTime.now())
+                .nickname("testUser")
                 .email("test@test.com")
                 .build();
 

@@ -73,8 +73,9 @@ public class Walk {
     @Column(name = "calorie")
     private Short calorie;
 
+    @Setter
     @Column(name = "image_id")
-    private Integer imageId;
+    private Long imageId;
 
     @ManyToOne
     @JoinColumn(name = "theme_id")
