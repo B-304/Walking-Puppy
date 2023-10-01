@@ -1,14 +1,12 @@
 package io.ssafy.p.j9b304.backend.domain.walk.controller;
 
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkExistPathAddRequestDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.*;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetDetailResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetListResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkInitialInfoResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkSaveResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
+import io.ssafy.p.j9b304.backend.domain.walk.service.RouteService;
 import io.ssafy.p.j9b304.backend.domain.walk.service.WalkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 @Tag(name = "산책", description = "산책 API 문서")
 public class WalkController {
     private final WalkService walkService;
+    private final RouteService routeService;
 
     @PostMapping("/new-path")
     @ResponseStatus(HttpStatus.CREATED)
@@ -99,13 +99,14 @@ public class WalkController {
     }
 
 
-    @GetMapping("/hadoopRoute")
+    @GetMapping("/testSafeRoot")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "경로 제공")
     @Operation(summary = "산책 새로운 경로 생성", description = "산책 새로운 경로 생성을 위한 사용자 입력 데이터")
-    public void walkHadoop() {
-        double x = 127.2980536;
-        double y= 36.3491276;
-        walkService.addNewHadoopPath(x,y);
+    public List<Point> walkHadoop() {
+        List<Point> safeRoute = routeService.getSafeRoute(127.4015279,36.34488459, 30,2);
+        System.out.println(safeRoute);
+        return safeRoute;
+
     }
 }
