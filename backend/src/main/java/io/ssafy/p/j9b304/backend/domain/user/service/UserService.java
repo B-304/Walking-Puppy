@@ -2,13 +2,15 @@ package io.ssafy.p.j9b304.backend.domain.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.ssafy.p.j9b304.backend.domain.dog.entity.Dog;
+import io.ssafy.p.j9b304.backend.domain.dog.service.DogService;
 import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtToken;
 import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtTokenProvider;
 import io.ssafy.p.j9b304.backend.domain.security.oAuth.KakaoProfile;
 import io.ssafy.p.j9b304.backend.domain.security.oAuth.OauthToken;
 import io.ssafy.p.j9b304.backend.domain.user.dto.request.UserModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetDetailResponseDto;
-import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetWalkDetailResponseDto;
+import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetWalkListResponseDto;
 import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import io.ssafy.p.j9b304.backend.domain.user.repository.UserRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
@@ -42,6 +44,8 @@ public class UserService {
     private final BCryptPasswordEncoder encoder;
     private final WalkRepository walkRepository;
 
+    private final DogService dogService;
+
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
 
@@ -49,12 +53,13 @@ public class UserService {
     private String redirectUri;
 
     @Autowired
-    public UserService(BCryptPasswordEncoder encoder, UserRepository userRepository, AuthenticationManagerBuilder authenticationManagerBuilder, JwtTokenProvider jwtTokenProvider, WalkRepository walkRepository) {
+    public UserService(BCryptPasswordEncoder encoder, UserRepository userRepository, AuthenticationManagerBuilder authenticationManagerBuilder, JwtTokenProvider jwtTokenProvider, WalkRepository walkRepository, DogService dogService) {
         this.encoder = encoder;
         this.userRepository = userRepository;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.walkRepository = walkRepository;
+        this.dogService = dogService;
     }
 
     public OauthToken getAccessToken(String code) {
@@ -100,14 +105,18 @@ public class UserService {
 
 
         if (user == null) {
+            Dog newDog = dogService.addDog();
+
             user = User.builder()
                     .kakaoId(profile.getId())
 //                    .profileImage(profile.getKakao_account().getProfile().getProfile_image_url())
                     .nickname(profile.getKakao_account().getProfile().getNickname())
                     .email(profile.getKakao_account().getEmail())
+                    .dog(newDog)
                     .build();
 
             userRepository.save(user);
+
         }
         return user;
 
@@ -205,11 +214,14 @@ public class UserService {
             throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
     }
 
-    public List<UserGetWalkDetailResponseDto> getUserWalkList(HttpServletRequest httpServletRequest) {
+    public UserGetWalkListResponseDto getUserWalkList(HttpServletRequest httpServletRequest) {
         User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
 
         List<Walk> walkList = walkRepository.findByUserAndState(walker, '1');
 
-        return walkList.stream().map(Walk::toUserGetWalkDetailResponseDto).collect(Collectors.toList());
+        return UserGetWalkListResponseDto.builder()
+                .userWalkList(walkList.stream().map(Walk::toUserGetWalkDetailResponseDto).collect(Collectors.toList()))
+                .walkCount(walker.getWalkCount())
+                .build();
     }
 }
