@@ -21,7 +21,7 @@ public class DogLevel {
     @Column(name = "image_id", nullable = false)
     private Long imageId;
 
-    @Column(name = "level_range", nullable = false)
+    @Column(name = "level_range")
     private int levelRange;
 
     @ManyToOne(fetch = FetchType.LAZY)

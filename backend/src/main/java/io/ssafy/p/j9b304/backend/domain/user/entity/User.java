@@ -1,5 +1,6 @@
 package io.ssafy.p.j9b304.backend.domain.user.entity;
 
+import io.ssafy.p.j9b304.backend.domain.dog.entity.Dog;
 import io.ssafy.p.j9b304.backend.domain.user.dto.request.UserModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetDetailResponseDto;
 import lombok.Builder;
@@ -48,10 +49,11 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    // todo : 강아지
+    @OneToOne(fetch = FetchType.LAZY)
+    private Dog dog;
 
     @Builder
-    public User(Long userId, Long kakaoId, boolean state, LocalDateTime createdAt, LocalDateTime expiredAt, String nickname, Integer walkCount, String email) {
+    public User(Long userId, Long kakaoId, boolean state, LocalDateTime createdAt, LocalDateTime expiredAt, String nickname, Integer walkCount, String email, Dog dog) {
         this.userId = userId;
         this.kakaoId = kakaoId;
         this.state = state;
@@ -60,7 +62,9 @@ public class User {
         this.nickname = nickname;
         this.walkCount = walkCount;
         this.email = email;
+        this.dog = dog;
     }
+
 
     public UserGetDetailResponseDto toDto() {
         return UserGetDetailResponseDto.builder()
@@ -83,6 +87,6 @@ public class User {
 
     @PrePersist
     public void prepersist() {
-        this.walkCount = this.walkCount == 0 ? 5000 : this.walkCount;
+        this.walkCount = this.walkCount == null ? 5000 : this.walkCount;
     }
 }
