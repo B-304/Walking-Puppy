@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-//    private final CorsConfig corsConfig;
+    private final CorsConfig corsConfig;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -35,10 +35,11 @@ public class SecurityConfig {
                 .and()
                 .formLogin().disable()
                 .httpBasic().disable()
-//                .addFilter(corsConfig.corsFilter())
+                .addFilter(corsConfig.corsFilter())
                 .authorizeRequests()
-                .antMatchers("/public/**").permitAll()
-                .antMatchers("/oauth/kakao/**").permitAll()
+                .antMatchers("/**").permitAll()
+//                .antMatchers("/public/**").permitAll()
+//                .antMatchers("/oauth/kakao/**").permitAll()
 //                .anyRequest().authenticated()
                 // .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()

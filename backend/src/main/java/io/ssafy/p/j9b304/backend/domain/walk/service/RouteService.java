@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -26,7 +27,7 @@ public class RouteService {
         double r = (estimatedTime*80.0)/1000;
 
         //현재 점에서 반경 r의 시작점을 가진 모든 간선을 가져온다.
-        List<Path> safePaths = safePathRepository.findSafePathsInRadius(nowX, nowY, r, type);
+        List<Path> safePaths = safePathRepository.findSafePathsInRadius(nowX, nowY, r*0.8, type);
 
         System.out.println(safePaths.size());
 //        for(Path tmp: safePaths){
@@ -79,7 +80,7 @@ public class RouteService {
         DijkstraResult startResult = pathFromTargetToStart.getDestination();
         if(startResult==null) {
             System.out.println("시작점으로 되돌아 오는 경로 없음");
-            //return null;
+//            return null;
 
             Point closestEnd = findClosestKey(reverseShortestPaths, closestStart.getX(), closestStart.getY());
              pathFromTargetToStart=findPathToStart(reverseShortestPaths ,closestEnd);
@@ -87,7 +88,6 @@ public class RouteService {
             startResult = pathFromTargetToStart.getDestination();
 
         }
-
 
 
         List<Point> combinedPath = new ArrayList<>();

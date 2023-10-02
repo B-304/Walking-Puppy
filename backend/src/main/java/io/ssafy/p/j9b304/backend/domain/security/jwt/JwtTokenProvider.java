@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -38,25 +39,19 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secretByteKey);
     }
 
-    public JwtToken generateToken(User user) {
+    public JwtToken generateToken(Authentication authentication) {
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user.getEmail(), null);
-
-        Authentication authentication = authenticate(authenticationToken);
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
 
-        Claims claims = Jwts.claims().setSubject(String.valueOf(user.getUserId()));
+        Claims claims = Jwts.claims().setSubject(String.valueOf(authentication.getCredentials()));
         Date now = new Date();
 
         //Access Token 생성
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .setClaims(claims)
-                .setIssuedAt(now)
                 .claim("auth", authorities)
                 .claim("type", "ACCESS")
                 .claim("userId", authentication.getCredentials())
@@ -68,8 +63,6 @@ public class JwtTokenProvider {
         //Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .setClaims(claims)
-                .setIssuedAt(now)
                 .claim("type", "ACCESS")
                 .claim("userId", authentication.getCredentials())
                 .setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 60 * 36))
@@ -83,8 +76,9 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    private Authentication authenticate(UsernamePasswordAuthenticationToken authenticationToken) {
-        User findUser = userRepository.findByEmail(authenticationToken.getName())
+
+    public Authentication authenticate(Authentication authentication) {
+        User findUser = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 사용자가 없습니다."));
 
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -92,7 +86,10 @@ public class JwtTokenProvider {
             throw new RuntimeException("아이디 또는 비밀번호를 확인하세요");
         }
 
-        return new UsernamePasswordAuthenticationToken(authenticationToken.getPrincipal(), findUser.getUserId());
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), findUser.getUserId(), authorities);
     }
 
     public Authentication getAuthentication(String accessToken) {
@@ -102,6 +99,7 @@ public class JwtTokenProvider {
         if (claims.get("auth") == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
+
 
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get("auth").toString().split(","))
@@ -136,11 +134,14 @@ public class JwtTokenProvider {
         }
     }
 
-    public Long extractUserIdFromToken(HttpServletRequest httpServletRequest) {
+    public User extractUserFromToken(HttpServletRequest httpServletRequest) {
         String bearerToken = httpServletRequest.getHeader("Authorization");
+
         String token = bearerToken.substring(7);
 
+        User user = userRepository.findByUserId(Long.parseLong(parseClaims(token).get("userId").toString()))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
-        return Long.parseLong(parseClaims(token).get("userId").toString());
+        return user;
     }
 }
