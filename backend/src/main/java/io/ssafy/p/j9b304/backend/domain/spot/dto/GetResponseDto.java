@@ -14,14 +14,14 @@ public class GetResponseDto {
     private Long spotId;
     private String name;
     @Column(precision = 18, scale = 10)
-    private BigDecimal latitude;
+    private double latitude;
     @Column(precision = 18, scale = 10)
-    private BigDecimal longitude;
+    private double longitude;
     private LocalDateTime createdAt;
     private char open;
 
     @Builder
-    public GetResponseDto(Long spotId, String name, BigDecimal latitude, BigDecimal longitude, LocalDateTime createdAt, char open) {
+    public GetResponseDto(Long spotId, String name, double latitude, double longitude, LocalDateTime createdAt, char open) {
         this.spotId = spotId;
         this.name = name;
         this.latitude = latitude;

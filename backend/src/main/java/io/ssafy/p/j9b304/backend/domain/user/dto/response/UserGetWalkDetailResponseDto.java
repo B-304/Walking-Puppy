@@ -25,16 +25,16 @@ public class UserGetWalkDetailResponseDto {
     private Theme theme;
 
     @Schema(description = "출발지 위도")
-    private BigDecimal startLatitude;
+    private double startLatitude;
 
     @Schema(description = "출발지 경도")
-    private BigDecimal startLongitude;
+    private double startLongitude;
 
     @Schema(description = "도착지 위도")
-    private BigDecimal endLatitude;
+    private double endLatitude;
 
     @Schema(description = "도착지 경도")
-    private BigDecimal endLongitude;
+    private double endLongitude;
 
     @Schema(description = "시작 시간")
     private LocalDateTime startTime;
@@ -43,7 +43,7 @@ public class UserGetWalkDetailResponseDto {
     private LocalDateTime endTime;
 
     @Builder
-    public UserGetWalkDetailResponseDto(Long walkld, long durationTime, Integer walkCount, Theme theme, BigDecimal startLatitude, BigDecimal startLongitude, BigDecimal endLatitude, BigDecimal endLongitude, LocalDateTime startTime, LocalDateTime endTime) {
+    public UserGetWalkDetailResponseDto(Long walkld, long durationTime, Integer walkCount, Theme theme, double startLatitude, double startLongitude, double endLatitude, double endLongitude, LocalDateTime startTime, LocalDateTime endTime) {
         this.walkld = walkld;
         this.durationTime = durationTime;
         this.walkCount = walkCount;

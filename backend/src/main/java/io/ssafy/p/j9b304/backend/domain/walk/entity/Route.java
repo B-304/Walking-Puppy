@@ -28,10 +28,10 @@ public class Route {
 
     // decimal(18,10)
     @Column(name = "latitude", precision = 18, scale = 10)
-    private BigDecimal latitude;
+    private double latitude;
 
     @Column(name = "longitude", precision = 18, scale = 10)
-    private BigDecimal longitude;
+    private double longitude;
 
     @ManyToOne
     @JoinColumn(name = "walk_id")

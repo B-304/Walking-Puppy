@@ -14,10 +14,10 @@ public class RouteGetResponseDto {
     Integer sequence;
 
     @Schema(description = "위도")
-    BigDecimal latitude;
+    double latitude;
 
     @Schema(description = "경도")
-    BigDecimal longitude;
+    double longitude;
 
     public RouteGetResponseDto(Route route) {
         this.sequence = route.getSequence();

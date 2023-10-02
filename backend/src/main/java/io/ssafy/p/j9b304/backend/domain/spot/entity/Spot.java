@@ -35,11 +35,11 @@ public class Spot {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "latitude", precision = 18, scale = 10, nullable = false)
-    private BigDecimal latitude;
+    @Column(name = "latitude", nullable = false)
+    private double latitude;
 
-    @Column(name = "longitude", precision = 18, scale = 10, nullable = false)
-    private BigDecimal longitude;
+    @Column(name = "longitude", nullable = false)
+    private double longitude;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -57,7 +57,7 @@ public class Spot {
     private char open;
 
     @Builder
-    public Spot(Long spotId, User user, String name, BigDecimal latitude, BigDecimal longitude, LocalDateTime createdAt, LocalDateTime deletedAt, char state, char open) {
+    public Spot(Long spotId, User user, String name, double latitude, double longitude, LocalDateTime createdAt, LocalDateTime deletedAt, char state, char open) {
         this.spotId = spotId;
         this.user = user;
         this.name = name;
