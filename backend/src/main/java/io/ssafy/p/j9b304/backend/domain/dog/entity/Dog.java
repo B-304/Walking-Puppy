@@ -56,7 +56,7 @@ public class Dog {
             this.name = dogModifyRequestDto.getName();
     }
 
-    public DogGetResponseDto toResponse(Long daysDifference) {
+    public DogGetResponseDto toResponse(Long daysDifference, int levelRange) {
         return DogGetResponseDto.builder()
                 .dogId(this.dogId)
                 .name(this.name)
@@ -64,6 +64,7 @@ public class Dog {
                 .dogLevel(this.dogLevelId.getLevel())
                 .createdAt(this.createdAt)
                 .dayCount(daysDifference)
+                .levelRange(levelRange)
                 .build();
     }
 }

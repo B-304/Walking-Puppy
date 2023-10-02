@@ -46,8 +46,9 @@ public class DogService {
 //        return dog.toResponse(image.getPath());
 
         Long daysDifference = ChronoUnit.DAYS.between(dog.getCreatedAt(), LocalDateTime.now());
+        int levelRange =  dogLevelRepository.findByDogLevelId(dog.getDogLevelId().getDogLevelId()).getLevelRange();
 
-        return dog.toResponse(daysDifference);
+        return dog.toResponse(daysDifference, levelRange);
     }
 
     @Transactional
