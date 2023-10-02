@@ -57,14 +57,16 @@ public class Walk {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
+    @Setter
     @Column(name = "estimated_time")
     private Integer estimatedTime;
 
+    @Setter
     @Column(name = "estimated_distance")
-    private Float estimatedDistance;
+    private Double estimatedDistance;
 
     @Column(name = "distance")
-    private Float distance;
+    private Double distance;
 
     @Column(name = "walk_count")
     private Integer walkCount;

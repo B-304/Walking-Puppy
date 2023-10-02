@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -22,87 +21,72 @@ public class RouteService {
     private final SafePathRepository safePathRepository;
 
 
-    public List<Point> getSafeRoute(double nowX, double nowY, Integer estimatedTime, Integer type){
+    public Map<String, Object> getRecommendedRoute(double startLongitude, double startLatitude, double endLongitude, double endLatitude, Integer estimatedTime, Long themeType) {
 
-        double r = (estimatedTime*80.0)/1000;
+        Map<String,Object> map = new HashMap<>();
+        List<Point> combinedPath = new ArrayList<>();
+        double totalDistance =0;
 
-        //현재 점에서 반경 r의 시작점을 가진 모든 간선을 가져온다.
-        List<Path> safePaths = safePathRepository.findSafePathsInRadius(nowX, nowY, r*0.8, type);
+        double r = (estimatedTime * 80.0 * 0.6) / 1000;
+        List<Path> safePaths = safePathRepository.findSafePathsInRadius(startLongitude, startLatitude, r * 0.8, themeType.intValue());
 
-        System.out.println(safePaths.size());
-//        for(Path tmp: safePaths){
-//            System.out.println(tmp.getStartX()+", "+tmp.getStartY()+", "+tmp.getEndX()+", "+tmp.getEndY());
-//        }
-
-        //간선정보로 그래프를 생성하낟.
         Map<Point, List<Edge>> graph = convertPathsToGraph(safePaths);
 
-        //출발지와 가장 가까운 시작점
-        Point closestStart = findClosestKey(graph, nowX, nowY);
-        System.out.println("closetSatrt= "+ closestStart);
+        Point closestStart = findClosestKey(graph, startLongitude, startLatitude);
+        System.out.println("closetSatrt= " + closestStart);
 
+        Map<Point, DijkstraResult> shortestPaths = dikjstra(graph, closestStart);
 
-        //모든 점들에 대하여 최소 가중치를 구함
-        Map<Point, DijkstraResult> shortestPaths = dikjstra(graph,closestStart);
-        System.out.println(shortestPaths.size());
-
-        for (Map.Entry<Point, DijkstraResult> entrySet : shortestPaths.entrySet()) {
-            System.out.println(entrySet.getKey() + " : " + entrySet.getValue().getTotalDistance()+", "+entrySet.getValue().getTotalWeight());
-        }
-
-
-        double targetKm = (estimatedTime/2.0*80)/1000; //분속 80m라고 가정함
-        System.out.println("targetkm= "+targetKm);
-
-        //targetKm넘는 경로 중에 가중치가 가장 작은 점과 경로를 반환함
-        PathResult pathFromStartToTarget  = findShortestPathOverTargetKm(shortestPaths, targetKm);
+        double targetKm = (estimatedTime / 2.0 * 80) / 1000; //분속 80m라고 가정함
+        PathResult pathFromStartToTarget = findShortestPathOverTargetKm(shortestPaths, targetKm);
         System.out.println(pathFromStartToTarget);
 
-        //여기서 값이 null이면 해당 출발지에서 시간안에 갈 수 있는 점이 없다는 것
         DijkstraResult targetResult = pathFromStartToTarget.getDestination();
-        if(targetResult==null) {
+        if (targetResult == null) {
             System.out.println("목적지가 없음");
             return null;
         }
-
-        System.out.println("===================리턴 점에 그래프가 있는 지 확인!=============");
-        System.out.println(graph.get(targetResult.getPoint()));
+        totalDistance+=targetResult.getTotalDistance();
 
 
-        Map<Point,DijkstraResult> reverseShortestPaths = dikjstra(graph,targetResult.getPoint());
-        System.out.println("리턴 다익스트라 결과");
-        System.out.println(reverseShortestPaths);
+        Point Closestend = findClosestKey(graph, endLongitude, endLatitude);
+        Map<Point, DijkstraResult> reverseShortestPaths = dikjstra(graph, targetResult.getPoint());
+        PathResult pathFromTargetToStart = findPathToStart(reverseShortestPaths, Closestend);
 
-        PathResult pathFromTargetToStart=findPathToStart(reverseShortestPaths ,closestStart);
-        System.out.println(reverseShortestPaths.get(closestStart));
 
-        //여기서 값이 null이면 시작점으로 되돌아 올 수 있는 경로가 없다는 것
-        DijkstraResult startResult = pathFromTargetToStart.getDestination();
-        if(startResult==null) {
+        //도착지로 되돌아 오는 경로
+        DijkstraResult returnResult = pathFromTargetToStart.getDestination();
+        if (returnResult == null) {
             System.out.println("시작점으로 되돌아 오는 경로 없음");
-//            return null;
 
-            Point closestEnd = findClosestKey(reverseShortestPaths, closestStart.getX(), closestStart.getY());
-             pathFromTargetToStart=findPathToStart(reverseShortestPaths ,closestEnd);
-            System.out.println(reverseShortestPaths.get(closestStart));
-            startResult = pathFromTargetToStart.getDestination();
+            //왔던 길로 되돌아 온다.
+            if (startLongitude == endLongitude && startLatitude == endLatitude) {
+                for (Point p : pathFromStartToTarget.getPath()) {
+                    combinedPath.add(p);
+                }
+                for (int i = pathFromStartToTarget.getPath().size() - 2; i >= 0; i--) {
+                    combinedPath.add(pathFromStartToTarget.getPath().get(i));
 
+                }
+                totalDistance+=targetResult.getTotalDistance();
+
+            } else {
+                return null;
+            }
+        } else {
+            combinedPath.addAll(pathFromStartToTarget.getPath());
+            combinedPath.remove(combinedPath.size() - 1);
+            combinedPath.addAll(pathFromTargetToStart.getPath());
+            totalDistance+=returnResult.getTotalDistance();
         }
 
+        map.put("recommendedRoute", combinedPath);
+        map.put("totalDistance", totalDistance);
 
-        List<Point> combinedPath = new ArrayList<>();
-        System.out.println("=====최종 경로===");
-        System.out.println(pathFromStartToTarget.getPath());
-        System.out.println(pathFromTargetToStart.getPath());
+        Integer totalMinute =  (int)(totalDistance*1000/80);
+        map.put("totalMinute", totalMinute);
 
-        combinedPath.addAll(pathFromStartToTarget.getPath());
-        combinedPath.addAll(pathFromTargetToStart.getPath());
-
-        System.out.println(combinedPath);
-
-        return combinedPath;
-//
-
+        return map;
     }
 
 
@@ -110,7 +94,7 @@ public class RouteService {
 
     private static double calculateHaversineDistance(Point p1, double lon2, double lat2) {
 
-        double dLat  = Math.toRadians((lat2 - p1.getY()));
+        double dLat = Math.toRadians((lat2 - p1.getY()));
         double dLong = Math.toRadians((lon2 - p1.getX()));
 
         lat2 = Math.toRadians(lat2);
@@ -133,19 +117,20 @@ public class RouteService {
         Point closestPoint = null;
 
         for (Point point : graph.keySet()) {
-            Double distance = calculateHaversineDistance(point , nowX , nowY);
-            if(distance < minDistance){
-                minDistance=distance ;
-                closestPoint=point ;
+            Double distance = calculateHaversineDistance(point, nowX, nowY);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestPoint = point;
             }
         }
-        return closestPoint ;
+        return closestPoint;
     }
 
 
     private static Double haversin(double val) {
         return Math.pow(Math.sin(val / 2), 2);
     }
+
     private PathResult findPathToStart(Map<Point, DijkstraResult> shortestPaths, Point source) {
         DijkstraResult sourceResult = shortestPaths.get(source);
 
@@ -159,17 +144,17 @@ public class RouteService {
             return new PathResult(sourceResult, path);
         }
 
-        return new PathResult(null,Collections.emptyList());
+        return new PathResult(null, Collections.emptyList());
     }
 
     private PathResult findShortestPathOverTargetKm(Map<Point, DijkstraResult> shortestPaths, double targetKm) {
         DijkstraResult minWeightOverTargetKm = null;
 
         for (DijkstraResult result : shortestPaths.values()) {
-          //  if (result.getTotalDistance().compareTo(targetKm) >0) {
-            if(result.getTotalDistance() > targetKm){
+            //  if (result.getTotalDistance().compareTo(targetKm) >0) {
+            if (result.getTotalDistance() > targetKm) {
                 if (minWeightOverTargetKm == null || result.getTotalWeight() < minWeightOverTargetKm.getTotalWeight()) {
-                //if (minWeightOverTargetKm == null || result.getTotalWeight().compareTo(minWeightOverTargetKm.getTotalWeight()) < 0) {
+                    //if (minWeightOverTargetKm == null || result.getTotalWeight().compareTo(minWeightOverTargetKm.getTotalWeight()) < 0) {
 
                     minWeightOverTargetKm = result;
                 }
@@ -187,17 +172,17 @@ public class RouteService {
             return new PathResult(minWeightOverTargetKm, path);
         }
 
-        return new PathResult(null,Collections.emptyList());
+        return new PathResult(null, Collections.emptyList());
     }
 
     private Map<Point, DijkstraResult> dikjstra(Map<Point, List<Edge>> graph, Point start) {
 
         //가중치가 작은 것부터 꺼내는 다익스트라
-       PriorityQueue<DijkstraResult> queue = new PriorityQueue<>(Comparator.comparingDouble(DijkstraResult::getTotalWeight));
+        PriorityQueue<DijkstraResult> queue = new PriorityQueue<>(Comparator.comparingDouble(DijkstraResult::getTotalWeight));
 //        PriorityQueue<DijkstraResult> queue = new PriorityQueue<>(Comparator.comparing(DijkstraResult::getTotalWeight));
         Map<Point, DijkstraResult> results = new HashMap<>();
 
-        queue.add(new DijkstraResult(start,0.0, 0.0,null));
+        queue.add(new DijkstraResult(start, 0.0, 0.0, null));
 
         while (!queue.isEmpty()) {
             DijkstraResult current = queue.poll();
@@ -209,7 +194,7 @@ public class RouteService {
                 if (!results.containsKey(edge.getTarget())) {
                     DijkstraResult next = new DijkstraResult(edge.getTarget(),
                             current.getTotalWeight() + edge.getWeight(),
-                            current.getTotalDistance()+ edge.getDistance(),
+                            current.getTotalDistance() + edge.getDistance(),
                             current);
 
                     queue.add(next);
@@ -223,7 +208,7 @@ public class RouteService {
 
     private Map<Point, List<Edge>> convertPathsToGraph(List<Path> paths) {
 
-        Map<Point,List<Edge>> graph = new HashMap<>();
+        Map<Point, List<Edge>> graph = new HashMap<>();
 
         for (Path path : paths) {
             Point startPoint = new Point(path.getStartX(), path.getStartY());
@@ -240,5 +225,4 @@ public class RouteService {
         return graph;
 
     }
-
 }

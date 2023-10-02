@@ -22,7 +22,7 @@ public class WalkGetListResponseDto {
     Integer time;
 
     @Schema(description = "이동 거리(km)")
-    Float distance;
+    Double distance;
 
     @Setter
     @Schema(description = "산책로 지도 이미지")

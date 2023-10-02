@@ -121,14 +121,4 @@ public class WalkController {
     }
 
 
-    @GetMapping("/testSafeRoot")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiResponse(responseCode = "201", description = "경로 제공")
-    @Operation(summary = "산책 새로운 경로 생성", description = "산책 새로운 경로 생성을 위한 사용자 입력 데이터")
-    public List<Point> walkHadoop() {
-        List<Point> safeRoute = routeService.getSafeRoute(127.378548, 36.3523388, 60,1);
-        System.out.println(safeRoute);
-        return safeRoute;
-
-    }
 }
