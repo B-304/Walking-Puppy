@@ -36,9 +36,6 @@ public class Dog {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-//    @OneToOne(mappedBy = "dog")
-//    private User user;
-
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dog_level_id")
@@ -46,12 +43,11 @@ public class Dog {
 
 
     @Builder
-    public Dog(Long dogId, String name, int exp, LocalDateTime createdAt/*, User user */, DogLevel dogLevelId) {
+    public Dog(Long dogId, String name, int exp, LocalDateTime createdAt, DogLevel dogLevelId) {
         this.dogId = dogId;
         this.name = name;
         this.exp = exp;
         this.createdAt = createdAt;
-//        this.user = user;
         this.dogLevelId = dogLevelId;
     }
 

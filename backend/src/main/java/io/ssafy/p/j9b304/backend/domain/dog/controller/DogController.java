@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/dog")
@@ -20,20 +22,13 @@ public class DogController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "강아지 이름 수정 성공")
     @Operation(summary = "강아지 이름 수정")
-    public void dogModify(/*User user,*/ @PathVariable Long dogId, @RequestBody DogModifyRequestDto dogModifyRequestDto) {
-//        User user = User.builder()
-//                .state(true)
-//                .createAt(LocalDateTime.now())
-//                .nickName("testUser")
-//                .email("test@test.com")
-//                .build();
+    public void dogModify(HttpServletRequest httpServletRequest, @PathVariable Long dogId, @RequestBody DogModifyRequestDto dogModifyRequestDto) {
 
-        dogService.modifyDog(/*user,*/ dogId, dogModifyRequestDto);
+        dogService.modifyDog(httpServletRequest, dogId, dogModifyRequestDto);
     }
 
     @GetMapping("/{dogId}")
     @ApiResponse(responseCode = "200", description = "강아지 단건 조회")
-    @Operation(summary = "강아지 단건 조회")
     public DogGetResponseDto dogGet(@PathVariable Long dogId) {
         return dogService.getDog(dogId);
     }

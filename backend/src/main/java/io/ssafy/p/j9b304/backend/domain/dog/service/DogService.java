@@ -8,10 +8,13 @@ import io.ssafy.p.j9b304.backend.domain.dog.entity.Dog;
 import io.ssafy.p.j9b304.backend.domain.dog.entity.DogLevel;
 import io.ssafy.p.j9b304.backend.domain.dog.repository.DogLevelRepository;
 import io.ssafy.p.j9b304.backend.domain.dog.repository.DogRepository;
+import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtTokenProvider;
+import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 @Service
@@ -20,11 +23,12 @@ import java.time.LocalDateTime;
 public class DogService {
     private final DogRepository dogRepository;
     private final DogLevelRepository dogLevelRepository;
-//    private final ImageRepository imageRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public void modifyDog( /*User user,*/ Long dogId, DogModifyRequestDto dogModifyRequestDto) {
-        // todo : 사용자가 유효한지 검증
+    public void modifyDog(HttpServletRequest httpServletRequest, Long dogId, DogModifyRequestDto dogModifyRequestDto) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+
         Dog originaDog = dogRepository.findByDogId(dogId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 강아지가 없습니다."));
 
@@ -32,7 +36,6 @@ public class DogService {
     }
 
     public DogGetResponseDto getDog(Long dogId) {
-        // todo : 사용자가 유효한지 검증
         Dog dog = dogRepository.findByDogId(dogId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 강아지가 없습니다."));
 
