@@ -1,12 +1,15 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
+import axios from 'axios';
 
-const PopularSpot:React.FC = (): JSX.Element => {
+const PopularSpot: React.FC = () => {
   return (
     <View>
-      <Text>PopularSpot</Text>
+      <Text>
+        dqwwqdqwd
+      </Text>
     </View>
-  )
-}
+  )}
 
-export default PopularSpot
+export default PopularSpot;
