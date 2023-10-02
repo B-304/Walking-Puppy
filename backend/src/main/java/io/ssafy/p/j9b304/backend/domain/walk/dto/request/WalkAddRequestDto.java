@@ -13,16 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 public class WalkAddRequestDto {
     @Schema(description = "출발지 위도")
-    BigDecimal startLatitude;
+    double startLatitude;
 
     @Schema(description = "출발지 경도")
-    BigDecimal startLongitude;
+    double startLongitude;
 
     @Schema(description = "도착지 위도")
-    BigDecimal endLatitude;
+    double endLatitude;
 
     @Schema(description = "도착지 경도")
-    BigDecimal endLongitude;
+    double endLongitude;
 
     @Schema(description = "스팟 리스트")
     List<Long> spotList;
