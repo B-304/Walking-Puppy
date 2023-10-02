@@ -4,7 +4,7 @@ import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtToken;
 import io.ssafy.p.j9b304.backend.domain.security.oAuth.OauthToken;
 import io.ssafy.p.j9b304.backend.domain.user.dto.request.UserModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetDetailResponseDto;
-import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetWalkDetailResponseDto;
+import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetWalkListResponseDto;
 import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import io.ssafy.p.j9b304.backend.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @RequestMapping("")
@@ -66,7 +65,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "월별 산책 기록")
     @Operation(summary = "월별 산책 목록 & 상세 조회")
-    public List<UserGetWalkDetailResponseDto> userGetWalkList(HttpServletRequest httpServletRequest) {
+    public UserGetWalkListResponseDto userGetWalkList(HttpServletRequest httpServletRequest) {
         return userService.getUserWalkList(httpServletRequest);
     }
 }
