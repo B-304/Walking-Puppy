@@ -16,9 +16,10 @@ public class DogGetResponseDto {
     private int exp;
     private String imagePath;
     private Long dayCount;
+    private int levelRange;
 
     @Builder
-    public DogGetResponseDto(Long dogId, String name, LocalDateTime createdAt, char dogLevel, int exp, String imagePath, Long dayCount) {
+    public DogGetResponseDto(Long dogId, String name, LocalDateTime createdAt, char dogLevel, int exp, String imagePath, Long dayCount, int levelRange) {
         this.dogId = dogId;
         this.name = name;
         this.createdAt = createdAt;
@@ -26,5 +27,6 @@ public class DogGetResponseDto {
         this.exp = exp;
         this.imagePath = imagePath;
         this.dayCount = dayCount;
+        this.levelRange = levelRange;
     }
 }
