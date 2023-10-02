@@ -1,4 +1,4 @@
-package io.ssafy.p.j9b304.backend.global.config;
+package io.ssafy.p.j9b304.backend.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
