@@ -52,6 +52,7 @@ public class WalkController {
     public List<WalkGetListResponseDto> walkGetList(HttpServletRequest httpServletRequest) {
         List<Walk> walkList = walkService.getWalkList(httpServletRequest);
 
+
         List<WalkGetListResponseDto> walkGetListResponseDtos = new ArrayList<>();
         for (Walk walk : walkList) {
             WalkGetListResponseDto dto = new WalkGetListResponseDto(walk);
@@ -62,6 +63,8 @@ public class WalkController {
             }
             walkGetListResponseDtos.add(dto);
         }
+
+
 //        return walkList.stream()
 //                .map(w -> new WalkGetListResponseDto(w))
 //                .collect(Collectors.toList());
@@ -105,8 +108,8 @@ public class WalkController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "산책 스크랩 성공")
     @Operation(summary = "산책 스크랩", description = "산책 스크랩 (보관함에 저장)")
-    public void walkScrap(HttpServletRequest httpServletRequest, @RequestPart WalkModifyRequestDto walkModifyRequestDto, @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
-        walkService.scrapWalk(httpServletRequest, walkModifyRequestDto, multipartFile);
+    public void walkScrap(HttpServletRequest httpServletRequest, @RequestBody WalkModifyRequestDto walkModifyRequestDto, @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+        walkService.scrapWalk(httpServletRequest, walkModifyRequestDto, multipartFile );
     }
 
     @GetMapping("/today")

@@ -5,6 +5,7 @@ import io.ssafy.p.j9b304.backend.domain.dog.dto.DogModifyRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.util.StringUtils;
@@ -26,6 +27,7 @@ public class Dog {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Setter
     @ColumnDefault("0")
     @Column(name = "exp", nullable = false)
     private int exp;
@@ -34,21 +36,18 @@ public class Dog {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-//    @OneToOne(mappedBy = "dog")
-//    private User user;
-
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dog_level_id")
     private DogLevel dogLevelId;
 
 
     @Builder
-    public Dog(Long dogId, String name, int exp, LocalDateTime createdAt/*, User user */, DogLevel dogLevelId) {
+    public Dog(Long dogId, String name, int exp, LocalDateTime createdAt, DogLevel dogLevelId) {
         this.dogId = dogId;
         this.name = name;
         this.exp = exp;
         this.createdAt = createdAt;
-//        this.user = user;
         this.dogLevelId = dogLevelId;
     }
 
@@ -57,12 +56,15 @@ public class Dog {
             this.name = dogModifyRequestDto.getName();
     }
 
-    public DogGetResponseDto toResponse() {
+    public DogGetResponseDto toResponse(Long daysDifference, int levelRange) {
         return DogGetResponseDto.builder()
                 .dogId(this.dogId)
                 .name(this.name)
                 .exp(this.exp)
+                .dogLevel(this.dogLevelId.getLevel())
                 .createdAt(this.createdAt)
+                .dayCount(daysDifference)
+                .levelRange(levelRange)
                 .build();
     }
 }
