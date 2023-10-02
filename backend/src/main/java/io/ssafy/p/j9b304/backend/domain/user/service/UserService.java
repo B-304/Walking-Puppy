@@ -10,7 +10,7 @@ import io.ssafy.p.j9b304.backend.domain.security.oAuth.KakaoProfile;
 import io.ssafy.p.j9b304.backend.domain.security.oAuth.OauthToken;
 import io.ssafy.p.j9b304.backend.domain.user.dto.request.UserModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetDetailResponseDto;
-import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetWalkDetailResponseDto;
+import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetWalkListResponseDto;
 import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import io.ssafy.p.j9b304.backend.domain.user.repository.UserRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
@@ -214,11 +214,14 @@ public class UserService {
             throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
     }
 
-    public List<UserGetWalkDetailResponseDto> getUserWalkList(HttpServletRequest httpServletRequest) {
+    public UserGetWalkListResponseDto getUserWalkList(HttpServletRequest httpServletRequest) {
         User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
 
         List<Walk> walkList = walkRepository.findByUserAndState(walker, '1');
 
-        return walkList.stream().map(Walk::toUserGetWalkDetailResponseDto).collect(Collectors.toList());
+        return UserGetWalkListResponseDto.builder()
+                .userWalkList(walkList.stream().map(Walk::toUserGetWalkDetailResponseDto).collect(Collectors.toList()))
+                .walkCount(walker.getWalkCount())
+                .build();
     }
 }
