@@ -21,9 +21,12 @@ import io.ssafy.p.j9b304.backend.domain.walk.repository.RouteRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.ThemeRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkSpotRepository;
+import io.ssafy.p.j9b304.backend.global.entity.File;
+import io.ssafy.p.j9b304.backend.global.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -41,6 +44,7 @@ public class WalkService {
     private final WalkSpotRepository walkSpotRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final DogService dogService;
+    private final FileService fileService;
 
     public WalkInitialInfoResponseDto addWalkNewPath(HttpServletRequest httpServletRequest, WalkAddRequestDto walkAddRequestDto) {
         Theme theme = themeRepository.findById(walkAddRequestDto.getThemeId())
@@ -217,7 +221,7 @@ public class WalkService {
                 .build();
     }
 
-    public Walk scrapWalk(HttpServletRequest httpServletRequest, WalkModifyRequestDto walkModifyRequestDto) {
+    public Walk scrapWalk(HttpServletRequest httpServletRequest, WalkModifyRequestDto walkModifyRequestDto, MultipartFile multipartFile) {
         User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
 
         Walk walk = walkRepository.findById(walkModifyRequestDto.getWalkId())
@@ -230,6 +234,11 @@ public class WalkService {
             throw new IllegalArgumentException("아직 완료되지 않은 산책입니다.");
         } else if (walk.getState() == '2') {
             throw new IllegalArgumentException("이미 스크랩 된 산책입니다.");
+        }
+
+        if (multipartFile != null) {
+            File file = fileService.addFile(multipartFile);
+            walk.setImageId(file.getFileId());
         }
 
         walk.scrap(walkModifyRequestDto.getName());
