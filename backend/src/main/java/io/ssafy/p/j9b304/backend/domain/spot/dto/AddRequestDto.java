@@ -16,10 +16,10 @@ public class AddRequestDto {
     private String name;
 
     @NotNull(message = "위도를 입력해주세요.")
-    private BigDecimal latitude;
+    private double latitude;
 
     @NotNull(message = "경도를 입력해주세요.")
-    private BigDecimal longitude;
+    private double longitude;
 
     private char open;
 

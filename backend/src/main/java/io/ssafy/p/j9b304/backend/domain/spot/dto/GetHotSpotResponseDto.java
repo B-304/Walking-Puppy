@@ -11,11 +11,11 @@ import java.math.BigDecimal;
 public class GetHotSpotResponseDto {
     private Long spotId;
     private String name;
-    private BigDecimal latitude;
-    private BigDecimal longitude;
+    private double latitude;
+    private double longitude;
 
     @Builder
-    public GetHotSpotResponseDto(Long spotId, String name, BigDecimal latitude, BigDecimal longitude) {
+    public GetHotSpotResponseDto(Long spotId, String name, double latitude, double longitude) {
         this.spotId = spotId;
         this.name = name;
         this.latitude = latitude;
