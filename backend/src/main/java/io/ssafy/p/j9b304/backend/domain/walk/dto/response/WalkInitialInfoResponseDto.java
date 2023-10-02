@@ -23,7 +23,7 @@ public class WalkInitialInfoResponseDto {
     Integer estimatedTime;
 
     @Schema(description = "예상 이동 거리(km)")
-    Float estimatedDistance;
+    Double estimatedDistance;
 
     @Schema(description = "테마명")
     String themeName;
