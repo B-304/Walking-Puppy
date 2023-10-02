@@ -1,12 +1,15 @@
 package io.ssafy.p.j9b304.backend.domain.walk.service;
 
+import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtTokenProvider;
 import io.ssafy.p.j9b304.backend.domain.spot.entity.Spot;
 import io.ssafy.p.j9b304.backend.domain.spot.repository.SpotRepository;
+import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkExistPathAddRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetDetailResponseDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetTodayResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkInitialInfoResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkSaveResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Route;
@@ -17,13 +20,14 @@ import io.ssafy.p.j9b304.backend.domain.walk.repository.RouteRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.ThemeRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkSpotRepository;
+import io.ssafy.p.j9b304.backend.global.entity.File;
+import io.ssafy.p.j9b304.backend.global.service.FileService;
 import lombok.RequiredArgsConstructor;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,16 +41,21 @@ public class WalkService {
     private final RouteRepository routeRepository;
     private final SpotRepository spotRepository;
     private final WalkSpotRepository walkSpotRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final FileService fileService;
+    private final RouteService routeService;
 
-    public WalkInitialInfoResponseDto addWalkNewPath(/* User user, */ WalkAddRequestDto walkAddRequestDto) {
+    public WalkInitialInfoResponseDto addWalkNewPath(HttpServletRequest httpServletRequest, WalkAddRequestDto walkAddRequestDto) {
         Theme theme = themeRepository.findById(walkAddRequestDto.getThemeId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 테마가 없습니다."));
 
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+
         Walk walk = walkAddRequestDto.toEntity(theme);
+        walk.setUser(walker);
+
         Walk walkInit = walkRepository.save(walk);
 //        walk.setUser(user);
-
-
 
         // 산책 스팟 저장
         List<Long> spotIdList = walkAddRequestDto.getSpotList();
@@ -57,6 +66,9 @@ public class WalkService {
         }
 
         // todo 추천 경로 생성 로직 추가
+//        routeService.getSafeRoute(walkAddRequestDto.getStartLongitude(),walkAddRequestDto.getStartLatitude(),
+//                walkAddRequestDto.getEndLongitude(),walkAddRequestDto.getEndLatitude(),
+//                walkAddRequestDto.getEstimatedTime(),  walkAddRequestDto.getEstimatedTime() );
         // todo DB에 간식 스팟 추가
 
         List<Route> routeList = routeRepository.findByWalkAndState(walkInit, '0');
@@ -79,12 +91,14 @@ public class WalkService {
                 .build();
     }
 
-    public WalkInitialInfoResponseDto addWalkExistPath(WalkExistPathAddRequestDto walkExistPathAddRequestDto) {
-        // todo user와 산책을 저장한 사용자가 같은지 확인
-        Walk walkScrap = walkRepository.findById(walkExistPathAddRequestDto.getWalkId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
+    public WalkInitialInfoResponseDto addWalkExistPath(HttpServletRequest httpServletRequest, WalkExistPathAddRequestDto walkExistPathAddRequestDto) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+
+        Walk walkScrap = walkRepository.findByWalkIdAndUser(walkExistPathAddRequestDto.getWalkId(), walker)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 선택한 산책과 일치하는 산책이 없습니다."));
 
         Walk walk = new Walk();
+        walk.setUser(walker);
 
         List<Route> routeList = routeRepository.findByWalkAndState(walkScrap, '1');
         if (routeList.isEmpty()) {
@@ -123,15 +137,16 @@ public class WalkService {
                 .build();
     }
 
-    public List<Walk> getWalkList(/* User user, */) {
-        // todo user id에 해당하는 산책 리스트만 가져오기
-        return walkRepository.findByState('2');
+    public List<Walk> getWalkList(HttpServletRequest httpServletRequest) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+        return walkRepository.findByUserAndState(walker, '2');
     }
 
-    public WalkGetDetailResponseDto getWalkDetail(/* User user, */Long walkId) {
-        // todo user와 산책을 저장한 사용자가 같은지 확인
-        Walk walk = walkRepository.findById(walkId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
+    public WalkGetDetailResponseDto getWalkDetail(HttpServletRequest httpServletRequest, Long walkId) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+
+        Walk walk = walkRepository.findByWalkIdAndUser(walkId, walker)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 선택한 산책과 일치하는 산책이 없습니다."));
 
         List<Route> routeList = routeRepository.findByWalkAndState(walk, '1');
         List<WalkSpot> walkSpotList = walkSpotRepository.findByWalk(walk);
@@ -149,29 +164,39 @@ public class WalkService {
                 .build();
     }
 
-    public Walk modifyWalk(WalkModifyRequestDto walkModifyRequestDto) {
-        // todo user와 산책을 저장한 사용자가 같은지 확인
+    public Walk modifyWalk(HttpServletRequest httpServletRequest, WalkModifyRequestDto walkModifyRequestDto) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+
         Walk walk = walkRepository.findById(walkModifyRequestDto.getWalkId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
+
+        if (walker.getUserId() != walk.getUser().getUserId())
+            throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
+
         walk.setName(walkModifyRequestDto.getName());
 
         return walk;
     }
 
-    public Walk removeWalk(/* User user, */Long walkId) {
+    public Walk removeWalk(HttpServletRequest httpServletRequest, Long walkId) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
 
         Walk walk = walkRepository.findById(walkId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
 
-        // todo user와 산책을 저장한 사용자가 같은지 확인
+        if (walker.getUserId() != walk.getUser().getUserId())
+            throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
+
         walk.removeScrap();
 
         return walk;
     }
 
 
-    public WalkSaveResponseDto saveWalk(WalkSaveRequestDto walkSaveRequestDto) {
-        Walk walk = walkRepository.findById(walkSaveRequestDto.getWalkId())
+    public WalkSaveResponseDto saveWalk(HttpServletRequest httpServletRequest, WalkSaveRequestDto walkSaveRequestDto) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+
+        Walk walk = walkRepository.findByWalkIdAndUser(walkSaveRequestDto.getWalkId(), walker)
                 .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
 
         walk.walkOver(walkSaveRequestDto);
@@ -197,8 +222,9 @@ public class WalkService {
                 .build();
     }
 
-    public Walk scrapWalk(WalkModifyRequestDto walkModifyRequestDto) {
-        // todo user와 산책을 저장한 사용자가 같은지 확인
+    public Walk scrapWalk(HttpServletRequest httpServletRequest, WalkModifyRequestDto walkModifyRequestDto, MultipartFile multipartFile) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+
         Walk walk = walkRepository.findById(walkModifyRequestDto.getWalkId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
 
@@ -208,33 +234,36 @@ public class WalkService {
             throw new IllegalArgumentException("이미 스크랩 된 산책입니다.");
         }
 
+        if (multipartFile != null) {
+            File file = fileService.addFile(multipartFile);
+            walk.setImageId(file.getFileId());
+        }
+
         walk.scrap(walkModifyRequestDto.getName());
 
         return walk;
     }
 
-    public void addNewHadoopPath(double x, double y) {
+    public WalkGetTodayResponseDto getWalkToday(HttpServletRequest httpServletRequest) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
 
-        SparkSession spark = SparkSession.builder()
-                .appName("Springtest")
-                .master("spark://172.26.1.113:7077")
-                .getOrCreate();
-        System.out.println("=========================================================");
-        System.out.println(spark);
+        List<Walk> walks = walkRepository.findByUser(walker);
 
-        String dataFile = "hdfs://localhost:9000/data/CCTV_daejeon.csv";
-        Dataset<Row> df = spark.read().format("csv")
-                .option("header", "true")
-                .option("inferSchema", "true")
-                .load(dataFile);
+        int walkCount = 0;
+        float walkDistance = 0;
+        short walkCalorie = 0;
 
-        df.createOrReplaceTempView("police");
+        for (Walk w : walks) {
+            walkCount += w.getWalkCount();
+            walkDistance += w.getDistance();
+            walkCalorie += w.getCalorie();
+        }
 
-        long rowCount = df.count();
-        System.out.println("police_road_distance의 행 수: " + rowCount);
 
-        spark.stop();
-
+        return WalkGetTodayResponseDto.builder()
+                .walkCount(walkCount)
+                .distance(walkDistance)
+                .calorie(walkCalorie)
+                .build();
     }
 }
-

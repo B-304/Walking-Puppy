@@ -1,5 +1,7 @@
 package io.ssafy.p.j9b304.backend.domain.walk.entity;
 
+import io.ssafy.p.j9b304.backend.domain.user.dto.response.UserGetWalkDetailResponseDto;
+import io.ssafy.p.j9b304.backend.domain.user.entity.User;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -70,12 +73,18 @@ public class Walk {
     @Column(name = "calorie")
     private Short calorie;
 
+    @Setter
     @Column(name = "image_id")
-    private Integer imageId;
+    private Long imageId;
 
     @ManyToOne
     @JoinColumn(name = "theme_id")
     private Theme theme;
+
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @PrePersist
     public void prePersist() {
@@ -114,5 +123,20 @@ public class Walk {
         this.startLongitude = start.getLongitude();
         this.endLatitude = end.getLatitude();
         this.endLongitude = end.getLongitude();
+    }
+
+    public UserGetWalkDetailResponseDto toUserGetWalkDetailResponseDto() {
+        return UserGetWalkDetailResponseDto.builder()
+                .walkld(walkId)
+                .durationTime(Duration.between(startTime, endTime).getSeconds() / 60)
+                .walkCount(walkCount)
+                .theme(theme)
+                .startTime(startTime)
+                .endTime(endTime)
+                .startLatitude(startLatitude)
+                .startLongitude(startLongitude)
+                .endLatitude(endLatitude)
+                .endLongitude(endLongitude)
+                .build();
     }
 }
