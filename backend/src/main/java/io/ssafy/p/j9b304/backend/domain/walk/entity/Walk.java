@@ -38,17 +38,17 @@ public class Walk {
     private Character state;
 
     // decimal(18,10)
-    @Column(name = "start_latitude", precision = 18, scale = 10)
-    private BigDecimal startLatitude;
+    @Column(name = "start_latitude")
+    private double startLatitude;
 
-    @Column(name = "start_longitude", precision = 18, scale = 10)
-    private BigDecimal startLongitude;
+    @Column(name = "start_longitude")
+    private double startLongitude;
 
-    @Column(name = "end_latitude", precision = 18, scale = 10)
-    private BigDecimal endLatitude;
+    @Column(name = "end_latitude")
+    private double endLatitude;
 
-    @Column(name = "end_longitude", precision = 18, scale = 10)
-    private BigDecimal endLongitude;
+    @Column(name = "end_longitude")
+    private double endLongitude;
 
     @CreatedDate
     @Column(name = "start_time")

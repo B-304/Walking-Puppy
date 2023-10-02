@@ -1,5 +1,6 @@
 package io.ssafy.p.j9b304.backend.domain.walk.service;
 
+import io.ssafy.p.j9b304.backend.domain.dog.service.DogService;
 import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtTokenProvider;
 import io.ssafy.p.j9b304.backend.domain.spot.entity.Spot;
 import io.ssafy.p.j9b304.backend.domain.spot.repository.SpotRepository;
@@ -42,6 +43,7 @@ public class WalkService {
     private final SpotRepository spotRepository;
     private final WalkSpotRepository walkSpotRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final DogService dogService;
     private final FileService fileService;
     private final RouteService routeService;
 
@@ -139,7 +141,7 @@ public class WalkService {
 
     public List<Walk> getWalkList(HttpServletRequest httpServletRequest) {
         User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
-        return walkRepository.findByUserAndState(walker, '2');
+        return walkRepository.findByUserAndState(walker, '1');
     }
 
     public WalkGetDetailResponseDto getWalkDetail(HttpServletRequest httpServletRequest, Long walkId) {
@@ -214,6 +216,8 @@ public class WalkService {
         }
 
         // todo 강아지 경험치 증가
+        dogService.dogLevelUpCheck(walker.getDog().getDogId(), exp);
+
         return WalkSaveResponseDto.builder()
                 .walk(walk)
                 .routeList(addedRoute)
