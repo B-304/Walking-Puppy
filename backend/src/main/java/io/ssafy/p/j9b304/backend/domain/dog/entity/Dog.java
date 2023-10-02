@@ -56,12 +56,14 @@ public class Dog {
             this.name = dogModifyRequestDto.getName();
     }
 
-    public DogGetResponseDto toResponse() {
+    public DogGetResponseDto toResponse(Long daysDifference) {
         return DogGetResponseDto.builder()
                 .dogId(this.dogId)
                 .name(this.name)
                 .exp(this.exp)
+                .dogLevel(this.dogLevelId.getLevel())
                 .createdAt(this.createdAt)
+                .dayCount(daysDifference)
                 .build();
     }
 }

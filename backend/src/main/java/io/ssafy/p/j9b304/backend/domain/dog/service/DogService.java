@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +44,10 @@ public class DogService {
 //                .orElseThrow(() -> new IllegalArgumentException("해당 이미지가 없습니다."));
 
 //        return dog.toResponse(image.getPath());
-        return dog.toResponse();
+
+        Long daysDifference = ChronoUnit.DAYS.between(dog.getCreatedAt(), LocalDateTime.now());
+
+        return dog.toResponse(daysDifference);
     }
 
     @Transactional
