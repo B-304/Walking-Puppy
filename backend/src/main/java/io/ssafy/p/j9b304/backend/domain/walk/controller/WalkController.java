@@ -1,11 +1,9 @@
 package io.ssafy.p.j9b304.backend.domain.walk.controller;
 
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkExistPathAddRequestDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.*;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.*;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
+import io.ssafy.p.j9b304.backend.domain.walk.service.RouteService;
 import io.ssafy.p.j9b304.backend.domain.walk.service.WalkService;
 import io.ssafy.p.j9b304.backend.global.entity.File;
 import io.ssafy.p.j9b304.backend.global.repository.FileRepository;
@@ -28,6 +26,7 @@ import java.util.stream.Collectors;
 @Tag(name = "산책", description = "산책 API 문서")
 public class WalkController {
     private final WalkService walkService;
+    private final RouteService routeService;
     private final FileRepository fileRepository;
 
     @PostMapping("/new-path")
@@ -120,4 +119,6 @@ public class WalkController {
     public WalkGetTodayResponseDto walkGetToday(HttpServletRequest httpServletRequest) {
         return walkService.getWalkToday(httpServletRequest);
     }
+
+
 }
