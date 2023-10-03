@@ -13,7 +13,7 @@ public class WalkSaveRequestDto {
     Long walkId;
 
     @Schema(description = "실제 이동거리")
-    Float distance;
+    Double distance;
 
     @Schema(description = "걸음 수")
     Integer walkCount;
