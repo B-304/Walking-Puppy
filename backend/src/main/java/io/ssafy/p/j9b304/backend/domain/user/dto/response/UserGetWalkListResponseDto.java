@@ -9,12 +9,16 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class UserGetWalkListResponseDto {
+    private String day;
     private Integer walkCount;
-    private List<UserGetWalkDetailResponseDto> userWalkList;
+    private boolean isAchieved;
+    private List<Long> walkIdList;
 
     @Builder
-    public UserGetWalkListResponseDto(Integer walkCount, List<UserGetWalkDetailResponseDto> userWalkList) {
+    public UserGetWalkListResponseDto(String day, Integer walkCount, boolean isAchieved, List<Long> walkIdList) {
+        this.day = day;
         this.walkCount = walkCount;
-        this.userWalkList = userWalkList;
+        this.isAchieved = isAchieved;
+        this.walkIdList = walkIdList;
     }
 }

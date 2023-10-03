@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("")
@@ -65,7 +66,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "월별 산책 기록")
     @Operation(summary = "월별 산책 목록 & 상세 조회")
-    public UserGetWalkListResponseDto userGetWalkList(HttpServletRequest httpServletRequest) {
-        return userService.getUserWalkList(httpServletRequest);
+    public List<UserGetWalkListResponseDto> userGetWalkList(@RequestParam("yearAndMonth") String yearAndMonth, HttpServletRequest httpServletRequest) {
+        return userService.getUserWalkList(yearAndMonth, httpServletRequest);
     }
 }
