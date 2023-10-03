@@ -27,7 +27,7 @@ public class WalkGetDetailResponseDto {
     Integer time;
 
     @Schema(description = "이동 거리(km)")
-    Float distance;
+    Double distance;
 
     @Schema(description = "걸음 수")
     Integer walkCount;

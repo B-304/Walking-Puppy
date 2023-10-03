@@ -5,10 +5,7 @@ import io.ssafy.p.j9b304.backend.domain.security.jwt.JwtTokenProvider;
 import io.ssafy.p.j9b304.backend.domain.spot.entity.Spot;
 import io.ssafy.p.j9b304.backend.domain.spot.repository.SpotRepository;
 import io.ssafy.p.j9b304.backend.domain.user.entity.User;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkExistPathAddRequestDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.*;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetDetailResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkGetTodayResponseDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.WalkInitialInfoResponseDto;
@@ -31,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +43,7 @@ public class WalkService {
     private final JwtTokenProvider jwtTokenProvider;
     private final DogService dogService;
     private final FileService fileService;
+    private final RouteService routeService;
 
     public WalkInitialInfoResponseDto addWalkNewPath(HttpServletRequest httpServletRequest, WalkAddRequestDto walkAddRequestDto) {
         Theme theme = themeRepository.findById(walkAddRequestDto.getThemeId())
@@ -56,16 +55,50 @@ public class WalkService {
         walk.setUser(walker);
 
         Walk walkInit = walkRepository.save(walk);
+//        walk.setUser(user);
 
         // 산책 스팟 저장
+
         List<Long> spotIdList = walkAddRequestDto.getSpotList();
-        for (Long spotId : spotIdList) {
-            Spot spot = spotRepository.findSpotById(spotId)
-                    .orElseThrow(() -> new IllegalArgumentException("해당 스팟이 없습니다."));
-            walkSpotRepository.save(WalkSpot.builder().walk(walkInit).spot(spot).build());
+        if(spotIdList!=null) {
+            for (Long spotId : spotIdList) {
+                Spot spot = spotRepository.findSpotById(spotId)
+                        .orElseThrow(() -> new IllegalArgumentException("해당 스팟이 없습니다."));
+                walkSpotRepository.save(WalkSpot.builder().walk(walkInit).spot(spot).build());
+            }
         }
+        System.out.println(walkAddRequestDto.getStartLongitude()+", " +walkAddRequestDto.getStartLatitude()+", " +
+                walkAddRequestDto.getEndLongitude()+", " + walkAddRequestDto.getEndLatitude()+", " +
+                walkAddRequestDto.getEstimatedTime()+", " +walkAddRequestDto.getThemeId());
 
         // todo 추천 경로 생성 로직 추가
+        final Map<String, Object> resultRouteMap = routeService.getRecommendedRoute(walkAddRequestDto.getStartLongitude(), walkAddRequestDto.getStartLatitude(),
+                walkAddRequestDto.getEndLongitude(), walkAddRequestDto.getEndLatitude(),
+                walkAddRequestDto.getEstimatedTime(), walkAddRequestDto.getThemeId());
+        List<Point> recommendedRoute= (List<Point>)resultRouteMap.get("recommendedRoute");
+
+        walk.setEstimatedDistance((Double)resultRouteMap.get("totalDistance"));
+        walk.setEstimatedTime((int)resultRouteMap.get("totalMinute"));
+
+        char state = '0';
+        int sequence = 1;
+        if(recommendedRoute!=null) {
+            for (Point point : recommendedRoute) {
+                Route route = Route.builder()
+                        .state(state)
+                        .sequence(sequence)
+                        .latitude(point.getY())
+                        .longitude(point.getX())
+                        .walk(walk)
+                        .build();
+
+                routeRepository.save(route);
+                sequence++;
+            }
+        }else{
+            throw new IllegalArgumentException("경로를 생성할 수 없습니다.");
+        }
+
         // todo DB에 간식 스팟 추가
 
         List<Route> routeList = routeRepository.findByWalkAndState(walkInit, '0');
@@ -227,9 +260,6 @@ public class WalkService {
         Walk walk = walkRepository.findById(walkModifyRequestDto.getWalkId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 산책이 없습니다."));
 
-        if (walker.getUserId() != walk.getUser().getUserId())
-            throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
-
         if (walk.getState() == '0') {
             throw new IllegalArgumentException("아직 완료되지 않은 산책입니다.");
         } else if (walk.getState() == '2') {
@@ -268,4 +298,7 @@ public class WalkService {
                 .calorie(walkCalorie)
                 .build();
     }
+
+
+
 }
