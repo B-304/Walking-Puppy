@@ -1,5 +1,7 @@
 
 import React from 'react'
+import { StackNavigationProp } from '@react-navigation/stack';
+
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -17,6 +19,13 @@ import Ionic from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
 import { RootState } from './src/redux/reducer';
 import WalkingMain from './src/screens/walking/WalkingMain';
+
+type RootStackParamList = {
+  Home: undefined;
+  
+};
+
+type NavigationProp = StackNavigationProp<RootStackParamList, 'Home'>; // 'Home'은 현재 스크린의 이름입니다.
 
 const AppInner:React.FC = () => {
   const isLoggendIn = useSelector((state:RootState) => state.user.isLoggedIn);
