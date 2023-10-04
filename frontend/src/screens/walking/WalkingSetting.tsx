@@ -141,7 +141,7 @@ const WalkingSetting:React.FC = (): JSX.Element => {
 
         <TouchableOpacity style={styles.button} onPress={newPath}>
               <Text style={styles.buttonText}>경로 확인하기</Text>
-          </TouchableOpacity>
+        </TouchableOpacity>
     </View>
   )
 }
