@@ -6,24 +6,14 @@ import TimeThemeSetting from './TimeThemeSetting';
 import WalkingMap from './WalkingMap';
 import StartDesMap from './StartDesMap';
 
-
-
-export type RootStackParamList = {
-  NewWalkingSetting: undefined;
-  TimeThemeSetting: undefined;
-  WalkingMap: undefined;
-  StartDesMap: undefined;
-  
-};
 const WalkingMain:React.FC = (): JSX.Element => {
-  
-  const Stack = createNativeStackNavigator<RootStackParamList>();
+  const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator initialRouteName='NewWalkingSetting'>
-      <Stack.Screen name="NewWalkingSetting" component={NewWalkingSetting} options={{headerShown: false}}/>
-      <Stack.Screen name="TimeThemeSetting" component={TimeThemeSetting} options={{headerShown: false}}/>
+      <Stack.Screen name="NewWalkingSetting" component={NewWalkingSetting} />
+      <Stack.Screen name="TimeThemeSetting" component={TimeThemeSetting}/>
       <Stack.Screen name="WalkingMap" component={WalkingMap}/>
-      <Stack.Screen name="StartDesMap" component={StartDesMap} options={{headerTitle:'장소 검색', headerTitleAlign:'center'}}/>
+      <Stack.Screen name="StartDesMap" component={StartDesMap} />
     </Stack.Navigator>
   );
 };
