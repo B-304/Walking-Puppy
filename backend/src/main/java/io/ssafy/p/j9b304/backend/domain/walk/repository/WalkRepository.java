@@ -18,5 +18,7 @@ public interface WalkRepository extends JpaRepository<Walk, Long> {
     @Query("SELECT w FROM Walk w WHERE w.user = ?1  AND w.state = '1' AND DATE(w.startTime) = DATE(now())")
     List<Walk> findByUser(User walker);
 
-    List<Walk> findByStartTimeBetween(LocalDateTime startTime1, LocalDateTime startTime2);
+//    List<Walk> findByStartTimeBetween(LocalDateTime startTime1, LocalDateTime startTime2);
+
+    List<Walk> findByStartTimeBetweenAndStateAndUser(LocalDateTime localDateTime, LocalDateTime localDateTime1, Character state, User user);
 }
