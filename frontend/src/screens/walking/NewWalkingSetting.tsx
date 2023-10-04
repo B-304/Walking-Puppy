@@ -74,7 +74,16 @@ const NewWalkingSetting: React.FC<CombinedProps> = ({navigation}) => {
       
       <View>
 
-        <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('산책 테마 설정')}>
+        <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('산책 테마 설정',{
+          start:{
+            latitude:36.3463,
+            longitude:127.2941
+          },
+          end:{
+            latitude:36.3463,
+            longitude:127.2941
+          }
+        })}>
               <Text style={styles.buttonText}>확인</Text>
         </TouchableOpacity>
       </View>
