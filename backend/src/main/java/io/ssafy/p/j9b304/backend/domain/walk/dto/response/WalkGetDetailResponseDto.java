@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,6 +58,12 @@ public class WalkGetDetailResponseDto {
     @Schema(description = "스팟 리스트")
     List<GetResponseDto> spotList;
 
+    @Schema(description = "출발 시간")
+    String startTime;
+
+    @Schema(description = "도착 시간")
+    String endTime;
+
     @Builder
     public WalkGetDetailResponseDto(Walk walk, List<Route> routeList, List<Spot> spotList) {
         this.walkId = walk.getWalkId();
@@ -70,6 +78,9 @@ public class WalkGetDetailResponseDto {
         this.startLongitude = walk.getStartLongitude();
         this.endLatitude = walk.getEndLatitude();
         this.endLongitude = walk.getEndLongitude();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        this.startTime = walk.getStartTime().format(formatter);
+        this.endTime = walk.getEndTime().format(formatter);
         this.routeList = routeList.stream().map(r -> new RouteGetResponseDto(r)).collect(Collectors.toList());
         this.spotList = spotList.stream().map(Spot::toSpotDto).collect(Collectors.toList());
     }
