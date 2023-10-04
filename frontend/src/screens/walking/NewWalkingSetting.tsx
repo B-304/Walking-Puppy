@@ -73,11 +73,10 @@ const NewWalkingSetting: React.FC<CombinedProps> = ({navigation}) => {
       </View>
       
       <View>
-        <Pressable style={styles.nextButton}>
-          <Text style={styles.buttonText} onPress={() => navigation.navigate('TimeThemeSetting')}>
-            확인
-          </Text>
-        </Pressable>
+
+        <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('산책 테마 설정')}>
+              <Text style={styles.buttonText}>확인</Text>
+        </TouchableOpacity>
       </View>
     </View>
     

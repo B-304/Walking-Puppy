@@ -1,8 +1,5 @@
-
 import React from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
-
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {NavigationContainer, } from '@react-navigation/native';
@@ -10,7 +7,7 @@ import SpotSavedScreen from './src/screens/scrap/SpotSavedScreen';
 import NewWalkingSetting from './src/screens/walking/NewWalkingSetting';
 import HomeScreen from './src/screens/home/HomeScreen';
 import PopularSpot from './src/screens/popularSpot/PopularSpot';
-import MyPage from './src/screens/myPage/MyPage';
+import MyPageMain from './src/screens/myPage/MypageMain';
 import LoginScreen from './src/screens/loginStart/LoginScreen';
 // import WalkingSavedScreen from './src/screens/scrap/WalkingSavedScreen';
 // import SavedWalkingSetting from './src/screens/walking/SavedWalkingSetting';
@@ -20,6 +17,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from './src/redux/reducer';
 import WalkingMain from './src/screens/walking/WalkingMain';
 import WalkingSavedScreen from './src/screens/scrap/WalkingSavedScreen';
+import HomeMain from './src/screens/home/HomeMain';
+
+
 
 type RootStackParamList = {
   Home: undefined;
@@ -33,6 +33,7 @@ const AppInner:React.FC = () => {
   
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
+
 
   const BottomTabScreen:React.FC = () => {
     return (
@@ -74,13 +75,13 @@ const AppInner:React.FC = () => {
       }
     )}>
       <Tab.Screen name="인기스팟" component={PopularSpot} /> 
-      <Tab.Screen name="산책" component={WalkingMain} /> 
+      <Tab.Screen name="산책" component={WalkingMain} options={{ headerShown: false }} /> 
       {/*<Tab.Screen name="산책" component={NewWalkingSetting} />*/}
       {/*<Tab.Screen name="산책" component={WalkingSetting} />*/}
-      <Tab.Screen name="홈" component={HomeScreen} /> 
+      <Tab.Screen name="홈" component={HomeMain} options={{ headerShown: false }} /> 
       <Tab.Screen name="스크랩" component={WalkingSavedScreen} /> 
-     <Tab.Screen name="마이페이지" component={MyPage} />
-    
+      <Tab.Screen name="마이페이지" component={MyPageMain} options={{ headerShown: false }}/>
+      {/*<Tab.Screen name="마이페이지" component={ProfileEdit} />*/}
     </Tab.Navigator>
     )
   };
@@ -103,16 +104,12 @@ const AppInner:React.FC = () => {
         {/* 산책 */}
         {/* <Stack.Screen name="SavedWalking" component={SavedWalkingSetting} />
         <Stack.Screen name="TimeThemeSetting" component={TimeThemeSetting} /> */}
-      
-
-
         {/* 홈 */}
-
+        
         {/* 스크랩 */}
         {/* <Stack.Screen name="WalkingSaved" component={WalkingSavedScreen} /> */}
 
         {/* 마이페이지 */}
-
       </Stack.Navigator>
     </NavigationContainer>
   )
