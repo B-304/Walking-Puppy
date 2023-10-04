@@ -229,9 +229,16 @@ public class UserService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         LocalDateTime localDate = YearMonth.parse(yearAndMonth, formatter).atDay(1).atStartOfDay();
 
-        List<Walk> walks = walkRepository.findByStartTimeBetween(
+//        List<Walk> walks = walkRepository.findByStartTimeBetween(
+//                localDate.withDayOfMonth(1),
+//                localDate.withDayOfMonth(localDate.toLocalDate().lengthOfMonth())
+//        );
+
+        List<Walk> walks = walkRepository.findByStartTimeBetweenAndStateAndUser(
                 localDate.withDayOfMonth(1),
-                localDate.withDayOfMonth(localDate.toLocalDate().lengthOfMonth())
+                localDate.withDayOfMonth(localDate.toLocalDate().lengthOfMonth()),
+                '1', // Assuming 1 is the desired state value
+                walker
         );
 
         Map<String, List<Walk>> walksByDate = new HashMap<>();
