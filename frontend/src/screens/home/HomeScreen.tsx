@@ -15,7 +15,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
   const [weatherData, setWeatherData] = useState<any>(null);
   const navigation = useNavigation();
 
-  const BEARER_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MSwiZXhwIjoxNjk2NDI5NzE4fQ.BqqbjEEiEBWB52OiLOPI_I7RgASP1WDXQojHcaLtrGI';
+  const BEARER_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MiwiZXhwIjoxNjk2NDAzNzEwfQ.fROTgdimSGBJuKux_AZUFTj1rJRmfS7is6BfxWNtvq0';
 
   useEffect(() => {
     axios
@@ -95,7 +95,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
 
           </View>
           <View style={styles.dogText}>
-            {/* <Text style={styles.dogDataNameText}>{DogData && DogData.name}</Text> */}
+            <Text style={styles.dogDataNameText}>{DogData && DogData.name}</Text>
             <Text style={styles.dogdataText}>와 만난 지</Text>
             <Text style={styles.dogDataDayText}> {DogData.dayCount}</Text>
             <Text style={styles.dogdataText}>일 째</Text>

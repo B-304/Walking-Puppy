@@ -3,11 +3,13 @@ import React from 'react'
 import { useDispatch } from 'react-redux';
 import { userActions } from '../../redux/reducer/userSlice';  // 경로가 바뀔 수 있으니, userActions가 위치한 경로로 올바르게 수정해주세요.
 // import { NavigationContainer } from '@react-navigation/native';
-
+import {accessToken} from 'react-native-dotenv';
 const LoginScreen: React.FC = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const handleLoginButtonClick = () => {
+    console.log(accessToken);
+
 
 
     // Redux의 로그인 상태를 true로 설정
