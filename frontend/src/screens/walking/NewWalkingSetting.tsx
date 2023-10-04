@@ -1,45 +1,27 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity, Pressable, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
+import {useNavigation} from '@react-navigation/native';
 
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from './WalkingMain';
-type LocationData = {
-  lat: number ;
-  lng: number;
-  formatted_address: string | null;
-} | null;
-
-type TimeThemeSettingScreenProps = NativeStackScreenProps<RootStackParamList, 'TimeThemeSetting'>
-type StartDesMapScreenProps = NativeStackScreenProps<RootStackParamList, 'StartDesMap'>
-type CombinedProps = TimeThemeSettingScreenProps & StartDesMapScreenProps;
-
-const NewWalkingSetting: React.FC<CombinedProps> = ({navigation}) => {
-  const [start, setStart] = useState<LocationData | null>(null);
-  const [destination, setDestination] = useState<LocationData | null>(null);
-  
-  const findStart = useCallback(() => {
-    navigation.navigate('StartDesMap', { setFunction: setStart });
-  },[navigation]);
-
-  const findDestination = useCallback(() => {
-    navigation.navigate('StartDesMap');
-  },[navigation]);
+const NewWalkingSetting: React.FC = () => {
+  const [departure, setDeparture] = useState<string | null>(null);
+  const [destination, setDestination] = useState<string>('');
+  const navigation = useNavigation();
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
       async (position) => {
         try {
           const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
-            params: { // 내 위치 정보를 가져옴 현재 오류중
+            params: {
               latlng: `${position.coords.latitude},${position.coords.longitude}`,
               key: '${googleMapApiKey}',
             },
           });
 
           if (response.data.results && response.data.results.length > 0) {
-            setStart(response.data.results[0].formatted_address);
+            setDeparture(response.data.results[0].formatted_address);
             console.log(response);
           }
 
@@ -55,43 +37,31 @@ const NewWalkingSetting: React.FC<CombinedProps> = ({navigation}) => {
   }, []);
 
   return (
-    
     <View style={styles.container}>
-      <View style={styles.inputBox}>
-        <Pressable onPress={findStart}>
-          <Text>
-            {start?.formatted_address ? start.formatted_address : '출발지를 입력하세요'}
-          </Text>
-        </Pressable>
-      </View>
-      <View style={styles.inputBox}>
-        <Pressable onPress={findDestination}>
-          <Text>
-            {destination?.formatted_address ? destination.formatted_address : '도착지를 입력하세요'}
-          </Text>
-        </Pressable>
-      </View>
-      
-      <View>
-        <Pressable style={styles.nextButton}>
-          <Text style={styles.buttonText} onPress={() => navigation.navigate('TimeThemeSetting')}>
-            확인
-          </Text>
-        </Pressable>
-      </View>
+      <TouchableOpacity onPress={() => navigation.navigate('StartDesMap', { type: 'start' })}>
+      <TextInput
+        style={styles.input}
+        value={departure ?? ''}
+        placeholder="현재 위치"
+      />
+      </TouchableOpacity>
+      <TextInput
+        style={styles.input}
+        value={destination}
+        placeholder="도착지를 입력하세요."
+        onChangeText={setDestination}
+      />
     </View>
-    
-    
-    
-)};
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    height:800,
+    flex: 1,
     backgroundColor: '#FFFFFF',
     padding: 16,
   },
-  inputBox: {
+  input: {
     borderWidth: 1,
     borderColor: '#E8E8E8',
     backgroundColor: '#F6F6F6',
@@ -99,47 +69,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginBottom: 12,
   },
-  nextButton: {
-    position: 'absolute',
-    left: 33.5,            // 왼쪽에서 33.5만큼 떨어짐
-    right: 33.5,           // 오른쪽에서 33.5만큼 떨어짐
-    top: 450,            // 하단에서 20만큼 떨어짐
-    height: 53,            // 버튼의 높이
-    backgroundColor: '#4B9460',
-    justifyContent: 'center',  // 텍스트를 버튼 중앙에 위치시키기 위해
-    alignItems: 'center',      // 텍스트를 버튼 중앙에 위치시키기 위해
-    textAlignVertical: 'center',
-    borderRadius: 10,       // 버튼을 화면 중앙에 위치시키기 위해
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: 'bold',  // semi-bold로 설정. 'bold'로 설정하면 더 굵게 됩니다.
-  },
 });
 
 export default NewWalkingSetting;
-
-{/* <View style={styles.container}>
-      Vi
-      <TouchableOpacity onPress={() => navigation.navigate('StartDesMap', { type: 'start' })}>
-      {/* <TextInput
-        style={styles.input}
-        value={departure ?? ''}
-        placeholder="현재 위치"
-      /> */}
-      
-  //     </TouchableOpacity>
-  //     <TextInput
-  //       style={styles.input}
-  //       value={destination}
-  //       placeholder="도착지를 입력하세요."
-  //       onChangeText={setDestination}
-  //     />
-  //     <Pressable onPress={() => setCount((p) => p+1)}>
-  //       <Text>
-  //         {count}
-  //       </Text>
-  //     </Pressable>
-  //   </View>
-  // ); */}
