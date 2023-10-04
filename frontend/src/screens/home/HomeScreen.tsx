@@ -3,12 +3,16 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { RootState } from '../../redux/reducer';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const HomeScreen: React.FC = (): JSX.Element => {
   const [responseData, setResponseData] = useState<any>(null);
   const [dogResponseData, setDogResponseData] = useState<any>({ name: '', dayCount: 0, dogLevel: 0, exp: 0, levelRange: 0 });
   const [loading, setLoading] = useState(true);
   const [weatherData, setWeatherData] = useState<any>(null);
+  const navigation = useNavigation();
 
   const BEARER_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MSwiZXhwIjoxNjk2NDI5NzE4fQ.BqqbjEEiEBWB52OiLOPI_I7RgASP1WDXQojHcaLtrGI';
 
@@ -60,7 +64,10 @@ const HomeScreen: React.FC = (): JSX.Element => {
 
   const nickname = useSelector((state: RootState) => state.user.user.nickname as string);
 
-  const handleWalkButtonClick = () => {};
+  const handleWalkButtonClick = () => {
+    navigation.navigate('산책');
+
+  };
 
   const dailyWalkData = responseData;
   const DogData = dogResponseData;
