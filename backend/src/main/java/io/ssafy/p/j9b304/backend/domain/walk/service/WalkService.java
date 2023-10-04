@@ -71,7 +71,6 @@ public class WalkService {
                 walkAddRequestDto.getEndLongitude()+", " + walkAddRequestDto.getEndLatitude()+", " +
                 walkAddRequestDto.getEstimatedTime()+", " +walkAddRequestDto.getThemeId());
 
-        // todo 추천 경로 생성 로직 추가
         final Map<String, Object> resultRouteMap = routeService.getRecommendedRoute(walkAddRequestDto.getStartLongitude(), walkAddRequestDto.getStartLatitude(),
                 walkAddRequestDto.getEndLongitude(), walkAddRequestDto.getEndLatitude(),
                 walkAddRequestDto.getEstimatedTime(), walkAddRequestDto.getThemeId());
@@ -98,8 +97,6 @@ public class WalkService {
         }else{
             throw new IllegalArgumentException("경로를 생성할 수 없습니다.");
         }
-
-        // todo DB에 간식 스팟 추가
 
         List<Route> routeList = routeRepository.findByWalkAndState(walkInit, '0');
         List<WalkSpot> walkSpotList = walkSpotRepository.findByWalk(walkInit);
@@ -147,7 +144,6 @@ public class WalkService {
 
         }
 
-        // todo DB에 새로운 랜덤 간식 스팟 추가
         List<WalkSpot> walkSpotList = walkSpotRepository.findByWalk(walkInit);
         List<Spot> spotList = new ArrayList<>();
         List<Spot> itemSpotList = new ArrayList<>();
@@ -243,7 +239,6 @@ public class WalkService {
             }
         }
 
-        // todo 강아지 경험치 증가
         dogService.dogLevelUpCheck(walker.getDog().getDogId(), exp);
 
         return WalkSaveResponseDto.builder()
