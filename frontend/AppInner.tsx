@@ -1,41 +1,38 @@
-import React from 'react';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {NavigationContainer, } from '@react-navigation/native';
-import SpotSavedScreen from './src/screens/scrap/SpotSavedScreen';
-import NewWalkingSetting from './src/screens/walking/NewWalkingSetting';
-import HomeScreen from './src/screens/home/HomeScreen';
-import PopularSpot from './src/screens/popularSpot/PopularSpot';
-import MyPageMain from './src/screens/myPage/MypageMain';
-import LoginScreen from './src/screens/loginStart/LoginScreen';
+import React from "react";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import SpotSavedScreen from "./src/screens/scrap/SpotSavedScreen";
+import NewWalkingSetting from "./src/screens/walking/NewWalkingSetting";
+import HomeScreen from "./src/screens/home/HomeScreen";
+import PopularSpot from "./src/screens/popularSpot/PopularSpot";
+import MyPageMain from "./src/screens/myPage/MypageMain";
+import LoginScreen from "./src/screens/loginStart/LoginScreen";
 // import WalkingSavedScreen from './src/screens/scrap/WalkingSavedScreen';
 // import SavedWalkingSetting from './src/screens/walking/SavedWalkingSetting';
 // import TimeThemeSetting from './src/screens/walking/TimeThemeSetting';
-import Ionic from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
-import { RootState } from './src/redux/reducer';
-import WalkingMain from './src/screens/walking/WalkingMain';
-import WalkingSavedScreen from './src/screens/scrap/WalkingSavedScreen';
-import HomeMain from './src/screens/home/HomeMain';
-
-
+import Ionic from "react-native-vector-icons/Ionicons";
+import { useSelector } from "react-redux";
+import { RootState } from "./src/redux/reducer";
+import WalkingMain from "./src/screens/walking/WalkingMain";
+import WalkingSavedScreen from "./src/screens/scrap/WalkingSavedScreen";
+import HomeMain from "./src/screens/home/HomeMain";
+import RouteDetail from "./src/screens/scrap/RouteDetail";
 
 type RootStackParamList = {
   Home: undefined;
-  
 };
 
-type NavigationProp = StackNavigationProp<RootStackParamList, 'Home'>; // 'Home'은 현재 스크린의 이름입니다.
+type NavigationProp = StackNavigationProp<RootStackParamList, "Home">; // 'Home'은 현재 스크린의 이름입니다.
 
-const AppInner:React.FC = () => {
-  const isLoggendIn = useSelector((state:RootState) => state.user.isLoggedIn);
-  
+const AppInner: React.FC = () => {
+  const isLoggendIn = useSelector((state: RootState) => state.user.isLoggedIn);
+
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
 
-
-  const BottomTabScreen:React.FC = () => {
+  const BottomTabScreen: React.FC = () => {
     return (
     <Tab.Navigator initialRouteName="홈." screenOptions={({ route }) => (
       {
@@ -88,31 +85,31 @@ const AppInner:React.FC = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown:false}}>
-       
-      {isLoggendIn?  
-      <Stack.Screen name="BottomNav" component={BottomTabScreen} /> 
-      : (<Stack.Screen name="Login" component={LoginScreen} />
-      )}
-      
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {isLoggendIn ? (
+          <Stack.Screen name="BottomNav" component={BottomTabScreen} />
+        ) : (
+          <Stack.Screen name="Login" component={LoginScreen} />
+        )}
+
         {/* 하단바 */}
-        
+
         {/* 로그인 및 시작 */}
-        
+
         {/* 인기스팟 */}
 
         {/* 산책 */}
         {/* <Stack.Screen name="SavedWalking" component={SavedWalkingSetting} />
         <Stack.Screen name="TimeThemeSetting" component={TimeThemeSetting} /> */}
         {/* 홈 */}
-        
+
         {/* 스크랩 */}
         {/* <Stack.Screen name="WalkingSaved" component={WalkingSavedScreen} /> */}
 
         {/* 마이페이지 */}
       </Stack.Navigator>
     </NavigationContainer>
-  )
-}
+  );
+};
 
-export default AppInner
+export default AppInner;
