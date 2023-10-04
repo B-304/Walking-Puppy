@@ -1,13 +1,13 @@
 import { View, Text, Image, Button, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
 import Modal from "react-native-modal";
 import Ionic from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 const MyPage: React.FC = (): JSX.Element => {
   const [name, setName] = useState(null);
@@ -39,10 +39,9 @@ const MyPage: React.FC = (): JSX.Element => {
   const BEARER_TOKEN =
     "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoeW9reW91bmdAa2FrYW8uY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsInR5cGUiOiJBQ0NFU1MiLCJ1c2VySWQiOjMsImV4cCI6MTY5NjQ0NTgxNH0.eAypxIIbsTrnohTkZYnsEtNZKwEhzF7lXnCE1WQfklw";
 
-    const Profile = () => {
-          navigation.navigate('회원정보 수정');
-    };
-
+  const Profile = () => {
+    navigation.navigate("회원정보 수정");
+  };
 
   const fetchWalkList = (year: number, month: number) => {
     const walkurl =
@@ -65,10 +64,10 @@ const MyPage: React.FC = (): JSX.Element => {
         setWalkList([]);
       });
   };
-//const url = 'https://j9b304.p.ssafy.io/api/2';
+  //const url = 'https://j9b304.p.ssafy.io/api/2';
   useEffect(() => {
     axios
-      .get("https://localhost:8080/2")
+      .get("http://10.0.2.2:8080/2")
       .then((response) => {
         console.log(response.data);
         setName(response.data.nickname);
@@ -161,7 +160,7 @@ const MyPage: React.FC = (): JSX.Element => {
   };
 
   const getGeoAddress = async (latitude, longitude) => {
-    const apiKey = "542311ca98f3ce1591320ed2d99fbcdd"; // 자신의 Kakao API 키로 대체해야 합니다.
+    const apiKey = "";
     const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}`;
 
     try {
@@ -214,11 +213,8 @@ const MyPage: React.FC = (): JSX.Element => {
     }
   }, [selectedModalWalk]);
 
-
-
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-
       <TouchableOpacity onPress={Profile} style={styles.grayBox}>
         <Image
           source={require("./assets/image-user.png")}
@@ -230,7 +226,6 @@ const MyPage: React.FC = (): JSX.Element => {
           <Ionicons name="chevron-forward" size={35} color="#616161" />
         </View>
       </TouchableOpacity>
-
 
       <View style={styles.contentContainer}>
         <Text style={styles.middleTitle}>월별 산책 기록</Text>
