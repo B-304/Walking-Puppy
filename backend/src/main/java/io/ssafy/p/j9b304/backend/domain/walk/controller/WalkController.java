@@ -71,6 +71,32 @@ public class WalkController {
         return walkGetListResponseDtos;
     }
 
+
+    @GetMapping("/scrap-list")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "200", description = "스크랩한 산책 목록 조회 성공")
+    @Operation(summary = "스크랩한 산책 목록 조회", description = "스크랩한 산책 목록")
+    public List<WalkGetListResponseDto> walkGetScrapList(HttpServletRequest httpServletRequest) {
+        List<Walk> walkList = walkService.getWalkScrapList(httpServletRequest);
+
+        List<WalkGetListResponseDto> walkGetListResponseDtos = new ArrayList<>();
+        for (Walk walk : walkList) {
+            WalkGetListResponseDto dto = new WalkGetListResponseDto(walk);
+            if (walk.getImageId() != null) {
+                File file = fileRepository.findById(walk.getImageId())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 파일이 없습니다."));
+                dto.setImageUrl(file.getUrl());
+            }
+            walkGetListResponseDtos.add(dto);
+        }
+
+
+//        return walkList.stream()
+//                .map(w -> new WalkGetListResponseDto(w))
+//                .collect(Collectors.toList());
+        return walkGetListResponseDtos;
+    }
+
     @GetMapping("/{walkId}")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponse(responseCode = "200", description = "내 산책 단건 조회 성공")
@@ -119,6 +145,4 @@ public class WalkController {
     public WalkGetTodayResponseDto walkGetToday(HttpServletRequest httpServletRequest) {
         return walkService.getWalkToday(httpServletRequest);
     }
-
-
 }
