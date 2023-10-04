@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import axios from "axios";
 
 type Walk = {
   walkId: number;
@@ -23,7 +30,7 @@ const WalkListItem: React.FC<{ walk: Walk }> = ({ walk }) => {
         style={[
           styles.walkItem,
           {
-            borderColor: isHighlighted ? '#4B9460' : '#ccc',
+            borderColor: isHighlighted ? "#4B9460" : "#ccc",
           },
         ]}
         onPress={toggleHighlight}
@@ -36,11 +43,15 @@ const WalkListItem: React.FC<{ walk: Walk }> = ({ walk }) => {
           )}
         </View>
         <View style={styles.walkInfo}>
-          <Text style={styles.walkInfoName}>{walk.name ? walk.name : '제목없음'}</Text>
+          <Text style={styles.walkInfoName}>
+            {walk.name ? walk.name : "제목없음"}
+          </Text>
           <Text style={styles.walkInfoTime}>
-            <Text>소요 시간           </Text>
-            <Text style={{ marginLeft: 5 }}>{walk.time} 분 {'\n'}</Text>
-            <Text>이동 거리           </Text>
+            <Text>소요 시간 </Text>
+            <Text style={{ marginLeft: 5 }}>
+              {walk.time} 분 {"\n"}
+            </Text>
+            <Text>이동 거리 </Text>
             <Text style={{ marginLeft: 5 }}>{walk.distance} km</Text>
           </Text>
         </View>
@@ -54,10 +65,11 @@ const NewWalkingSetting: React.FC = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const BEARER_TOKEN: string = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MiwiZXhwIjoxNjk2NjA4NDI2fQ.V6oAsUPGAMxYomvzX25Hny1z1RaJFJMLYXvSizEsyY4';
+    const BEARER_TOKEN: string =
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MiwiZXhwIjoxNjk2NjA4NDI2fQ.V6oAsUPGAMxYomvzX25Hny1z1RaJFJMLYXvSizEsyY4";
 
     axios
-      .get('https://j9b304.p.ssafy.io/api/walk/scrap-list', {
+      .get("https://j9b304.p.ssafy.io/api/walk/scrap-list", {
         headers: {
           Authorization: `Bearer ${BEARER_TOKEN}`,
         },
@@ -67,7 +79,7 @@ const NewWalkingSetting: React.FC = (): JSX.Element => {
         setLoading(false);
       })
       .catch((error) => {
-        console.error('API 요청 중 오류 발생:', error);
+        console.error("API 요청 중 오류 발생:", error);
         setLoading(false);
       });
   }, []);
@@ -91,34 +103,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 0,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
   },
   walkItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 10,
     padding: 10,
     margin: 10,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
   },
   walkInfo: {
     flex: 1,
   },
   walkInfoName: {
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     fontSize: 18,
   },
   walkInfoTime: {
     marginTop: 15,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 14,
   },
   imageContainer: {
     marginRight: 10,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   image: {
     width: 160,
@@ -128,7 +140,7 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     width: 160,
     height: 100,
-    backgroundColor: '#ccc',
+    backgroundColor: "#ccc",
     borderRadius: 10,
   },
 });
