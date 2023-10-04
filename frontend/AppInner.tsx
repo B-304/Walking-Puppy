@@ -19,6 +19,7 @@ import Ionic from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
 import { RootState } from './src/redux/reducer';
 import WalkingMain from './src/screens/walking/WalkingMain';
+import WalkingSavedScreen from './src/screens/scrap/WalkingSavedScreen';
 
 type RootStackParamList = {
   Home: undefined;
@@ -77,7 +78,7 @@ const AppInner:React.FC = () => {
       {/*<Tab.Screen name="산책" component={NewWalkingSetting} />*/}
       {/*<Tab.Screen name="산책" component={WalkingSetting} />*/}
       <Tab.Screen name="홈" component={HomeScreen} /> 
-      <Tab.Screen name="스크랩" component={SpotSavedScreen} /> 
+      <Tab.Screen name="스크랩" component={WalkingSavedScreen} /> 
      <Tab.Screen name="마이페이지" component={MyPage} />
     
     </Tab.Navigator>
