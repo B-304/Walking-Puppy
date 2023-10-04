@@ -58,7 +58,6 @@ public class WalkService {
 //        walk.setUser(user);
 
         // 산책 스팟 저장
-
         List<Long> spotIdList = walkAddRequestDto.getSpotList();
         if(spotIdList!=null) {
             for (Long spotId : spotIdList) {
@@ -166,6 +165,11 @@ public class WalkService {
     public List<Walk> getWalkList(HttpServletRequest httpServletRequest) {
         User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
         return walkRepository.findByUserAndState(walker, '1');
+    }
+
+    public List<Walk> getWalkScrapList(HttpServletRequest httpServletRequest) {
+        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+        return walkRepository.findByUserAndState(walker, '2');
     }
 
     public WalkGetDetailResponseDto getWalkDetail(HttpServletRequest httpServletRequest, Long walkId) {
