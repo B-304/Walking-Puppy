@@ -15,8 +15,14 @@ import LoginScreen from './src/screens/loginStart/LoginScreen';
 // import TimeThemeSetting from './src/screens/walking/TimeThemeSetting';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
+<<<<<<< HEAD
 import { RootState } from './src/redux/reducer';
 import WalkingMain from './src/screens/walking/WalkingMain';
+=======
+import RootState from './src/redux/reducer';
+import ProfileEdit from './src/screens/myPage/ProfileEdit';
+import WalkingSetting from './src/screens/walking/WalkingSetting';
+>>>>>>> feature-frontend/initial-Settings
 
 const AppInner:React.FC = () => {
   const isLoggendIn = useSelector((state:RootState) => state.user.isLoggedIn);
@@ -65,9 +71,12 @@ const AppInner:React.FC = () => {
     )}>
       <Tab.Screen name="인기스팟" component={PopularSpot} /> 
       <Tab.Screen name="산책" component={WalkingMain} /> 
+      {/*<Tab.Screen name="산책" component={NewWalkingSetting} />*/}
+      {/*<Tab.Screen name="산책" component={WalkingSetting} />*/}
       <Tab.Screen name="홈" component={HomeScreen} /> 
       <Tab.Screen name="스크랩" component={SpotSavedScreen} /> 
-      <Tab.Screen name="마이페이지" component={MyPage} /> 
+     {/* <Tab.Screen name="마이페이지" component={MyPage} />*/}
+      <Tab.Screen name="마이페이지" component={ProfileEdit} />
     </Tab.Navigator>
     )
   };
@@ -75,6 +84,7 @@ const AppInner:React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}}>
+       
       {isLoggendIn?  
       <Stack.Screen name="BottomNav" component={BottomTabScreen} /> 
       : (<Stack.Screen name="Login" component={LoginScreen} />
@@ -89,6 +99,9 @@ const AppInner:React.FC = () => {
         {/* 산책 */}
         {/* <Stack.Screen name="SavedWalking" component={SavedWalkingSetting} />
         <Stack.Screen name="TimeThemeSetting" component={TimeThemeSetting} /> */}
+      
+      <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
+
 
         {/* 홈 */}
 
