@@ -1,6 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Walk from '../walking/NewWalkingSetting';
+import WalkMain from '../walking/WalkingMain';
 import HomeScreen  from './HomeScreen';
 
 const HomeMain:React.FC = () => {
@@ -17,9 +17,9 @@ const HomeMain:React.FC = () => {
           },
         }}
         />
-        <Stack.Screen name="산책 설정" component={Walk} />
       </Stack.Navigator>
   );
+
 };
 
 export default HomeMain;
