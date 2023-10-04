@@ -21,8 +21,8 @@ const MyPage: React.FC = (): JSX.Element => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedModalWalk, setSelectedModalWalk] = useState("");
-  const [departureAddress, setDepartureAddress] = useState("");
-  const [arrivalAddress, setArrivalAddress] = useState("");
+  const [departureAddress, setDepartureAddress] = useState("유성구 덕명동");
+  const [arrivalAddress, setArrivalAddress] = useState("유성구 덕명동");
 
   // const onDayPress = (day) => {
   //   setSelectedDate(day.dateString);
@@ -150,21 +150,27 @@ const MyPage: React.FC = (): JSX.Element => {
   };
 
   const getGeoAddress = async (latitude, longitude) => {
-    console.log(latitude, longitude);
-    const apiKey = "AIzaSyCTQUD-fkSQAW20ujtRqqpxKMh6lU1uPSc"; // 실제 키 값으로 대체해야 합니다.
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
-    console.log(url);
+    const apiKey = "542311ca98f3ce1591320ed2d99fbcdd"; // 자신의 Kakao API 키로 대체해야 합니다.
+    const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}`;
 
     try {
-      const response = await axios.get(url);
-      if (response.data.status === "OK") {
-        // 전체 주소 정보 가져오기
-        const fullAddress = response.data.results[0].formatted_address;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `KakaoAK ${apiKey}`,
+        },
+      });
 
-        return fullAddress;
+      console.log(url);
+      if (response.data.meta.total_count > 0) {
+        // 주소 정보 가져오기
+        // const address = response.data.documents[0].address_name;
+        const region2DepthName = addressInfo.road_address.region_2depth_name;
+        const region3DepthName = addressInfo.road_address.region_3depth_name;
+
+        return region2DepthName + ", " + region3DepthName;
+      } else {
+        throw new Error("Unable to fetch the address.");
       }
-
-      throw new Error("Unable to fetch the address.");
     } catch (error) {
       console.error(error);
       return null;
@@ -364,11 +370,11 @@ const MyPage: React.FC = (): JSX.Element => {
             >
               <View style={{ width: "50%", marginLeft: 20 }}>
                 <Text style={styles.modalInnerTitleText}>출발지</Text>
-                <Text style={styles.modalInnerText}>유성구 덕명동</Text>
+                <Text style={styles.modalInnerText}>{departureAddress}</Text>
               </View>
               <View style={{ width: "50%" }}>
                 <Text style={styles.modalInnerTitleText}>도착지</Text>
-                <Text style={styles.modalInnerText}>유성구 덕명동</Text>
+                <Text style={styles.modalInnerText}>{arrivalAddress}</Text>
               </View>
             </View>
           </View>
