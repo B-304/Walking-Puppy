@@ -89,16 +89,19 @@ const MyPage: React.FC = (): JSX.Element => {
       console.log(date); // 추가: date 출력
       setSelectedItem(item); // 선택된 아이템 설정
       setModalVisible(!isModalVisible);
-      setSelectedDate(date);
+      setSelectedDate(item.day);
       console.log("==========");
-      console.log(selectedDate);
+      console.log(currentMonth);
+      console.log(item);
+      console.log(item.day);
+      console.log(date);
     }
   };
   const handleConfirmButtonClick = () => {
     // 필요한 처리 작성...
     setSelectedItem(null); // 선택된 아이템 설정
     setModalVisible(!isModalVisible);
-    setSelectedDate(null);
+    setSelectedDate("");
     setModalVisible(false);
     setSelectedModalWalk("");
   };
@@ -139,11 +142,11 @@ const MyPage: React.FC = (): JSX.Element => {
   // 캘린더 클릭 이벤트 핸들러 수정
   const handleDayPress = (date) => {
     const todayWalkItem = walkList.find(
-      (item) => item.day == date.day && state != "disabled",
+      (item) => item.day === dparseInt(date.day, 10) && state != "disabled",
     ); // 현재 날짜와 일치하는 항목 찾기
 
     if (todayWalkItem) {
-      toggleModal(todayWalkItem);
+      toggleModal(todayWalkItem, date);
       setSelectedDate(date.dateString); // 선택된 날짜 설정
       setSelectedIndex(0); // 인덱스 초기화
     }
@@ -164,8 +167,10 @@ const MyPage: React.FC = (): JSX.Element => {
       if (response.data.meta.total_count > 0) {
         // 주소 정보 가져오기
         // const address = response.data.documents[0].address_name;
-        const region2DepthName = addressInfo.road_address.region_2depth_name;
-        const region3DepthName = addressInfo.road_address.region_3depth_name;
+        const region2DepthName =
+          response.data.documents[0].address.region_2depth_name;
+        const region3DepthName =
+          response.data.documents[0].address.region_3depth_name;
 
         return region2DepthName + ", " + region3DepthName;
       } else {
@@ -225,10 +230,12 @@ const MyPage: React.FC = (): JSX.Element => {
                 (item) => item.day == date.day && state != "disabled",
               ); // 현재 날짜와 일치하는 항목 찾기
 
-              const today = date;
-              // console.log(today);
+              const today = date.month + "월 " + date.day + "일";
+              console.log(today);
               return (
-                <TouchableOpacity onPress={() => toggleModal(todayWalkItem)}>
+                <TouchableOpacity
+                  onPress={() => toggleModal(todayWalkItem, today)}
+                >
                   <View>
                     <Text
                       style={{
@@ -236,7 +243,7 @@ const MyPage: React.FC = (): JSX.Element => {
                         color:
                           state === "disabled"
                             ? "gray"
-                            : date.day == new Date().getDate() + 1
+                            : date.day == new Date().getDate()
                             ? "#4B9460"
                             : "black",
                       }}
@@ -290,7 +297,7 @@ const MyPage: React.FC = (): JSX.Element => {
           <Text
             style={[styles.middleTitle, { marginTop: 20, marginBottom: 10 }]}
           >
-            10월 4일 산책기록
+            {currentMonth}월 {selectedDate}일 산책기록
           </Text>
           <View
             style={{
@@ -300,14 +307,21 @@ const MyPage: React.FC = (): JSX.Element => {
               marginBottom: 10,
             }}
           >
-            <Ionicons name="chevron-back" size={30} color="#616161" />
+            {/* <Ionicons name="chevron-back" size={30} color="#616161" /> */}
 
+            <TouchableOpacity onPress={handleLeftArrowClick}>
+              <Ionicons name="chevron-back" size={30} color="#616161" />
+            </TouchableOpacity>
             <Image
               source={require("./assets/walkroute.png")}
               style={{ width: 280, height: 180 }}
             />
 
-            <Ionicons name="chevron-forward" size={30} color="#616161" />
+            {/* <Ionicons name="chevron-forward" size={30} color="#616161" /> */}
+
+            <TouchableOpacity onPress={handleRightArrowClick}>
+              <Ionicons name="chevron-forward" size={30} color="#616161" />
+            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -396,11 +410,15 @@ const MyPage: React.FC = (): JSX.Element => {
             >
               <View style={{ width: "50%", marginLeft: 20 }}>
                 <Text style={styles.modalInnerTitleText}>출발 시간</Text>
-                <Text style={styles.modalInnerText}>02:03:18</Text>
+                <Text style={styles.modalInnerText}>
+                  {selectedModalWalk.startTime}
+                </Text>
               </View>
               <View style={{ width: "50%" }}>
                 <Text style={styles.modalInnerTitleText}>도착 시간</Text>
-                <Text style={styles.modalInnerText}>02:50:15</Text>
+                <Text style={styles.modalInnerText}>
+                  {selectedModalWalk.endTime}
+                </Text>
               </View>
             </View>
           </View>
