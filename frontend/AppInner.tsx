@@ -15,14 +15,10 @@ import LoginScreen from './src/screens/loginStart/LoginScreen';
 // import TimeThemeSetting from './src/screens/walking/TimeThemeSetting';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
-<<<<<<< HEAD
 import { RootState } from './src/redux/reducer';
 import WalkingMain from './src/screens/walking/WalkingMain';
-=======
-import RootState from './src/redux/reducer';
 import ProfileEdit from './src/screens/myPage/ProfileEdit';
 import WalkingSetting from './src/screens/walking/WalkingSetting';
->>>>>>> feature-frontend/initial-Settings
 
 const AppInner:React.FC = () => {
   const isLoggendIn = useSelector((state:RootState) => state.user.isLoggedIn);
