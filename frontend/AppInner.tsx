@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 import React from 'react'
+=======
+
+import React from 'react';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+>>>>>>> fb2a5e42c1e25954fae12ee7e3d7e7d446b1cb82
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -16,9 +23,19 @@ import Ionic from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
 import { RootState } from './src/redux/reducer';
 import WalkingMain from './src/screens/walking/WalkingMain';
+<<<<<<< HEAD
 import HomeMain from './src/screens/home/HomeMain';
 
 
+=======
+
+type RootStackParamList = {
+  Home: undefined;
+  
+};
+
+type NavigationProp = StackNavigationProp<RootStackParamList, 'Home'>; // 'Home'은 현재 스크린의 이름입니다.
+>>>>>>> fb2a5e42c1e25954fae12ee7e3d7e7d446b1cb82
 
 const AppInner:React.FC = () => {
   const isLoggendIn = useSelector((state:RootState) => state.user.isLoggedIn);
@@ -72,8 +89,13 @@ const AppInner:React.FC = () => {
       {/*<Tab.Screen name="산책" component={WalkingSetting} />*/}
       <Tab.Screen name="홈" component={HomeMain} options={{ headerShown: false }} /> 
       <Tab.Screen name="스크랩" component={SpotSavedScreen} /> 
+<<<<<<< HEAD
       <Tab.Screen name="마이페이지" component={MyPageMain} options={{ headerShown: false }}/>
       {/*<Tab.Screen name="마이페이지" component={ProfileEdit} />*/}
+=======
+     <Tab.Screen name="마이페이지" component={MyPage} />
+    
+>>>>>>> fb2a5e42c1e25954fae12ee7e3d7e7d446b1cb82
     </Tab.Navigator>
     )
   };
@@ -96,6 +118,12 @@ const AppInner:React.FC = () => {
         {/* 산책 */}
         {/* <Stack.Screen name="SavedWalking" component={SavedWalkingSetting} />
         <Stack.Screen name="TimeThemeSetting" component={TimeThemeSetting} /> */}
+<<<<<<< HEAD
+=======
+      
+
+
+>>>>>>> fb2a5e42c1e25954fae12ee7e3d7e7d446b1cb82
         {/* 홈 */}
         
         {/* 스크랩 */}
