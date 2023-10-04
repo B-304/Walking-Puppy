@@ -10,7 +10,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [weatherData, setWeatherData] = useState<any>(null);
 
-  const BEARER_TOKEN = '';
+  const BEARER_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MSwiZXhwIjoxNjk2NDI5NzE4fQ.BqqbjEEiEBWB52OiLOPI_I7RgASP1WDXQojHcaLtrGI';
 
   useEffect(() => {
     axios
@@ -86,7 +86,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
             </View>
           </View>
           <View style={styles.dogText}>
-            <Text style={styles.dogDataNameText}>{DogData && DogData.name}</Text>
+            {/* <Text style={styles.dogDataNameText}>{DogData && DogData.name}</Text> */}
             <Text style={styles.dogdataText}>와 만난 지</Text>
             <Text style={styles.dogDataDayText}> {DogData.dayCount}</Text>
             <Text style={styles.dogdataText}>일 째</Text>
@@ -99,7 +99,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
           <TouchableOpacity style={styles.buttonStyle} onPress={handleWalkButtonClick}>
             <Text style={styles.buttonText}>산책 시작하기</Text>
           </TouchableOpacity>
-          <View style={styles.weather}>
+          {/* <View style={styles.weather}>
             <Text style={styles.city}>{weatherData.name}</Text>
             <Text style={styles.weatherDescription}>
               {weatherData.weather[0].description}
@@ -107,7 +107,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
             <Text style={styles.temperature}>
               {Math.round(weatherData.main.temp - 273.15)}°C
             </Text>
-          </View>
+          </View> */}
         </View>
       )}
     </View>

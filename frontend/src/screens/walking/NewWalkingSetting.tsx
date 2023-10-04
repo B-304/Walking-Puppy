@@ -1,57 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import MapView, { Marker, Region } from 'react-native-maps';
+import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
+import axios from 'axios';
+import {useNavigation} from '@react-navigation/native';
 
-
-const NewWalkingSetting: React.FC = (): JSX.Element => {
-  const [currentLocation, setCurrentLocation] = useState<Region | undefined>(undefined);
+const NewWalkingSetting: React.FC = () => {
+  const [departure, setDeparture] = useState<string | null>(null);
+  const [destination, setDestination] = useState<string>('');
+  const navigation = useNavigation();
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
-      position => {
-        const { latitude, longitude } = position.coords;
-        setCurrentLocation({
-          latitude,
-          longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        });
+      async (position) => {
+        try {
+          const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+            params: {
+              latlng: `${position.coords.latitude},${position.coords.longitude}`,
+              key: '${googleMapApiKey}',
+            },
+          });
+
+          if (response.data.results && response.data.results.length > 0) {
+            setDeparture(response.data.results[0].formatted_address);
+            console.log(response);
+          }
+
+        } catch (error) {
+          console.error('There was an error fetching the location data: ', error);
+        }
       },
-      error => console.log(error),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      (error) => {
+        console.log(error);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
   }, []);
 
   return (
     <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        region={currentLocation}
-        onRegionChangeComplete={region => setCurrentLocation(region)}
-      >
-        {currentLocation && (
-          <Marker
-            coordinate={{
-              latitude: currentLocation.latitude,
-              longitude: currentLocation.longitude,
-            }}
-            title="내 위치"
-          />
-        )}
-      </MapView>
+      <TouchableOpacity onPress={() => navigation.navigate('StartDesMap', { type: 'start' })}>
+      <TextInput
+        style={styles.input}
+        value={departure ?? ''}
+        placeholder="현재 위치"
+      />
+      </TouchableOpacity>
+      <TextInput
+        style={styles.input}
+        value={destination}
+        placeholder="도착지를 입력하세요."
+        onChangeText={setDestination}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    padding: 16,
   },
-  map: {
-    ...StyleSheet.absoluteFillObject,
+  input: {
+    borderWidth: 1,
+    borderColor: '#E8E8E8',
+    backgroundColor: '#F6F6F6',
+    padding: 12,
+    borderRadius: 4,
+    marginBottom: 12,
   },
 });
 
