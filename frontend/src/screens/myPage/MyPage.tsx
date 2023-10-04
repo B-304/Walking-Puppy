@@ -46,7 +46,7 @@ const MyPage: React.FC = (): JSX.Element => {
 
   const fetchWalkList = (year: number, month: number) => {
     const walkurl =
-      "http://10.0.2.2:8080/walk-list?yearAndMonth=" + year + "-" + month;
+      "https://j9b304.p.ssafy.io/api/walk-list?yearAndMonth=" + year + "-" + month;
     axios
       .get(walkurl, {
         headers: {
@@ -68,7 +68,7 @@ const MyPage: React.FC = (): JSX.Element => {
 //const url = 'https://j9b304.p.ssafy.io/api/2';
   useEffect(() => {
     axios
-      .get("https://localhost:8080/2")
+      .get("https://j9b304.p.ssafy.io/api/2")
       .then((response) => {
         console.log(response.data);
         setName(response.data.nickname);

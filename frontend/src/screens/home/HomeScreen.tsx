@@ -1,10 +1,11 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
+import { userActions } from '../../redux/reducer/userSlice';
+
 import axios from 'axios';
 import { RootState } from '../../redux/reducer';
 import { useNavigation } from '@react-navigation/native';
-
 
 
 const HomeScreen: React.FC = (): JSX.Element => {
@@ -18,7 +19,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     axios
-      .get('http://10.0.2.2:8080/dog/2', {
+      .get('https://j9b304.p.ssafy.io/api/dog/2', {
         headers: {
           Authorization: `Bearer ${BEARER_TOKEN}`,
         },
@@ -33,7 +34,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
     });
     
     axios
-      .get('http://10.0.2.2:8080/walk/today', {
+      .get('https://j9b304.p.ssafy.io/api/walk/today', {
         headers: {
           Authorization: `Bearer ${BEARER_TOKEN}`,
         },
@@ -91,6 +92,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
             <View style={styles.textWithDivider2}>
               <Text style={styles.walkdataText}> 칼로리 {'\n\n'} {dailyWalkData ? dailyWalkData.calorie : 0} kcal</Text>
             </View>
+
           </View>
           <View style={styles.dogText}>
             {/* <Text style={styles.dogDataNameText}>{DogData && DogData.name}</Text> */}
