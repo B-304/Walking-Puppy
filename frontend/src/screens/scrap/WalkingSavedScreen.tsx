@@ -56,7 +56,6 @@ const NewWalkingSetting: React.FC = (): JSX.Element => {
   useEffect(() => {
     const BEARER_TOKEN: string = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MiwiZXhwIjoxNjk2NjA4NDI2fQ.V6oAsUPGAMxYomvzX25Hny1z1RaJFJMLYXvSizEsyY4';
 
-    // 데이터를 가져오는 API 요청
     axios
       .get('https://j9b304.p.ssafy.io/api/walk/scrap-list', {
         headers: {
@@ -90,6 +89,7 @@ const NewWalkingSetting: React.FC = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 0,
     backgroundColor: '#ffffff',
   },

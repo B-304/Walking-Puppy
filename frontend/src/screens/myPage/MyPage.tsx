@@ -1,11 +1,13 @@
 import { View, Text, Image, Button, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { StyleSheet } from 'react-native';
 import { Calendar } from "react-native-calendars";
 import Modal from "react-native-modal";
 import Ionic from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation } from '@react-navigation/native';
 
 const MyPage: React.FC = (): JSX.Element => {
   const [name, setName] = useState(null);
@@ -23,6 +25,7 @@ const MyPage: React.FC = (): JSX.Element => {
   const [selectedModalWalk, setSelectedModalWalk] = useState("");
   const [departureAddress, setDepartureAddress] = useState("유성구 덕명동");
   const [arrivalAddress, setArrivalAddress] = useState("유성구 덕명동");
+  const navigation = useNavigation();
 
   // const onDayPress = (day) => {
   //   setSelectedDate(day.dateString);
@@ -35,6 +38,11 @@ const MyPage: React.FC = (): JSX.Element => {
 
   const BEARER_TOKEN =
     "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoeW9reW91bmdAa2FrYW8uY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsInR5cGUiOiJBQ0NFU1MiLCJ1c2VySWQiOjMsImV4cCI6MTY5NjQ0NTgxNH0.eAypxIIbsTrnohTkZYnsEtNZKwEhzF7lXnCE1WQfklw";
+
+    const Profile = () => {
+          navigation.navigate('회원정보 수정');
+    };
+
 
   const fetchWalkList = (year: number, month: number) => {
     const walkurl =
@@ -57,10 +65,10 @@ const MyPage: React.FC = (): JSX.Element => {
         setWalkList([]);
       });
   };
-
+//const url = 'https://j9b304.p.ssafy.io/api/2';
   useEffect(() => {
     axios
-      .get("http://10.0.2.2:8080/3")
+      .get("https://localhost:8080/2")
       .then((response) => {
         console.log(response.data);
         setName(response.data.nickname);
@@ -206,9 +214,12 @@ const MyPage: React.FC = (): JSX.Element => {
     }
   }, [selectedModalWalk]);
 
+
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <View style={styles.grayBox}>
+
+      <TouchableOpacity onPress={Profile} style={styles.grayBox}>
         <Image
           source={require("./assets/image-user.png")}
           style={styles.image}
@@ -218,7 +229,9 @@ const MyPage: React.FC = (): JSX.Element => {
         <View style={{ flex: 1, alignItems: "flex-end" }}>
           <Ionicons name="chevron-forward" size={35} color="#616161" />
         </View>
-      </View>
+      </TouchableOpacity>
+
+
       <View style={styles.contentContainer}>
         <Text style={styles.middleTitle}>월별 산책 기록</Text>
         <View style={styles.calcontainer}>
