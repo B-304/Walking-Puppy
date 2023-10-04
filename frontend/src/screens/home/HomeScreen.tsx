@@ -10,11 +10,11 @@ const HomeScreen: React.FC = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [weatherData, setWeatherData] = useState<any>(null);
 
-  const BEARER_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MSwiZXhwIjoxNjk2NDI5NzE4fQ.BqqbjEEiEBWB52OiLOPI_I7RgASP1WDXQojHcaLtrGI';
+  const BEARER_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MiwiZXhwIjoxNjk2NDAzNzEwfQ.fROTgdimSGBJuKux_AZUFTj1rJRmfS7is6BfxWNtvq0';
 
   useEffect(() => {
     axios
-      .get('http://10.0.2.2:8080/dog/2', {
+      .get('https://j9b304.p.ssafy.io/api/dog/2', {
         headers: {
           Authorization: `Bearer ${BEARER_TOKEN}`,
         },
@@ -29,7 +29,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
     });
     
     axios
-      .get('http://10.0.2.2:8080/walk/today', {
+      .get('https://j9b304.p.ssafy.io/api/walk/today', {
         headers: {
           Authorization: `Bearer ${BEARER_TOKEN}`,
         },
@@ -86,7 +86,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
             </View>
           </View>
           <View style={styles.dogText}>
-            {/* <Text style={styles.dogDataNameText}>{DogData && DogData.name}</Text> */}
+            <Text style={styles.dogDataNameText}>{DogData && DogData.name}</Text>
             <Text style={styles.dogdataText}>와 만난 지</Text>
             <Text style={styles.dogDataDayText}> {DogData.dayCount}</Text>
             <Text style={styles.dogdataText}>일 째</Text>
