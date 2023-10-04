@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// 최초의 상태를 저장합니다.
 const initialState = {
   accessToken: "",
   refreshToken: "",
