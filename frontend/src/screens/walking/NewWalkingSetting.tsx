@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from './WalkingMain';
+
 type LocationData = {
   lat: number ;
   lng: number;
