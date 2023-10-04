@@ -12,12 +12,15 @@ import LoginScreen from "./src/screens/loginStart/LoginScreen";
 // import WalkingSavedScreen from './src/screens/scrap/WalkingSavedScreen';
 // import SavedWalkingSetting from './src/screens/walking/SavedWalkingSetting';
 // import TimeThemeSetting from './src/screens/walking/TimeThemeSetting';
-import Ionic from "react-native-vector-icons/Ionicons";
-import { useSelector } from "react-redux";
-import { RootState } from "./src/redux/reducer";
-import WalkingMain from "./src/screens/walking/WalkingMain";
-import HomeMain from "./src/screens/home/HomeMain";
+import Ionic from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
+import { RootState } from './src/redux/reducer';
+import WalkingMain from './src/screens/walking/WalkingMain';
+import WalkingSavedScreen from './src/screens/scrap/WalkingSavedScreen';
+import HomeMain from './src/screens/home/HomeMain';
 import RouteDetail from "./src/screens/scrap/RouteDetail";
+
+
 
 type RootStackParamList = {
   Home: undefined;

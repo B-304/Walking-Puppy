@@ -55,7 +55,7 @@ const RouteDetail: React.FC = (): JSX.Element => {
   }, []);
 
   const getGeoAddress = async (latitude, longitude) => {
-    const apiKey = "542311ca98f3ce1591320ed2d99fbcdd";
+    const apiKey = "";
     const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}`;
 
     try {
