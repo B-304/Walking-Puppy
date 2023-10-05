@@ -2,16 +2,19 @@ import { View, Text ,StyleSheet,TouchableOpacity,Image} from 'react-native'
 import React,{useEffect, useState} from 'react'
 import axios from 'axios'
 import{accessToken} from 'react-native-dotenv';
+import { useNavigation } from "@react-navigation/native";
 
 const SavedWalkingSetting:React.FC = (): JSX.Element => {
   
+  const navigation = useNavigation();
   const BEARER_TOKEN =accessToken;
   const[data,setData] = useState({
     startLocation:'',
     arrivaLocation:'',
     estimatedTime:'',
-    distance:'',
-    theme:'',
+    estimatedDistance:'',
+    themeName:'',
+    walkId:'',
   })
 
   useEffect(() => {
@@ -24,12 +27,14 @@ const SavedWalkingSetting:React.FC = (): JSX.Element => {
          })
       .then((response)=>{
         const responseData = response.data;
+        console.log(response.data);
         setData({
           startLocation:"유성구 덕명동" ,
           arrivaLocation:"유성구 덕명동" ,
-          estimatedTime:responseData.time,
-          distance:responseData.distance,
-          theme:responseData.theme,
+          estimatedTime:responseData.estimatedTime,
+          estimatedDistance:responseData.estimatedDistance,
+          themeName:responseData.themeName,
+          walkId:responseData.walkId,
 
         });
 
@@ -42,7 +47,7 @@ const SavedWalkingSetting:React.FC = (): JSX.Element => {
   return (
     <View style = {styles.container}>
       <Image style={styles.img}
-        source={require('../../assets/walkroute.png')}
+        source={require('../../assets/route.png')}
       />
       <View style = {styles.walk}>
         <View style = {{flexDirection: 'row',}}>
@@ -58,24 +63,24 @@ const SavedWalkingSetting:React.FC = (): JSX.Element => {
         <View style = {{flexDirection: 'row',}}>
           <View style={styles.circle} />
           <Text style= {styles.walkinfo}>예상 소요시간</Text>
-          <Text style= {styles.walkinfo}>{data.estimatedTime}</Text>
+          <Text style= {styles.walkinfo}>{data.estimatedTime} 분</Text>
         </View>
         <View style = {{flexDirection: 'row',}}>
           <View style={styles.circle} />
           <Text style= {styles.walkinfo}>이동거리</Text>
-          <Text style= {styles.walkinfo}>{data.distance}</Text>
+          <Text style= {styles.walkinfo}>{data.estimatedDistance} km</Text>
         </View>
         <View style = {{flexDirection: 'row',}}>
           <View style={styles.circle} />
           <Text style= {styles.walkinfo}>테마</Text>
-          <Text style= {styles.walkinfo}>{data.theme}</Text>
+          <Text style= {styles.walkinfo}>{data.themeName}</Text>
         </View>
  
       </View>
 
 
       <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>산책 시작하기</Text>
+              <Text style={styles.buttonText} onPress={() => navigation.navigate('산책 중', data.walkId)}>산책 시작하기</Text>
         </TouchableOpacity>
     </View>
   )
@@ -122,7 +127,7 @@ const styles = StyleSheet.create({
 
   },
   img:{
-    width:310,
+    width:300,
     height:350,
     marginTop:25,
     marginLeft:43,

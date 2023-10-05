@@ -56,7 +56,7 @@ const WalkingSetting:React.FC = (): JSX.Element => {
             return;
         }
 
-        navigation.navigate('추천 산책 경로',Response.data);
+        navigation.navigate('추천 산책 경로');
 
 
         // const updatePathData={
