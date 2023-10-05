@@ -19,6 +19,7 @@ import WalkingMain from "./src/screens/walking/WalkingMain";
 import WalkingSavedScreen from "./src/screens/scrap/WalkingSavedScreen";
 import HomeMain from "./src/screens/home/HomeMain";
 import RouteDetail from "./src/screens/scrap/RouteDetail";
+import ScrapMain from "./src/screens/scrap/ScrapMain";
 
 type RootStackParamList = {
   Home: undefined;
@@ -35,7 +36,7 @@ const AppInner: React.FC = () => {
   const BottomTabScreen: React.FC = () => {
     return (
       <Tab.Navigator
-        initialRouteName="홈"
+        initialRouteName="홈."
         screenOptions={({ route }) => ({
           tabBarHideOnKeyboard: true,
           headerShown: true,
@@ -54,7 +55,7 @@ const AppInner: React.FC = () => {
               iconName = focused ? "trophy" : "trophy-outline";
             } else if (route.name === "산책") {
               iconName = focused ? "footsteps-sharp" : "footsteps-outline";
-            } else if (route.name === "홈") {
+            } else if (route.name === "홈.") {
               iconName = focused ? "home-sharp" : "home-outline";
             } else if (route.name === "스크랩") {
               iconName = focused ? "bookmark-sharp" : "bookmark-outline";
@@ -81,13 +82,15 @@ const AppInner: React.FC = () => {
         {/*<Tab.Screen name="산책" component={NewWalkingSetting} />*/}
         {/*<Tab.Screen name="산책" component={WalkingSetting} />*/}
         <Tab.Screen
-          name="홈"
+          name="홈."
           component={HomeMain}
           options={{ headerShown: false }}
         />
-        <Tab.Screen name="스크랩" component={WalkingSavedScreen} />
-        {/* <Tab.Screen name="스크랩" component={SpotSavedScreen} /> */}
-
+        <Tab.Screen
+          name="스크랩"
+          component={ScrapMain}
+          options={{ headerShown: false }}
+        />
         <Tab.Screen
           name="마이페이지"
           component={MyPageMain}
