@@ -133,7 +133,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
             <Text style={styles.dogdataText}>일 째</Text>
           </View>
           <Image
-            source={require("../../assets/dog_test.png")}
+            source={require("../../assets/dog_body.png")}
             style={styles.dogImage}
           />
           <View style={styles.dogLevelText}>
