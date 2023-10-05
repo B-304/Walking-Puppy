@@ -93,14 +93,17 @@ const HomeScreen: React.FC = (): JSX.Element => {
           <Text style={styles.greetingText}>오늘의 산책 기록</Text>
 
           <View style={styles.horizontalTextContainer}>
+          <View style={styles.textWithDivider}>
+            <Text style={styles.walkdataTitle}> 걸음수</Text>
+            <Text style={styles.walkdataContent}>{dailyWalkData ? dailyWalkData.walkCount : 0} 걸음</Text>
+          </View>
             <View style={styles.textWithDivider}>
-              <Text style={styles.walkdataText}> 걸음수 {'\n\n'} {dailyWalkData ? dailyWalkData.walkCount : 0} 걸음</Text>
-            </View>
-            <View style={styles.textWithDivider}>
-              <Text style={styles.walkdataText}> 이동거리 {'\n\n'} {dailyWalkData ? dailyWalkData.distance : 0} km</Text>
+              <Text style={styles.walkdataTitle}> 이동거리</Text>
+              <Text style={styles.walkdataContent}>{dailyWalkData ? dailyWalkData.distance : 0} km</Text>
             </View>
             <View style={styles.textWithDivider2}>
-              <Text style={styles.walkdataText}> 칼로리 {'\n\n'} {dailyWalkData ? dailyWalkData.calorie : 0} kcal</Text>
+              <Text style={styles.walkdataTitle}> 칼로리</Text>
+              <Text style={styles.walkdataContent}>{dailyWalkData ? dailyWalkData.calorie : 0} kcal</Text>
             </View>
           </View>
           <View style={styles.dogText}>
@@ -175,8 +178,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop:10,
   },
-  walkdataText: {
-    fontSize: 13.5,
+  walkdataTitle: {
+    fontSize: 15,
+    marginTop: 10,
+    marginBottom: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    textAlignVertical: 'center',
+    fontWeight: 'bold',
+  },
+  walkdataContent: {
+    fontSize: 14.5,
     marginTop: 10,
     marginBottom: 10,
     marginRight: 10,
