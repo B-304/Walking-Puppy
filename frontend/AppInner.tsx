@@ -3,7 +3,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import SpotSavedScreen from "./src/screens/scrap/SpotSavedScreen";
+import SpotSavedScreen from "./src/screens/walking/SpotSavedScreen";
 import NewWalkingSetting from "./src/screens/walking/NewWalkingSetting";
 import HomeScreen from "./src/screens/home/HomeScreen";
 import PopularSpot from "./src/screens/popularSpot/PopularSpot";
@@ -86,7 +86,7 @@ const AppInner: React.FC = () => {
           options={{ headerShown: false }}
         />
         <Tab.Screen name="스크랩" component={WalkingSavedScreen} />
-        {/* <Tab.Screen name="스크랩" component={RouteDetail} /> */}
+        {/* <Tab.Screen name="스크랩" component={SpotSavedScreen} /> */}
 
         <Tab.Screen
           name="마이페이지"

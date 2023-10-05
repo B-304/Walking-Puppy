@@ -69,7 +69,8 @@ const NewWalkingSetting: React.FC = (): JSX.Element => {
       "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MiwiZXhwIjoxNjk2NjA4NDI2fQ.V6oAsUPGAMxYomvzX25Hny1z1RaJFJMLYXvSizEsyY4";
 
     axios
-      .get("https://j9b304.p.ssafy.io/api/walk/scrap-list", {
+      // .get("https://j9b304.p.ssafy.io/api/walk/scrap-list", {
+      .get("http://10.0.2.2:8080/walk/scrap-list", {
         headers: {
           Authorization: `Bearer ${BEARER_TOKEN}`,
         },
