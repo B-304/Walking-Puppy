@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React from "react";
 // import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import {NavigationContainer, } from '@react-navigation/native';
@@ -18,23 +18,16 @@ import React from 'react';
 // import WalkingSavedScreen from './src/screens/scrap/WalkingSavedScreen';
 // import SavedWalkingSetting from './src/screens/walking/SavedWalkingSetting';
 // import TimeThemeSetting from './src/screens/walking/TimeThemeSetting';
-import AppInner from './AppInner';
-import { Provider } from 'react-redux';
-import store from './src/redux/store';
+import AppInner from "./AppInner";
+import { Provider } from "react-redux";
+import store from "./src/redux/store";
 
-const App : React.FC = (): JSX.Element => {
-
-  
-  // eslint-disable-next-line react/no-unstable-nested-components
-
-
+const App: React.FC = (): JSX.Element => {
   return (
     <Provider store={store}>
       <AppInner />
     </Provider>
   );
-
 };
-
 
 export default App;
