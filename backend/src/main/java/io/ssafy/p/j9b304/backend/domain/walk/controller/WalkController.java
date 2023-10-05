@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -136,8 +135,8 @@ public class WalkController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "산책 스크랩 성공")
     @Operation(summary = "산책 스크랩", description = "산책 스크랩 (보관함에 저장)")
-    public void walkScrap(HttpServletRequest httpServletRequest, @RequestPart WalkModifyRequestDto walkModifyRequestDto, @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
-        walkService.scrapWalk(httpServletRequest, walkModifyRequestDto, multipartFile);
+    public void walkScrap(HttpServletRequest httpServletRequest, @RequestBody WalkModifyRequestDto walkModifyRequestDto/*, @RequestPart(value = "file", required = false) MultipartFile multipartFile */) {
+        walkService.scrapWalk(httpServletRequest, walkModifyRequestDto /*, multipartFile*/);
     }
 
     @GetMapping("/today")
