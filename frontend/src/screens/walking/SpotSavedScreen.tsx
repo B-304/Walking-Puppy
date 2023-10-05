@@ -16,12 +16,12 @@ import DismissKeyboardView from "../../components/DismissKeyboardView";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
 import { accessToken } from "react-native-dotenv";
-import { useRoute } from '@react-navigation/native';
+import { useRoute } from "@react-navigation/native";
 
 const SpotSavedScreen: React.FC = (): JSX.Element => {
   const navigation = useNavigation();
   const route = useRoute();
-  const workId = route.params;
+  const walkId = route.params;
 
   const coordinates = [
     { latitude: 36.3463, longitude: 127.2941 },
@@ -52,7 +52,7 @@ const SpotSavedScreen: React.FC = (): JSX.Element => {
   const [longitude, setLongitude] = useState(coordinates[0].longitude + "");
   const [walkTotal, setWalkTotal] = useState("");
   const mapRef = useRef(null);
-  const walkId = 57; //앞 화면에서 받아오는 데이터
+  // const walkId = 57; //앞 화면에서 받아오는 데이터
   const [walkName, setWalkName] = useState("");
 
   useEffect(() => {
