@@ -125,7 +125,7 @@ const SpotSavedScreen: React.FC = (): JSX.Element => {
 
     //산책 종료 axios
     // const url = "https://j9b304.p.ssafy.io/api/walk/over"; // 탈퇴 API 엔드포인트 URL로 변경해야 합니다.
-    const url = "http://10.0.2.2:8080/walk/over";
+    const url = "https://j9b304.p.ssafy.io/api/walk/over";
     const postdata = {
       walkId: walkId,
       distance: (elapsedSeconds / 60) * 60,
@@ -170,7 +170,7 @@ const SpotSavedScreen: React.FC = (): JSX.Element => {
   const saveWalking = () => {
     //산책로 저장 axios
     // const url = "https://j9b304.p.ssafy.io/api/walk/over";
-    const url = "http://10.0.2.2:8080/walk/scrap";
+    const url = "https://j9b304.p.ssafy.io/api/walk/scrap";
     const putdata = {
       walkId: walkId,
       name: walkName,
