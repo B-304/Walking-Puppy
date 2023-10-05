@@ -8,9 +8,6 @@ const LoginScreen: React.FC = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const handleLoginButtonClick = () => {
-    console.log(accessToken);
-
-
 
     // Redux의 로그인 상태를 true로 설정
     dispatch(userActions.loginSuccess());

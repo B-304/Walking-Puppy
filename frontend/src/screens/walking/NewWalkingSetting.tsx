@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Pressable, Text } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
+import {google_map_api_key} from 'react-native-dotenv';
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from './WalkingMain';
@@ -35,13 +36,13 @@ const NewWalkingSetting: React.FC<CombinedProps> = ({navigation}) => {
           const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
             params: { // 내 위치 정보를 가져옴 현재 오류중
               latlng: `${position.coords.latitude},${position.coords.longitude}`,
-              key: '${googleMapApiKey}',
+              API_KEY: google_map_api_key,
             },
           });
-
+          
+          console.log(response.data);
           if (response.data.results && response.data.results.length > 0) {
             setStart(response.data.results[0].formatted_address);
-            console.log(response);
           }
 
         } catch (error) {
