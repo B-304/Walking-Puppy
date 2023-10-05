@@ -75,7 +75,7 @@ const MyPage: React.FC = (): JSX.Element => {
         fetchWalkList(new Date().getFullYear(), new Date().getMonth() + 1);
       })
       .catch((error) => {
-        console.error("데이터 요청 실패:", error);
+        console.error("사용자 데이터 요청 실패:", error);
       });
   }, []);
 
