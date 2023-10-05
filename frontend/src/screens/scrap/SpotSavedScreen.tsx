@@ -1,3 +1,4 @@
+
 import React, {useState} from 'react';
 import MapView, { Polyline } from 'react-native-maps';
 import { View, StyleSheet, Pressable, Text, TextInput, KeyboardAvoidingView } from 'react-native';
@@ -334,3 +335,4 @@ const styles = StyleSheet.create({
 
 
 export default SpotSavedScreen;
+
