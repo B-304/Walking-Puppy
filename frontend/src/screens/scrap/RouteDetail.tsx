@@ -101,7 +101,7 @@ const RouteDetail: React.FC = (): JSX.Element => {
   const handleDeleteRoute = () => {
     const walkId = walk.walkId;
     // const url = "https://j9b304.p.ssafy.io/api/walk/${walkId}"; // 탈퇴 API 엔드포인트 URL로 변경해야 합니다.
-    const url = `http://10.0.2.2:8080/walk/${walkId}`;
+    const url = `https://j9b304.p.ssafy.io/api/walk/${walkId}`;
     axios
       .delete(url, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -122,7 +122,7 @@ const RouteDetail: React.FC = (): JSX.Element => {
   const newWalkExistPath = () => {
     const walkId = walk.walkId;
     // const url = "https://j9b304.p.ssafy.io/api/walk/${walkId}"; // 탈퇴 API 엔드포인트 URL로 변경해야 합니다.
-    const url = "http://10.0.2.2:8080/walk/exist-path";
+    const url = "https://j9b304.p.ssafy.io/api/walk/exist-path";
     axios
       .post(
         url,
