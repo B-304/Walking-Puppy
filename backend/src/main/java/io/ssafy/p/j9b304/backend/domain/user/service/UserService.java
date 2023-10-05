@@ -222,37 +222,96 @@ public class UserService {
             throw new IllegalArgumentException("사용자가 일치하지 않습니다.");
     }
 
+//    public List<UserGetWalkListResponseDto> getUserWalkList(String yearAndMonth, HttpServletRequest httpServletRequest) {
+//        User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
+//        Integer walkCountGoal = userRepository.findByUserId(walker.getUserId()).get().getWalkCount();
+//
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+//        LocalDateTime localDate = YearMonth.parse(yearAndMonth, formatter).atDay(1).atStartOfDay();
+//
+////        List<Walk> walks = walkRepository.findByStartTimeBetween(
+////                localDate.withDayOfMonth(1),
+////                localDate.withDayOfMonth(localDate.toLocalDate().lengthOfMonth())
+////        );
+//
+//        List<Walk> walks = walkRepository.findByStartTimeBetweenAndStateAndUser(
+//                localDate.withDayOfMonth(1),
+//                localDate.withDayOfMonth(localDate.toLocalDate().lengthOfMonth()),
+//                '1', // Assuming 1 is the desired state value
+//                walker
+//        );
+//
+//        Map<String, List<Walk>> walksByDate = new HashMap<>();
+//
+//        // 일자별로 Map에 정렬
+//        for (Walk walk : walks) {
+//            String dateKey = walk.getStartTime().toLocalDate().getDayOfMonth() + ""; // 일(day)만 추출하여 문자열로 변환
+//            walksByDate.computeIfAbsent(dateKey, k -> new ArrayList<>()).add(walk);
+//        }
+//
+//        List<UserGetWalkListResponseDto> result = new ArrayList<>();
+//
+//        for (Map.Entry<String, List<Walk>> entry : walksByDate.entrySet()) {
+//            String dateKey = entry.getKey();
+//            List<Walk> walksForDate = entry.getValue();
+//
+//            // 날짜별로 Walk 엔티티의 walkCount 합산
+//            int totalWalkCount = walksForDate.stream()
+//                    .mapToInt(Walk::getWalkCount)
+//                    .sum();
+//
+//            // walkCount와 walkCountGoal을 비교하여 isAchieved 설정
+//            boolean isAchieved = totalWalkCount >= walkCountGoal;
+//
+//            // Walk 엔티티의 walkId 추출
+//            List<Long> walkIdList = new ArrayList<>();
+//            for (Walk walk : walksForDate) {
+//                walkIdList.add(walk.getWalkId());
+//            }
+//
+//            // 결과 엔티티 생성 및 리스트에 추가
+//            UserGetWalkListResponseDto responseDto = UserGetWalkListResponseDto.builder()
+//                    .day(entry.getKey()) // 일(day)만 반환
+//                    .walkCount(totalWalkCount)
+//                    .isAchieved(isAchieved)
+//                    .walkIdList(walkIdList)
+//                    .build();
+//
+//            result.add(responseDto);
+//        }
+//
+//        return result;
+//    }
+
     public List<UserGetWalkListResponseDto> getUserWalkList(String yearAndMonth, HttpServletRequest httpServletRequest) {
         User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
         Integer walkCountGoal = userRepository.findByUserId(walker.getUserId()).get().getWalkCount();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        LocalDateTime localDate = YearMonth.parse(yearAndMonth, formatter).atDay(1).atStartOfDay();
-
-//        List<Walk> walks = walkRepository.findByStartTimeBetween(
-//                localDate.withDayOfMonth(1),
-//                localDate.withDayOfMonth(localDate.toLocalDate().lengthOfMonth())
-//        );
-
-        List<Walk> walks = walkRepository.findByStartTimeBetweenAndStateAndUser(
-                localDate.withDayOfMonth(1),
-                localDate.withDayOfMonth(localDate.toLocalDate().lengthOfMonth()),
-                '1', // Assuming 1 is the desired state value
-                walker
-        );
-
-        Map<String, List<Walk>> walksByDate = new HashMap<>();
-
-        // 일자별로 Map에 정렬
-        for (Walk walk : walks) {
-            String dateKey = walk.getStartTime().toLocalDate().getDayOfMonth() + ""; // 일(day)만 추출하여 문자열로 변환
-            walksByDate.computeIfAbsent(dateKey, k -> new ArrayList<>()).add(walk);
-        }
-
+        // yearAndMonth 파라미터를 콤마로 분리
+        String[] yearMonths = yearAndMonth.split(",");
         List<UserGetWalkListResponseDto> result = new ArrayList<>();
 
-        for (Map.Entry<String, List<Walk>> entry : walksByDate.entrySet()) {
-            String dateKey = entry.getKey();
+        for (String yearMonth : yearMonths) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+            LocalDateTime localDate = YearMonth.parse(yearMonth, formatter).atDay(1).atStartOfDay();
+
+            List<Walk> walks = walkRepository.findByStartTimeBetweenAndStateAndUser(
+                    localDate.withDayOfMonth(1),
+                    localDate.withDayOfMonth(localDate.toLocalDate().lengthOfMonth()),
+                    '1', // Assuming 1 is the desired state value
+                    walker
+            );
+
+            Map<String, List<Walk>> walksByDate = new HashMap<>();
+
+            // 일자별로 Map에 정렬
+            for (Walk walk : walks) {
+                String dateKey = walk.getStartTime().toLocalDate().getDayOfMonth() + ""; // 일(day)만 추출하여 문자열로 변환
+                walksByDate.computeIfAbsent(dateKey, k -> new ArrayList<>()).add(walk);
+            }
+
+            for (Map.Entry<String, List<Walk>> entry : walksByDate.entrySet()) {
+                String dateKey = entry.getKey();
             List<Walk> walksForDate = entry.getValue();
 
             // 날짜별로 Walk 엔티티의 walkCount 합산
@@ -278,9 +337,11 @@ public class UserService {
                     .build();
 
             result.add(responseDto);
+            }
         }
 
         return result;
     }
+
 
 }
