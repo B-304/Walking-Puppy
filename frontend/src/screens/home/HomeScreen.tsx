@@ -112,7 +112,7 @@ const HomeScreen: React.FC = (): JSX.Element => {
             <Text style={styles.dogDataDayText}> {DogData.dayCount}</Text>
             <Text style={styles.dogdataText}>일 째</Text>
           </View>
-          <Image source={require('../../assets/dog_test.png')} style={styles.dogImage} />
+          <Image source={require('../../assets/dog_body.png')} style={styles.dogImage} />
           <View style={styles.dogLevelText}>
             <Text style={styles.levelText}>Lv.{DogData.dogLevel}</Text>
             <Text style={styles.expText}>{DogData.exp} / {DogData.levelRange} EXP</Text>
