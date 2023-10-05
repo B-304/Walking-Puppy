@@ -66,6 +66,12 @@ public class WalkGetDetailResponseDto {
     @Schema(description = "산책로 지도 이미지")
     String imageUrl;
 
+    @Schema(description = "예상 소요 시간")
+    Integer estimatedTime;
+
+    @Schema(description = "예상 이동 거리")
+    Double estimatedDistance;
+
     @Builder
     public WalkGetDetailResponseDto(Walk walk, List<Route> routeList, List<Spot> spotList, File file) {
         this.walkId = walk.getWalkId();
@@ -83,6 +89,9 @@ public class WalkGetDetailResponseDto {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         this.startTime = walk.getStartTime().format(formatter);
         this.endTime = walk.getEndTime().format(formatter);
+        this.estimatedTime = walk.getEstimatedTime();
+        this.estimatedDistance = walk.getEstimatedDistance();
+        
         this.routeList = routeList.stream().map(r -> new RouteGetResponseDto(r)).collect(Collectors.toList());
         this.spotList = spotList.stream().map(Spot::toSpotDto).collect(Collectors.toList());
         if (file != null)
