@@ -91,6 +91,7 @@ const AppInner: React.FC = () => {
           component={ScrapMain}
           options={{ headerShown: false }}
         />
+
         <Tab.Screen
           name="마이페이지"
           component={MyPageMain}
