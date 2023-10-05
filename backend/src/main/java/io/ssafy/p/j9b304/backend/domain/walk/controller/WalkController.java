@@ -1,6 +1,9 @@
 package io.ssafy.p.j9b304.backend.domain.walk.controller;
 
-import io.ssafy.p.j9b304.backend.domain.walk.dto.request.*;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkAddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkExistPathAddRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkModifyRequestDto;
+import io.ssafy.p.j9b304.backend.domain.walk.dto.request.WalkSaveRequestDto;
 import io.ssafy.p.j9b304.backend.domain.walk.dto.response.*;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
 import io.ssafy.p.j9b304.backend.domain.walk.service.RouteService;
@@ -18,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -134,8 +136,8 @@ public class WalkController {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(responseCode = "201", description = "산책 스크랩 성공")
     @Operation(summary = "산책 스크랩", description = "산책 스크랩 (보관함에 저장)")
-    public void walkScrap(HttpServletRequest httpServletRequest, @RequestBody WalkModifyRequestDto walkModifyRequestDto, @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
-        walkService.scrapWalk(httpServletRequest, walkModifyRequestDto, multipartFile );
+    public void walkScrap(HttpServletRequest httpServletRequest, @RequestPart WalkModifyRequestDto walkModifyRequestDto, @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+        walkService.scrapWalk(httpServletRequest, walkModifyRequestDto, multipartFile);
     }
 
     @GetMapping("/today")
