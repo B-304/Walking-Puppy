@@ -54,7 +54,7 @@ const AppInner: React.FC = () => {
             iconName = focused ? 'trophy' : 'trophy-outline';
           } else if (route.name === '산책') {
             iconName = focused ? 'footsteps-sharp' : 'footsteps-outline';
-          } else if (route.name === '홈.') {
+          } else if (route.name === '홈') {
             iconName = focused ? 'home-sharp' : 'home-outline';
           } else if (route.name === '스크랩') {
             iconName = focused ? 'bookmark-sharp' : 'bookmark-outline';
@@ -76,7 +76,7 @@ const AppInner: React.FC = () => {
       <Tab.Screen name="산책" component={WalkingMain} options={{ headerShown: false }} /> 
       {/*<Tab.Screen name="산책" component={NewWalkingSetting} />*/}
       {/*<Tab.Screen name="산책" component={WalkingSetting} />*/}
-      <Tab.Screen name="홈." component={HomeMain} options={{ headerShown: false }} /> 
+      <Tab.Screen name="홈" component={HomeMain} options={{ headerShown: false }} /> 
       <Tab.Screen name="스크랩" component={ScrapMain} options={{ headerShown: false }} /> 
       <Tab.Screen name="마이페이지" component={MyPageMain} options={{ headerShown: false }}/>
       {/*<Tab.Screen name="마이페이지" component={ProfileEdit} />*/}

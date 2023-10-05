@@ -8,6 +8,7 @@ import Ionic from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import{accessToken} from 'react-native-dotenv';
 
 const MyPage: React.FC = (): JSX.Element => {
   const [name, setName] = useState(null);
@@ -27,6 +28,7 @@ const MyPage: React.FC = (): JSX.Element => {
   const [arrivalAddress, setArrivalAddress] = useState("유성구 덕명동");
   const navigation = useNavigation();
 
+
   // const onDayPress = (day) => {
   //   setSelectedDate(day.dateString);
   //   setModalVisible(true);
@@ -36,8 +38,7 @@ const MyPage: React.FC = (): JSX.Element => {
   //   setModalVisible(false);
   // };
 
-  const BEARER_TOKEN =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoeW9reW91bmdAa2FrYW8uY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsInR5cGUiOiJBQ0NFU1MiLCJ1c2VySWQiOjMsImV4cCI6MTY5NjQ0NTgxNH0.eAypxIIbsTrnohTkZYnsEtNZKwEhzF7lXnCE1WQfklw";
+  const BEARER_TOKEN =accessToken;
 
   const Profile = () => {
     navigation.navigate("회원정보 수정");
@@ -60,6 +61,7 @@ const MyPage: React.FC = (): JSX.Element => {
       })
       .catch((error) => {
         console.log(year, month);
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!실패 ")
         console.error("데이터 가져오기 실패:", error);
         setWalkList([]);
       });
@@ -117,9 +119,8 @@ const MyPage: React.FC = (): JSX.Element => {
   useEffect(() => {
     if (isModalVisible && selectedItem) {
       const walkId = selectedItem.walkIdList[selectedIndex];
-      console.log(walkId);
       axios
-        .get(`http://10.0.2.2:8080/walk/${walkId}`, {
+        .get(`https://j9b304.p.ssafy.io/api/walk/${walkId}`, {
           // .get("http://10.0.2.2:8080/walk/10", {
           headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
         })
