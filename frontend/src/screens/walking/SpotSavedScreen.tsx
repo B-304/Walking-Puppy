@@ -16,9 +16,13 @@ import DismissKeyboardView from "../../components/DismissKeyboardView";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
 import { accessToken } from "react-native-dotenv";
+import { useRoute } from '@react-navigation/native';
 
 const SpotSavedScreen: React.FC = (): JSX.Element => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const workId = route.params;
+
   const coordinates = [
     { latitude: 36.3463, longitude: 127.2941 },
     { latitude: 36.34604859, longitude: 127.2948598 },
