@@ -21,7 +21,7 @@ const SavedWalkingSetting:React.FC = (): JSX.Element => {
 
     console.log(accessToken);
     axios
-      .get('https://j9b304.p.ssafy.io/api/walk/71',{ headers: {
+      .get('https://j9b304.p.ssafy.io/api/walk/72',{ headers: {
             Authorization: `Bearer ${BEARER_TOKEN}`,
           },
          })
@@ -47,7 +47,7 @@ const SavedWalkingSetting:React.FC = (): JSX.Element => {
   return (
     <View style = {styles.container}>
       <Image style={styles.img}
-        source={require('../../assets/route.png')}
+        source={require('../../assets/walk.png')}
       />
       <View style = {styles.walk}>
         <View style = {{flexDirection: 'row',}}>
@@ -127,10 +127,10 @@ const styles = StyleSheet.create({
 
   },
   img:{
-    width:300,
-    height:350,
+    width:370,
+    height:300,
     marginTop:25,
-    marginLeft:43,
+    marginLeft:10,
     
 
   },
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     backgroundColor:'#4B9460',
     marginLeft:53,
-    marginTop :35,
+    marginTop :40,
     borderRadius :10,
 },
 
