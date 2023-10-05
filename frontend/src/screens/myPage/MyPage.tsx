@@ -52,6 +52,7 @@ const MyPage: React.FC = (): JSX.Element => {
       })
       .catch((error) => {
         console.log(year, month);
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!실패 ")
         console.error("데이터 가져오기 실패:", error);
         setWalkList([]);
       });
@@ -127,7 +128,6 @@ const MyPage: React.FC = (): JSX.Element => {
   useEffect(() => {
     if (isModalVisible && selectedItem) {
       const walkId = selectedItem.walkIdList[selectedIndex];
-      console.log(walkId);
       axios
         .get(`https://j9b304.p.ssafy.io/api/walk/${walkId}`, {
           // .get("http://10.0.2.2:8080/walk/10", {

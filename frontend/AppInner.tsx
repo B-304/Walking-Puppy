@@ -35,71 +35,53 @@ const AppInner: React.FC = () => {
 
   const BottomTabScreen: React.FC = () => {
     return (
-      <Tab.Navigator
-        initialRouteName="홈."
-        screenOptions={({ route }) => ({
-          tabBarHideOnKeyboard: true,
-          headerShown: true,
-          headerTitleAlign: "center",
-          headerTitleStyle: {
-            fontSize: 24,
-          },
-          tabBarStyle: {
-            height: 70,
-          },
-          // eslint-disable-next-line react/no-unstable-nested-components
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName: string;
-            color = "#4B9460";
-            if (route.name === "인기스팟") {
-              iconName = focused ? "trophy" : "trophy-outline";
-            } else if (route.name === "산책") {
-              iconName = focused ? "footsteps-sharp" : "footsteps-outline";
-            } else if (route.name === "홈") {
-              iconName = focused ? "home-sharp" : "home-outline";
-            } else if (route.name === "스크랩") {
-              iconName = focused ? "bookmark-sharp" : "bookmark-outline";
-            } else if (route.name === "마이페이지") {
-              iconName = focused ? "person" : "person-outline";
-            }
-            return <Ionic name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: "#4B9460", // 포커스 될 때의 색상
-          tabBarInactiveTintColor: "gray", // 포커스되지 않을 때의 색상
-          tabBarLabelStyle: {
-            fontSize: 12,
-            fontFamily: "Your-Font-Family-Here", // 폰트 가족을 변경하려면 이 줄을 수정하세요
-            marginBottom: 12,
-          },
-        })}
-      >
-        <Tab.Screen name="인기스팟" component={PopularSpot} />
-        <Tab.Screen
-          name="산책"
-          component={WalkingMain}
-          options={{ headerShown: false }}
-        />
-        {/*<Tab.Screen name="산책" component={NewWalkingSetting} />*/}
-        {/*<Tab.Screen name="산책" component={WalkingSetting} />*/}
-        <Tab.Screen
-          name="홈"
-          component={HomeMain}
-          options={{ headerShown: false }}
-        />
-        <Tab.Screen
-          name="스크랩"
-          component={ScrapMain}
-          options={{ headerShown: false }}
-        />
-
-        <Tab.Screen
-          name="마이페이지"
-          component={MyPageMain}
-          options={{ headerShown: false }}
-        />
-        {/*<Tab.Screen name="마이페이지" component={ProfileEdit} />*/}
-      </Tab.Navigator>
-    );
+    <Tab.Navigator initialRouteName="홈" screenOptions={({ route }) => (
+      {
+        tabBarHideOnKeyboard: true,
+        headerShown: true,
+        headerTitleAlign: 'center',
+        headerTitleStyle: {
+          fontSize: 24,
+        },
+        tabBarStyle: {
+          height: 70,
+        },
+        // eslint-disable-next-line react/no-unstable-nested-components
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName:string;
+          color = '#4B9460';
+          if (route.name === '인기스팟') {
+            iconName = focused ? 'trophy' : 'trophy-outline';
+          } else if (route.name === '산책') {
+            iconName = focused ? 'footsteps-sharp' : 'footsteps-outline';
+          } else if (route.name === '홈') {
+            iconName = focused ? 'home-sharp' : 'home-outline';
+          } else if (route.name === '스크랩') {
+            iconName = focused ? 'bookmark-sharp' : 'bookmark-outline';
+          } else if (route.name === '마이페이지') {
+            iconName = focused ? 'person' : 'person-outline';
+          }
+          return <Ionic name={iconName} size={size} color={color}/>;
+        },
+        tabBarActiveTintColor: '#4B9460', // 포커스 될 때의 색상
+        tabBarInactiveTintColor: 'gray',  // 포커스되지 않을 때의 색상
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontFamily: 'Your-Font-Family-Here', // 폰트 가족을 변경하려면 이 줄을 수정하세요
+          marginBottom: 12,
+        },
+      }
+    )}>
+      <Tab.Screen name="인기스팟" component={PopularSpot} /> 
+      <Tab.Screen name="산책" component={WalkingMain} options={{ headerShown: false }} /> 
+      {/*<Tab.Screen name="산책" component={NewWalkingSetting} />*/}
+      {/*<Tab.Screen name="산책" component={WalkingSetting} />*/}
+      <Tab.Screen name="홈" component={HomeMain} options={{ headerShown: false }} /> 
+      <Tab.Screen name="스크랩" component={ScrapMain} options={{ headerShown: false }} /> 
+      <Tab.Screen name="마이페이지" component={MyPageMain} options={{ headerShown: false }}/>
+      {/*<Tab.Screen name="마이페이지" component={ProfileEdit} />*/}
+    </Tab.Navigator>
+    )
   };
 
   return (

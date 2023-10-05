@@ -3,6 +3,9 @@ import React,{useState} from 'react'
 import Slider from '@react-native-community/slider';
 import axios from 'axios'
 import { useRoute } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import{accessToken} from 'react-native-dotenv';
+
 
 
 const WalkingSetting:React.FC = (): JSX.Element => {
@@ -12,9 +15,19 @@ const WalkingSetting:React.FC = (): JSX.Element => {
     const [isNature, setIsNature] = useState(false); // 자연 버튼 상태
     const [selectedTime, setSelectedTime] = useState(15); // 초기 선택 시간 (예: 15분)
     const [modalVisible, setModalVisible] = useState(false); // 모달 상태 추가
-    const [pathData, setPathData] = useState({});
     const route = useRoute();
     const {start,end} = route.params;
+    const [pathData, setPathData] = useState({startLatitude: start.latitude,
+        startLongitude: start.longitude,
+        endLatitude: end.latitude,
+        endLongitude: end.longitude,
+        spotList: [],
+        themeId: null, // 테마에 따라 업데이트
+        estimatedTime: selectedTime,});
+
+
+    const navigation = useNavigation();
+    const BEARER_TOKEN =accessToken;
 
     const minimumValue=15,maximumValue=60;
     const handleTimeChange = (value: number) => {
@@ -24,7 +37,8 @@ const WalkingSetting:React.FC = (): JSX.Element => {
 
 
     const newPath = () => {
-        const updatePathData={
+
+           const updatePathData={
             startLatitude: start.latitude,
             startLongitude: start.longitude,
             endLatitude: end.latitude,
@@ -33,28 +47,67 @@ const WalkingSetting:React.FC = (): JSX.Element => {
             themeId: isSafe ? 1 : isNature ? 2 : null, // 테마에 따라 업데이트
             estimatedTime: selectedTime,
         };
-        console.log(updatePathData)
 
-
+        
         if(updatePathData.themeId ==null){
 
-            
+            console.log(updatePathData+"null");
             setModalVisible(true)
             return;
         }
 
-        setPathData(updatePathData);
-        //새로운 경로
-        const url = 'https://j9b304.p.ssafy.io/api/walk/new-path'; // 실제 API 엔드포인트 URL로 변경해야 합니다.
-    
-        axios
-          .post(url,pathData)
-          .then((Response)=>{
-            console.log('새로운 경로 생성 성공')
-          })
-          .catch((error)=> {
-            console.error('새로운 경로 생성 실패',error)
-          })
+        navigation.navigate('추천 산책 경로');
+
+
+        // const updatePathData={
+        //     startLatitude: start.latitude,
+        //     startLongitude: start.longitude,
+        //     endLatitude: end.latitude,
+        //     endLongitude: end.longitude,
+        //     spotList: [],
+        //     themeId: isSafe ? 1 : isNature ? 2 : null, // 테마에 따라 업데이트
+        //     estimatedTime: selectedTime,
+        // };
+
+        // console.log(updatePathData+"1")
+
+        // if(updatePathData.themeId ==null){
+
+        //     console.log(updatePathData+"null");
+        //     setModalVisible(true)
+        //     return;
+        // }
+
+        // else{
+        //     if(isNature){
+        //         updatePathData.themeId = 2;
+        //     }
+        //     else{
+        //         updatePathData.themeId = 1;
+        //     }
+        // }
+
+        // console.log(updatePathData+"p");
+        // setPathData(updatePathData);
+
+        // //새로운 경로
+        // const url = 'https://j9b304.p.ssafy.io/api/walk/new-path'; // 실제 API 엔드포인트 URL로 변경해야 합니다.
+        // console.log(pathData);
+        // axios
+        //   .post(url,
+        //     pathData,
+        //    { headers: {
+        //         Authorization: `Bearer ${BEARER_TOKEN}`,
+        //       },
+        // })
+        //   .then((Response)=>{
+        //     console.log('새로운 경로 생성 성공')
+        //     console.log(Response.data)
+        //     navigation.navigate('추천 상책 경로',Response.data)
+        //   })
+        //   .catch((error)=> {
+        //     console.error('새로운 경로 생성 실패',error)
+        //   })
       };
 
   
