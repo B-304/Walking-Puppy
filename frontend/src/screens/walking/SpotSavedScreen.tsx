@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import MapView, { Polyline } from "react-native-maps";
+import React, { useState, useEffect, useRef } from "react";
+import MapView, { Polyline, Marker } from "react-native-maps";
 import {
   View,
   StyleSheet,
@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import DismissKeyboardView from "../../components/DismissKeyboardView";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
+import { accessToken } from "react-native-dotenv";
 
 const SpotSavedScreen: React.FC = (): JSX.Element => {
   const navigation = useNavigation();
@@ -42,9 +43,13 @@ const SpotSavedScreen: React.FC = (): JSX.Element => {
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [completeModal, setCompleteModal] = useState(false);
   const [saveTime, setSaveTime] = useState(false);
-  const routeImg = require("../../assets/walkroute.png");
-
-  const [nowLocation, setNowLocation] = useState("");
+  const routeImg = require("../../assets/stopmap.png");
+  const [latitude, setLatitude] = useState(coordinates[0].latitude + "");
+  const [longitude, setLongitude] = useState(coordinates[0].longitude + "");
+  const [walkTotal, setWalkTotal] = useState("");
+  const mapRef = useRef(null);
+  const walkId = 57; //앞 화면에서 받아오는 데이터
+  const [walkName, setWalkName] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -63,10 +68,8 @@ const SpotSavedScreen: React.FC = (): JSX.Element => {
     return () => clearInterval(interval); // 컴포넌트 unmount시 타이머 중지
   }, [saveTime]);
 
-  const GeoLocationAPI = ({}) => {
-    const [latitude, setLatitude] = useState(null);
-    const [longitude, setLogitude] = useState(null);
-
+  // 20초 간격으로 현재 위치를 받아온다.
+  useEffect(() => {
     const geoLocation = () => {
       Geolocation.getCurrentPosition(
         (position) => {
@@ -74,7 +77,8 @@ const SpotSavedScreen: React.FC = (): JSX.Element => {
           const longitude_now = JSON.stringify(position.coords.longitude);
 
           setLatitude(latitude_now);
-          setLogitude(longitude_now);
+          setLongitude(longitude_now);
+          console.log("=================now===================");
           console.log(latitude_now, longitude_now);
         },
         (error) => {
@@ -83,7 +87,25 @@ const SpotSavedScreen: React.FC = (): JSX.Element => {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       );
     };
-  };
+
+    geoLocation();
+    const intervalId = setInterval(geoLocation, 20000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    if (latitude && longitude && mapRef.current) {
+      const newRegion = {
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+      };
+
+      mapRef.current.animateToRegion(newRegion, 1000);
+    }
+  }, [latitude, longitude]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -91,56 +113,124 @@ const SpotSavedScreen: React.FC = (): JSX.Element => {
     return `${minutes}분 ${remainingSeconds}초`;
   };
 
+  //산책 종료
   const onConfirmPress = () => {
     setModalVisible(false);
     setDetailModal(true);
     setSaveTime(true);
+
+    //산책 종료 axios
+    // const url = "https://j9b304.p.ssafy.io/api/walk/over"; // 탈퇴 API 엔드포인트 URL로 변경해야 합니다.
+    const url = "http://10.0.2.2:8080/walk/over";
+    const postdata = {
+      walkId: walkId,
+      distance: (elapsedSeconds / 60) * 60,
+      walkCount: (elapsedSeconds / 60) * 95,
+      calorie: (elapsedSeconds / 60) * 14,
+      itemCount: 0,
+      route: [
+        {
+          sequence: 1,
+          latitude: latitude,
+          longitude: longitude,
+        },
+      ],
+    };
+    console.log(postdata);
+    axios
+      .post(url, postdata, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        console.log("산책 종료/저장 성공:", response.data);
+        setWalkTotal(response.data);
+      })
+      .catch((error) => {
+        console.error("산책 종료/저장 실패", error);
+        setSaveRoute(false);
+      });
   };
+
   const onCompletePress = () => {
     setSaveTime(true);
     setCompleteModal(false);
     setDetailModal(true);
   };
-  const BEARER_TOKEN =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MiwiZXhwIjoxNjk2NDAzNzEwfQ.fROTgdimSGBJuKux_AZUFTj1rJRmfS7is6BfxWNtvq0";
-  const saveWalking = async () => {
-    try {
-      const response = await axios.post(
-        "https://j9b304.p.ssafy.io/api/walk/over",
-        {
-          walkId: 0,
-          distance: 0,
-          walkCount: 0,
-          calorie: 0,
-          itemCount: 0,
-          route: [
-            {
-              sequence: 0,
-              latitude: 0,
-              longitude: 0,
-            },
-          ],
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${BEARER_TOKEN}`,
-          },
-        },
-      );
-      console.log(response);
-    } catch (error) {
-      console.log(error, "응 에러떴어");
-    } finally {
-      setSaveRoute(false);
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "홈" }],
-      });
-    }
+
+  const handlenameChange = (text: string) => {
+    setWalkName(text);
   };
+
+  const saveWalking = () => {
+    //산책로 저장 axios
+    // const url = "https://j9b304.p.ssafy.io/api/walk/over";
+    const url = "http://10.0.2.2:8080/walk/scrap";
+    const putdata = {
+      walkId: walkId,
+      name: walkName,
+    };
+    console.log(putdata);
+    axios
+      .put(url, putdata, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        console.log("산책로 저장 성공:", response.data);
+        setSaveRoute(false);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "홈" }],
+        });
+      })
+      .catch((error) => {
+        console.error("산책로 저장 실패", error);
+      });
+  };
+
+  //여기 산책로 저장임
+  // const saveWalking = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       "https://j9b304.p.ssafy.io/api/walk/over",
+  //       {
+  //         walkId: 0,
+  //         distance: 0,
+  //         walkCount: 0,
+  //         calorie: 0,
+  //         itemCount: 0,
+  //         route: [
+  //           {
+  //             sequence: 0,
+  //             latitude: 0,
+  //             longitude: 0,
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${BEARER_TOKEN}`,
+  //         },
+  //       },
+  //     );
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.log(error, "응 에러떴어");
+  //   } finally {
+  //     setSaveRoute(false);
+  //     navigation.reset({
+  //       index: 0,
+  //       routes: [{ name: "홈" }],
+  //     });
+  //   }
+  // };
   return (
     <View style={styles.container}>
       <MapView
+        ref={mapRef}
         style={styles.map}
         initialRegion={{
           latitude: coordinates[3].latitude,
@@ -154,6 +244,17 @@ const SpotSavedScreen: React.FC = (): JSX.Element => {
           strokeColor="#000" // 색상 설정
           strokeWidth={5} // 선 두께 설정
         />
+        <Marker
+          coordinate={{
+            latitude: Number(latitude),
+            longitude: Number(longitude),
+          }}
+        >
+          <Image
+            source={require("../../assets/dogFace.png")}
+            style={{ height: 90, width: 90 }}
+          />
+        </Marker>
       </MapView>
       <Pressable
         style={styles.closeButton}
@@ -228,37 +329,37 @@ const SpotSavedScreen: React.FC = (): JSX.Element => {
             <View style={styles.routeImgContainer}>
               <Image source={routeImg} style={{ width: 290, height: 200 }} />
             </View>
-            <View style={styles.detailModalContent}>
+            <View style={[styles.detailModalContent, { marginTop: 30 }]}>
               <View style={styles.modalDataRow}>
                 <Text style={styles.dataDot}>•</Text>
                 <Text style={styles.modalDataLabel}>소요시간</Text>
-                <Text style={styles.modalDataValue}>
-                  {formatTime(elapsedSeconds)}
-                </Text>
+                <Text style={styles.modalDataValue}>{walkTotal.time}분</Text>
               </View>
               <View style={styles.modalDataRow}>
                 <Text style={styles.dataDot}>•</Text>
                 <Text style={styles.modalDataLabel}>걸음 수</Text>
                 <Text style={styles.modalDataValue}>
-                  {elapsedSeconds * 3} 보
+                  {walkTotal.walkCount} 보
                 </Text>
               </View>
               <View style={styles.modalDataRow}>
                 <Text style={styles.dataDot}>•</Text>
                 <Text style={styles.modalDataLabel}>테마</Text>
-                <Text style={styles.modalDataValue}>자연</Text>
+                <Text style={styles.modalDataValue}>{walkTotal.themeName}</Text>
               </View>
               <View style={styles.modalDataRow}>
                 <Text style={styles.dataDot}>•</Text>
                 <Text style={styles.modalDataLabel}>칼로리</Text>
                 <Text style={styles.modalDataValue}>
-                  {(elapsedSeconds * 0.1).toFixed(2)} Kcal
+                  {walkTotal.calorie} kcal
                 </Text>
               </View>
               <View style={styles.modalDataRow}>
                 <Text style={styles.dataDot}>•</Text>
                 <Text style={styles.modalDataLabel}>이동거리</Text>
-                <Text style={styles.modalDataValue}>0.4km</Text>
+                <Text style={styles.modalDataValue}>
+                  {walkTotal.distance} km
+                </Text>
               </View>
             </View>
 
@@ -330,7 +431,11 @@ const SpotSavedScreen: React.FC = (): JSX.Element => {
                     marginTop: 10,
                   }}
                 >
-                  <TextInput placeholder="산책로 이름을 입력하세요." />
+                  <TextInput
+                    placeholder="산책로 이름을 입력하세요."
+                    value={walkName}
+                    onChangeText={handlenameChange}
+                  />
                 </View>
               </View>
 
