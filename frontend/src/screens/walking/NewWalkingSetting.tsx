@@ -1,79 +1,93 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, TextInput, StyleSheet, TouchableOpacity, Pressable, Text } from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 
-const NewWalkingSetting: React.FC = () => {
-  const [startAddress, setStartAddress] = useState<string>(''); // 출발지 주소
-  const [endAddress, setEndAddress] = useState<string>(''); // 도착지 주소
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from './WalkingMain';
+type LocationData = {
+  lat: number ;
+  lng: number;
+  formatted_address: string | null;
+} | null;
 
+type WalkingSettingScreenProps = NativeStackScreenProps<RootStackParamList, 'WalkingSetting'>
+type StartDesMapScreenProps = NativeStackScreenProps<RootStackParamList, 'StartDesMap'>
+
+type CombinedProps = WalkingSettingScreenProps & StartDesMapScreenProps;
+
+const NewWalkingSetting: React.FC<CombinedProps> = ({navigation}) => {
+  const [start, setStart] = useState<LocationData | null>({lat:36.353297143492796, lng:127.29965485227056, formatted_address:'내 위치 : 대전시 유성구 덕명동'});
+  const [destination, setDestination] = useState<LocationData | null>(null);
   
-  const searchAddress = async (address: string) => {
-    try {
-      const response = await axios.get(
-        `https://dapi.kakao.com/v2/local/search/address.json?query=${address}`,
-        {
-          headers: {
-            Authorization: 'KakaoAK 6e6828052f9580b3bc77e19c8b639327',
-          },
+  const findStart = useCallback(() => {
+    navigation.navigate('StartDesMap', { setFunction: setStart });
+  },[navigation]);
+
+  const findDestination = useCallback(() => {
+    navigation.navigate('StartDesMap');
+  },[navigation]);
+
+  useEffect(() => {
+    Geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+            params: { // 내 위치 정보를 가져옴 현재 오류중
+              latlng: `${position.coords.latitude},${position.coords.longitude}`,
+              key: '${googleMapApiKey}',
+            },
+          });
+
+          if (response.data.results && response.data.results.length > 0) {
+            setStart(response.data.results[0].formatted_address);
+            console.log(response);
+          }
+
+        } catch (error) {
+          console.error('There was an error fetching the location data: ', error);
         }
-      );
-
-      const firstAddress = response.data.documents[0];
-      if (firstAddress) {
-        const { x, y } = firstAddress;
-        console.log(`주소: ${address}`);
-        console.log(`위도: ${parseFloat(y)}`);
-        console.log(`경도: ${parseFloat(x)}`);
-        Alert.alert('위치가 지정되었습니다.');
-      } else {
-        Alert.alert('검색 결과가 없습니다.');
-      }
-    } catch (error) {
-      console.error('주소 검색 중 오류 발생:', error);
-      Alert.alert('주소 검색 중 오류 발생했습니다.');
-    }
-  };
-
-  // 엔터 키를 누를 때 주소 검색 수행
-  const handleEnterKeyPress = (address: string) => {
-    if (address.trim() !== '') {
-      searchAddress(address);
-    }
-  };
+      },
+      (error) => {
+        console.log(error);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+  }, []);
 
   return (
+    
     <View style={styles.container}>
-      {/* <Text style={styles.topText}>출발지와 도착지를 설정해주세요.</Text> */}
-      <TextInput
-        style={styles.inputBox}
-        placeholder="출발지 입력"
-        value={startAddress}
-        onChangeText={(text) => setStartAddress(text)}
-        onEndEditing={() => handleEnterKeyPress(startAddress)}
-      />
-      <TextInput
-        style={styles.inputBox}
-        placeholder="도착지 입력"
-        value={endAddress}
-        onChangeText={(text) => setEndAddress(text)}
-        onEndEditing={() => handleEnterKeyPress(endAddress)}
-      />
-      <TouchableOpacity
-        style={styles.nextButton}
-        onPress={() => {
-          // 이동하는 페이지 지정
-        }}
-        disabled={!startAddress || !endAddress}
-      >
-        <Text style={styles.buttonText}>확인</Text>
-      </TouchableOpacity>
+      <View style={styles.inputBox}>
+        <Pressable onPress={findStart}>
+          <Text style={{color: 'black'}}>
+            {start?.formatted_address ? start.formatted_address : '출발지를 입력하세요'}
+          </Text>
+        </Pressable>
+      </View>
+      <View style={styles.inputBox}>
+        <Pressable onPress={findDestination}>
+          <Text>
+            {destination?.formatted_address ? destination.formatted_address : '도착지를 입력하세요'}
+          </Text>
+        </Pressable>
+      </View>
+      
+      <View>
+
+        <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('WalkingSetting')}>
+              <Text style={styles.buttonText}>확인</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  );
-};
+    
+    
+    
+)};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height:800,
     backgroundColor: '#FFFFFF',
     padding: 16,
   },
@@ -84,30 +98,48 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 4,
     marginBottom: 12,
-    marginTop: 12,
   },
   nextButton: {
     position: 'absolute',
-    left: 33.5,
-    right: 33.5,
-    bottom: '10%',
-    height: 53,
+    left: 33.5,            // 왼쪽에서 33.5만큼 떨어짐
+    right: 33.5,           // 오른쪽에서 33.5만큼 떨어짐
+    top: 450,            // 하단에서 20만큼 떨어짐
+    height: 53,            // 버튼의 높이
     backgroundColor: '#4B9460',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'center',  // 텍스트를 버튼 중앙에 위치시키기 위해
+    alignItems: 'center',      // 텍스트를 버튼 중앙에 위치시키기 위해
     textAlignVertical: 'center',
-    borderRadius: 10,
+    borderRadius: 10,       // 버튼을 화면 중앙에 위치시키기 위해
   },
   buttonText: {
     color: '#FFFFFF',
     fontSize: 20,
-    fontWeight: 'bold',
-  },
-  topText: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    marginBottom: 12,
+    fontWeight: 'bold',  // semi-bold로 설정. 'bold'로 설정하면 더 굵게 됩니다.
   },
 });
 
 export default NewWalkingSetting;
+
+{/* <View style={styles.container}>
+      Vi
+      <TouchableOpacity onPress={() => navigation.navigate('StartDesMap', { type: 'start' })}>
+      {/* <TextInput
+        style={styles.input}
+        value={departure ?? ''}
+        placeholder="현재 위치"
+      /> */}
+      
+  //     </TouchableOpacity>
+  //     <TextInput
+  //       style={styles.input}
+  //       value={destination}
+  //       placeholder="도착지를 입력하세요."
+  //       onChangeText={setDestination}
+  //     />
+  //     <Pressable onPress={() => setCount((p) => p+1)}>
+  //       <Text>
+  //         {count}
+  //       </Text>
+  //     </Pressable>
+  //   </View>
+  // ); */}

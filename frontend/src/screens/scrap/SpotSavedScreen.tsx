@@ -1,36 +1,117 @@
-
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import MapView, { Polyline } from 'react-native-maps';
-import { View, StyleSheet, Pressable, Text, TextInput, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, Image, Pressable, Text, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { useNavigation } from '@react-navigation/native';
 import DismissKeyboardView from '../../components/DismissKeyboardView';
+import axios from 'axios';
 
 const SpotSavedScreen:React.FC = (): JSX.Element => {
   const navigation = useNavigation();
   const coordinates = [
-    { latitude: 37.78825, longitude: -122.4324 },
-    { latitude: 37.78845, longitude: -122.4322 },
-    { latitude: 37.78865, longitude: -122.5000  },
+    { latitude: 36.3463, longitude: 127.2941 },
+    { latitude: 36.34604859, longitude: 127.2948598},
+    { latitude: 36.34478219, longitude: 127.2971263 },
+    { latitude: 36.34238821, longitude: 127.3017015},
+    { latitude: 36.34237999, longitude: 127.3017057},
+    { latitude: 36.34244298, longitude: 127.301794},
+    { latitude: 36.34423989, longitude: 127.3065733},
+    { latitude: 36.34247574, longitude: 127.3017176},
+    { latitude: 36.34312939, longitude: 127.2992818},
+    { latitude: 36.34566924, longitude: 127.2947771},
+    { latitude: 36.34567735, longitude: 127.2947693},
+    { latitude: 36.34604859, longitude: 127.2948598},
+    { latitude: 36.3463, longitude: 127.2941},
+    
     // ... 기타 좌표들
-  ];
+  ]; 
   const [modalVisible, setModalVisible] = useState(false);
   const [detailModal, setDetailModal] = useState(false);
   const [saveRoute, setSaveRoute] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const [completeModal, setCompleteModal] = useState(false);
+  const [saveTime, setSaveTime] = useState(false);
+  const routeImg = require('../../assets/route.png');
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsedSeconds(prev => {
+        if (prev === 50) {  // 5분이 되었을 때
+          setCompleteModal(true);
+          clearInterval(interval)
+        }
+        return prev + 1;
+      });
+    }, 1000);
+    if (saveTime === true) {
+      clearInterval(interval)
+    }
+    return () => clearInterval(interval); // 컴포넌트 unmount시 타이머 중지
+  }, [saveTime]);
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}분 ${remainingSeconds}초`;
+  };
+
+  const onConfirmPress = () => {
+    setModalVisible(false);
+    setDetailModal(true);
+    setSaveTime(true)
+  };
+  const onCompletePress = () => {
+   
+    setSaveTime(true)
+      setCompleteModal(false);
+      setDetailModal(true);
+    
+  };
+  const saveWalking = async() => {
+    try {
+      const response = await axios.post('http://j9b304.p.ssafy.io:8080/walk/over', {
+        params: {
+          "walkId": 0,
+          "distance": 0,
+          "walkCount": 0,
+          "calorie": 0,
+          "itemCount": 0,
+          "route": [
+            {
+              "sequence": 0,
+              "latitude": 0,
+              "longitude": 0
+            }
+          ]
+      }})
+      console.log(response)
+    }
+    catch (error) {
+      console.log(error, '응 에러떴어')
+    }
+    finally {
+      setSaveRoute(false);
+      navigation.reset({
+      index: 0,
+      routes: [{ name: '홈' }],
+    })}
+
+   
+  };
   return (
     <View style={styles.container}>
+      
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: coordinates[0].latitude,
+          longitude: coordinates[0].longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
         <Polyline
           coordinates={coordinates}
           strokeColor="#000" // 색상 설정
-          strokeWidth={3} // 선 두께 설정
+          strokeWidth={5} // 선 두께 설정
         />
       </MapView>
       <Pressable
@@ -39,6 +120,9 @@ const SpotSavedScreen:React.FC = (): JSX.Element => {
       >
         <Octicons name="stop" size={35} color="black" />
       </Pressable>
+      <View style={styles.timeBox}>
+        <Text style={styles.timeText}> 소요시간 : {formatTime(elapsedSeconds)}</Text>
+      </View>
     {modalVisible && (
       <Pressable style={styles.modalBackground} onPress={() => setModalVisible(false)}>
         <View style={styles.modalContent}>
@@ -48,12 +132,12 @@ const SpotSavedScreen:React.FC = (): JSX.Element => {
             </Text>
           </View>
           <View style={styles.modalButtonSection}>
-            <Pressable style={styles.cancelButton}>
+            <Pressable style={styles.cancelButton} onPress={() => setModalVisible(false)}>
               <Text style={styles.cancelButtonText}>
                 취소
               </Text>
             </Pressable>
-            <Pressable style={styles.endButton} onPress={() => {setModalVisible(false); setDetailModal(true)}}>
+            <Pressable style={styles.endButton} onPress={onConfirmPress}>
               <Text style={styles.endButtonText}>
                 확인
               </Text>
@@ -62,25 +146,53 @@ const SpotSavedScreen:React.FC = (): JSX.Element => {
         </View>
       </Pressable>
     )}
+    {completeModal && (
+     <Pressable style={styles.modalBackground}>
+      <View style={styles.modalContent}>
+          <View style={styles.modalTextSection}>
+            <Text style={styles.modalText}>
+            목적지 부근에 도착하여
+            </Text>
+            <Text style={styles.modalText}>
+            산책을 종료합니다.
+            </Text>
+          </View>
+          <View style={{paddingBottom:10, alignItems:'center' ,justifyContent:'center'}}>
+            
+            <Pressable style={styles.endButton} onPress={onCompletePress}>
+              <Text style={styles.endButtonText }>
+                확인
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+     </Pressable>
+    )}
    {detailModal && (
-  <Pressable style={styles.modalBackground} onPress={() => setDetailModal(false)}>
+  <Pressable style={styles.modalBackground} onPress={() => navigation.reset({
+    index: 0,
+    routes: [{ name: '홈' }],
+  })}>
     <View style={styles.detailModal}>
       <View style={styles.modalTitle}>
           <Text style={styles.modalTitleContext}>
             산책 상세 기록
           </Text>
       </View>
+      <View style={styles.routeImgContainer}>
+        <Image source={routeImg} style={{width:290, height:200}}></Image>
+      </View>
       <View style={styles.detailModalContent}>
         
         <View style={styles.modalDataRow}>
           <Text style={styles.dataDot}>•</Text>
           <Text style={styles.modalDataLabel}>소요시간</Text>
-          <Text style={styles.modalDataValue}>1시간 36분</Text>
+          <Text style={styles.modalDataValue}>{formatTime(elapsedSeconds)}</Text>
         </View>
         <View style={styles.modalDataRow}>
           <Text style={styles.dataDot}>•</Text>
           <Text style={styles.modalDataLabel}>걸음 수</Text>
-          <Text style={styles.modalDataValue}>20000 보</Text>
+          <Text style={styles.modalDataValue}>{elapsedSeconds * 3} 보</Text>
         </View>
         <View style={styles.modalDataRow}>
           <Text style={styles.dataDot}>•</Text>
@@ -90,7 +202,7 @@ const SpotSavedScreen:React.FC = (): JSX.Element => {
         <View style={styles.modalDataRow}>
           <Text style={styles.dataDot}>•</Text>
           <Text style={styles.modalDataLabel}>칼로리</Text>
-          <Text style={styles.modalDataValue}>850 Kcal</Text>
+          <Text style={styles.modalDataValue}>{(elapsedSeconds * 0.1).toFixed(2)} Kcal</Text>
         </View>
         <View style={styles.modalDataRow}>
           <Text style={styles.dataDot}>•</Text>
@@ -154,6 +266,7 @@ const SpotSavedScreen:React.FC = (): JSX.Element => {
         
       </View>
     </View>
+    
     <View style={styles.modalButtonSection}>
       <Pressable style={styles.cancelButton}>
         <Text style={styles.cancelButtonText} onPress={() => 
@@ -165,7 +278,7 @@ const SpotSavedScreen:React.FC = (): JSX.Element => {
           홈으로
         </Text>
       </Pressable>
-      <Pressable style={styles.endButton} onPress={() => {setSaveRoute(false)}}>
+      <Pressable style={styles.endButton} onPress={saveWalking}>
         <Text style={styles.endButtonText}>
           저장
         </Text>
@@ -186,6 +299,23 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+  timeBox: {
+    width: 300,
+    height: 70,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 10,  // 위치를 조절하세요
+    left: '50%',
+    transform: [{ translateX: -150 }],
+  },
+  timeText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+  },
   closeButton: {
     position: 'absolute',
     bottom: 15,
@@ -200,6 +330,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 }, // iOS shadow
     shadowOpacity: 0.3, // iOS shadow
     shadowRadius: 4, // iOS shadow
+  },
+  routeImgContainer: {
+
   },
   modalBackground: {
     position: 'absolute',
@@ -282,8 +415,8 @@ const styles = StyleSheet.create({
   detailModal:{
     position: 'absolute',
     backgroundColor: '#ffffff',
-    top: 125,
-    bottom: 125,
+    top: 60,
+    bottom: 60,
     left: 16,
     right: 16,
     elevation: 5,  // Android shadow
@@ -295,7 +428,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 8,
+    paddingVertical: 5,
+    
   },
   dataDot: {
     width: 7,
@@ -335,4 +469,3 @@ const styles = StyleSheet.create({
 
 
 export default SpotSavedScreen;
-

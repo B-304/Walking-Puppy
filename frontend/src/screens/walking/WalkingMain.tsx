@@ -14,22 +14,24 @@ export type RootStackParamList = {
   TimeThemeSetting: undefined;
   WalkingMap: undefined;
   StartDesMap: undefined;
-  
+  WalkingSetting:undefined;
 };
 const WalkingMain:React.FC = (): JSX.Element => {
   
   const Stack = createNativeStackNavigator<RootStackParamList>();
   return (
     <Stack.Navigator initialRouteName='NewWalkingSetting'>
-      <Stack.Screen name="산책 설정" component={NewWalkingSetting}         options={{
+      <Stack.Screen name="NewWalkingSetting" component={NewWalkingSetting}         options={{
+          headerTitle: '산책 설정',
           headerShown: true,
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontSize: 24,
           },
         }}/>
-      <Stack.Screen name="산책 테마 설정" component={WalkingSetting} 
+      <Stack.Screen name="WalkingSetting" component={WalkingSetting} 
               options={{
+                headerTitle: '산책 테마 설정',
                 headerShown: true,
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
