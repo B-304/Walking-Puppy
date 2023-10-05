@@ -7,6 +7,7 @@ import WalkingMap from './WalkingMap';
 import StartDesMap from './StartDesMap';
 import WalkingSetting from './WalkingSetting';
 import SavedWalkingSetting from './SavedWalkingSetting';
+import SpotSavedScreen from './SpotSavedScreen';
 
 
 
@@ -15,16 +16,19 @@ export type RootStackParamList = {
   TimeThemeSetting: undefined;
   WalkingMap: undefined;
   StartDesMap: undefined;
-  
+  WalkingSetting: undefined;
 };
-const WalkingMain:React.FC = (): JSX.Element => {
-  
+const WalkingMain: React.FC = (): JSX.Element => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
   return (
-    <Stack.Navigator initialRouteName='NewWalkingSetting'>
-      <Stack.Screen name="산책 설정" component={NewWalkingSetting}         options={{
+    <Stack.Navigator initialRouteName="NewWalkingSetting">
+      <Stack.Screen
+        name="NewWalkingSetting"
+        component={NewWalkingSetting}
+        options={{
+          headerTitle: "산책 설정",
           headerShown: true,
-          headerTitleAlign: 'center',
+          headerTitleAlign: "center",
           headerTitleStyle: {
             fontSize: 24,
           },
@@ -45,6 +49,7 @@ const WalkingMain:React.FC = (): JSX.Element => {
                         fontSize: 24,
                       },
                     }}/>
+      <Stack.Screen name="산책 중" component={SpotSavedScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="WalkingMap" component={WalkingMap}/>
       <Stack.Screen name="StartDesMap" component={StartDesMap} options={{headerTitle:'장소 검색', headerTitleAlign:'center'}}/>
     </Stack.Navigator>

@@ -3,7 +3,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import SpotSavedScreen from "./src/screens/scrap/SpotSavedScreen";
+import SpotSavedScreen from "./src/screens/walking/SpotSavedScreen";
 import NewWalkingSetting from "./src/screens/walking/NewWalkingSetting";
 import HomeScreen from "./src/screens/home/HomeScreen";
 import PopularSpot from "./src/screens/popularSpot/PopularSpot";
@@ -35,7 +35,7 @@ const AppInner: React.FC = () => {
 
   const BottomTabScreen: React.FC = () => {
     return (
-    <Tab.Navigator initialRouteName="홈." screenOptions={({ route }) => (
+    <Tab.Navigator initialRouteName="홈" screenOptions={({ route }) => (
       {
         tabBarHideOnKeyboard: true,
         headerShown: true,

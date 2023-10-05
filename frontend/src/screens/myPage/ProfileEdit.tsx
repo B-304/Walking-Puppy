@@ -6,19 +6,26 @@ import {Avatar} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 const ProfileEdit:React.FC = (): JSX.Element => {
-
+//  const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState(null);
     const [editedData, setEditedData] = useState({
         nickname: '',
         walkCount: '',
       });
+
+    const [dogResponseData, setDogResponseData] = useState<any>({ name: '', dayCount: 0, dogLevel: 0, exp: 0, levelRange: 0 });
+    const [dogEditedData, setDogEditedData] = useState({
+          name: '',
+      });
       const navigation = useNavigation();
       const [modalVisible, setModalVisible] = useState(false); // 모달 상태 추가
-
+const BEARER_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MiwiZXhwIjoxNjk2NDAzNzEwfQ.fROTgdimSGBJuKux_AZUFTj1rJRmfS7is6BfxWNtvq0';
     useEffect(()=> {
         const url = 'https://j9b304.p.ssafy.io/api/2';
         //const url = 'http://10.0.2.2:8080/2';
-        axios.get(url)
+        axios.get(url, {headers: {
+          Authorization: `Bearer ${BEARER_TOKEN}`,
+        },})
         .then((response) => {
             //성공
             setUserData(response.data);
@@ -27,23 +34,40 @@ const ProfileEdit:React.FC = (): JSX.Element => {
             //실패
             console.error('프로필 가져오기 실패',error);
         });
+
+        axios
+          .get('https://j9b304.p.ssafy.io/api/dog/2', {
+            headers: {
+              Authorization: `Bearer ${BEARER_TOKEN}`,
+            },
+          })
+          .then((response) => {
+            setDogResponseData(response.data);
+//             setLoading(false);
+          })
+          .catch((error) => {
+            console.error('강아지 데이터 가져오기 실패:', error);
+//             setLoading(false);
+        });
     }, []);
 
     const handleNicknameChange = (text: string) => {
         setEditedData({ ...editedData, nickname: text });
       };
     
-      const handleWalkCountChange = (text: string) => {
-        const walkCount = parseInt(text);
-        setEditedData({ ...editedData, walkCount});
-      };
-    
+    const handleWalkCountChange = (text: string) => {
+      const walkCount = parseInt(text);
+      setEditedData({ ...editedData, walkCount});
+    };
+
+    const handleDognameChange = (text: string) => {
+        setDogEditedData({ ...editedData, name: text });
+    };
+
       const handleSaveProfile = () => {
-        // 수정된 정보를 서버로 전송하는 로직 추가
-        const url = 'https://j9b304.p.ssafy.io/api/2'; // 실제 API 엔드포인트 URL로 변경해야 합니다.
-       //const url = 'http://10.0.2.2:8080/2';
+
         axios
-          .patch(url, editedData)
+          .patch('https://j9b304.p.ssafy.io/api/2', editedData)
           .then((response) => {
             // 성공적으로 수정되었을 때의 처리
             console.log('프로필 수정 성공:', response.data);
@@ -55,7 +79,31 @@ const ProfileEdit:React.FC = (): JSX.Element => {
             // 오류 발생 시의 처리
             console.error('프로필 수정 실패', error);
           });
+
+          // 강아지 이름 수정
+           const url = 'https://j9b304.p.ssafy.io/api/dog/2';
+           //const url = 'http://10.0.2.2:8080/2';
+            axios
+              .post(url, dogEditedData,
+              {
+                headers: {
+                Authorization: `Bearer ${BEARER_TOKEN}`,
+              },
+              })
+              .then((response) => {
+                // 성공적으로 수정되었을 때의 처리
+                console.log('강아지 이름 수정 성공:', response.data);
+                // 수정된 정보를 화면에 반영
+                setDogResponseData(response.data);
+                navigation.navigate('마이페이지');
+              })
+              .catch((error) => {
+                // 오류 발생 시의 처리
+                console.error('강아지 이름 수정 실패', error);
+              });
+
       };
+
 
       const handleLogout = () => {
         // 로그아웃 로직을 구현
@@ -86,7 +134,6 @@ const ProfileEdit:React.FC = (): JSX.Element => {
           });
       };
     
-
 
 
   return (
@@ -146,11 +193,20 @@ const ProfileEdit:React.FC = (): JSX.Element => {
                 <Text style = {styles.text1}>목표 걸음수</Text>
                 <TextInput style={styles.input}
                     placeholder={userData.walkCount.toString()}
-                    value={editedData.walkCount}
+                    value={editedData.walkCount.toString()}
                     onChangeText={handleWalkCountChange}
                   />
                 <Text style = {styles.text2}>걸음</Text>
               </View>
+              <View style ={styles.lineContainer}>
+                              <Text style = {styles.text1}>강아지 이름</Text>
+                              <TextInput style={styles.input}
+                                  placeholder={dogResponseData.name}
+                                  value={dogEditedData.name}
+                                  onChangeText={handleDognameChange}
+                                />
+                              <Text style = {styles.text2}></Text>
+                            </View>
           </View>
 
 
@@ -308,7 +364,7 @@ modalButtonText:{
        alignItems: 'center', 
        backgroundColor:'#4B9460',
        marginLeft:48,
-       marginTop :330,
+       marginTop :350,
        borderRadius :10,
        position:'absolute'
        
