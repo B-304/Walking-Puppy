@@ -4,13 +4,12 @@ import io.ssafy.p.j9b304.backend.domain.spot.dto.GetResponseDto;
 import io.ssafy.p.j9b304.backend.domain.spot.entity.Spot;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Route;
 import io.ssafy.p.j9b304.backend.domain.walk.entity.Walk;
+import io.ssafy.p.j9b304.backend.global.entity.File;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -64,8 +63,11 @@ public class WalkGetDetailResponseDto {
     @Schema(description = "도착 시간")
     String endTime;
 
+    @Schema(description = "산책로 지도 이미지")
+    String imageUrl;
+
     @Builder
-    public WalkGetDetailResponseDto(Walk walk, List<Route> routeList, List<Spot> spotList) {
+    public WalkGetDetailResponseDto(Walk walk, List<Route> routeList, List<Spot> spotList, File file) {
         this.walkId = walk.getWalkId();
         this.name = walk.getName();
         long walkDuration = ChronoUnit.MINUTES.between(walk.getStartTime(), walk.getEndTime());
@@ -83,5 +85,7 @@ public class WalkGetDetailResponseDto {
         this.endTime = walk.getEndTime().format(formatter);
         this.routeList = routeList.stream().map(r -> new RouteGetResponseDto(r)).collect(Collectors.toList());
         this.spotList = spotList.stream().map(Spot::toSpotDto).collect(Collectors.toList());
+        if (file != null)
+            this.imageUrl = file.getUrl();
     }
 }
