@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -17,10 +18,14 @@ type Walk = {
   imageUrl: string;
 };
 
+
 const WalkListItem: React.FC<{ walk: Walk }> = ({ walk }) => {
   const [isHighlighted, setIsHighlighted] = useState<boolean>(false);
+  const navigation = useNavigation();
 
   const toggleHighlight = () => {
+    console.log(walk.walkId);
+    navigation.navigate("산책로 상세",walk.walkId);
     setIsHighlighted(!isHighlighted);
   };
 
