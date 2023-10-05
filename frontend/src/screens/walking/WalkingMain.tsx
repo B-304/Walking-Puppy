@@ -6,6 +6,7 @@ import TimeThemeSetting from './TimeThemeSetting';
 import WalkingMap from './WalkingMap';
 import StartDesMap from './StartDesMap';
 import WalkingSetting from './WalkingSetting';
+import SavedWalkingSetting from './SavedWalkingSetting';
 
 
 
@@ -36,7 +37,14 @@ const WalkingMain:React.FC = (): JSX.Element => {
                   fontSize: 24,
                 },
               }}/>
-      <Stack.Screen name="TimeThemeSetting" component={TimeThemeSetting}/>
+      <Stack.Screen name="추천 산책 경로" component={SavedWalkingSetting}
+                    options={{
+                      headerShown: true,
+                      headerTitleAlign: 'center',
+                      headerTitleStyle: {
+                        fontSize: 24,
+                      },
+                    }}/>
       <Stack.Screen name="WalkingMap" component={WalkingMap}/>
       <Stack.Screen name="StartDesMap" component={StartDesMap} options={{headerTitle:'장소 검색', headerTitleAlign:'center'}}/>
     </Stack.Navigator>
