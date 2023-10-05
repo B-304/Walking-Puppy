@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
 import axios from 'axios';
-import {google_map_api_key} from 'react-native-dotenv';
 
 const NewWalkingSetting: React.FC = () => {
   const [startAddress, setStartAddress] = useState<string>(''); // 출발지 주소

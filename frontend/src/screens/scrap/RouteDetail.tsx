@@ -190,7 +190,7 @@ const RouteDetail: React.FC = (): JSX.Element => {
         }}
       >
         <Image
-          source={require("../../assets/walkroute.png")}
+          source={{ uri: walk.imageUrl }}
           style={{ width: 350, height: 207 }}
         />
       </View>
