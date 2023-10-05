@@ -14,7 +14,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/reducer";
 import { setWalkId as setNewWalkId } from "../../redux/action/walkAction";
-import { useRoute } from '@react-navigation/native';
+import { useRoute } from "@react-navigation/native";
+import { accessToken, kakao_api } from "react-native-dotenv";
 
 const RouteDetail: React.FC = (): JSX.Element => {
   const [walk, setWalk] = useState([]);
@@ -24,8 +25,8 @@ const RouteDetail: React.FC = (): JSX.Element => {
   const route = useRoute();
   const walkId = route.params;
 
-  const BEARER_TOKEN =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MiwiZXhwIjoxNjk2NjA4NDI2fQ.V6oAsUPGAMxYomvzX25Hny1z1RaJFJMLYXvSizEsyY4";
+  // const BEARER_TOKEN =
+  //   "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MiwiZXhwIjoxNjk2NjA4NDI2fQ.V6oAsUPGAMxYomvzX25Hny1z1RaJFJMLYXvSizEsyY4";
 
   const walkIdTest = useSelector((state: RootState) => state.walk.walkId);
   const dispatch = useDispatch();
@@ -33,17 +34,19 @@ const RouteDetail: React.FC = (): JSX.Element => {
   useEffect(() => {
     //const walkId = 13;
     console.log("walkIdTest=" + walkIdTest);
-    console.log(walkId)
+    console.log(walkId);
     axios
       .get(`https://j9b304.p.ssafy.io/api/walk/${walkId}`, {
         //   .get("http://10.0.2.2:8080/walk/13", {
-        headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
+        headers: { Authorization: `Bearer ${accessToken}` },
       })
       .then((response) => {
         console.log("산책 상세");
         console.log(response.data);
         setWalk(response.data);
-
+        console.log("===================");
+        console.log(walk);
+        console.log(walk.startLatitude, walk.startLongitude);
         getGeoAddress(walk.startLatitude, walk.startLongitude)
           .then((address) => setDepartureAddress(address))
           .catch((error) => console.error(error));
@@ -61,11 +64,12 @@ const RouteDetail: React.FC = (): JSX.Element => {
   const getGeoAddress = async (latitude, longitude) => {
     const apiKey = "";
     const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}`;
-
+    console.log("======kakao===");
+    console.log(url);
     try {
       const response = await axios.get(url, {
         headers: {
-          Authorization: `KakaoAK ${Config.kakaoApiKey}`,
+          Authorization: `KakaoAK ${kakao_api}`,
         },
       });
 
@@ -100,7 +104,7 @@ const RouteDetail: React.FC = (): JSX.Element => {
     const url = `http://10.0.2.2:8080/walk/${walkId}`;
     axios
       .delete(url, {
-        headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
+        headers: { Authorization: `Bearer ${accessToken}` },
       })
       .then((response) => {
         // 탈퇴 성공 시의 처리
@@ -123,7 +127,7 @@ const RouteDetail: React.FC = (): JSX.Element => {
       .post(
         url,
         { walkId: `${walkId}` },
-        { headers: { Authorization: `Bearer ${BEARER_TOKEN}` } },
+        { headers: { Authorization: `Bearer ${accessToken}` } },
       )
       .then((response) => {
         console.log("기존경로로 산책:", response.data);

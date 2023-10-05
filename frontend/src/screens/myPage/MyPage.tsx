@@ -1,13 +1,13 @@
 import { View, Text, Image, Button, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
 import Modal from "react-native-modal";
-import Ionic from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { accessToken, kakao_api } from "react-native-dotenv";
+import { useFocusEffect } from "@react-navigation/native";
 
 const MyPage: React.FC = (): JSX.Element => {
   const [name, setName] = useState(null);
@@ -27,29 +27,21 @@ const MyPage: React.FC = (): JSX.Element => {
   const [arrivalAddress, setArrivalAddress] = useState("유성구 덕명동");
   const navigation = useNavigation();
 
-  // const onDayPress = (day) => {
-  //   setSelectedDate(day.dateString);
-  //   setModalVisible(true);
-  // };
-
-  // const closeModal = () => {
-  //   setModalVisible(false);
-  // };
-
-  const BEARER_TOKEN =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoeW9reW91bmdAa2FrYW8uY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsInR5cGUiOiJBQ0NFU1MiLCJ1c2VySWQiOjMsImV4cCI6MTY5NjQ0NTgxNH0.eAypxIIbsTrnohTkZYnsEtNZKwEhzF7lXnCE1WQfklw";
-
   const Profile = () => {
     navigation.navigate("회원정보 수정");
   };
 
   const fetchWalkList = (year: number, month: number) => {
     const walkurl =
-      "https://j9b304.p.ssafy.io/api/walk-list?yearAndMonth=" + year + "-" + month;
+      "https://j9b304.p.ssafy.io/api/walk-list?yearAndMonth=" +
+      year +
+      "-" +
+      month;
+    console.log(walkurl);
     axios
       .get(walkurl, {
         headers: {
-          Authorization: `Bearer ${BEARER_TOKEN}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then((response) => {
@@ -64,11 +56,29 @@ const MyPage: React.FC = (): JSX.Element => {
         setWalkList([]);
       });
   };
-  //const url = 'https://j9b304.p.ssafy.io/api/2';
-  useEffect(() => {
+  // useEffect(() => {
+  //   axios
+  //     .get("https://j9b304.p.ssafy.io/api/2")
+  //     //.get("http://10.0.2.2:8080/2")
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setName(response.data.nickname);
+  //       fetchWalkList(new Date().getFullYear(), new Date().getMonth() + 1);
+  //     })
+  //     .catch((error) => {
+  //       console.error("데이터 요청 실패:", error);
+  //     });
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, []),
+  );
+
+  const fetchData = () => {
     axios
       .get("https://j9b304.p.ssafy.io/api/2")
-      //.get("http://10.0.2.2:8080/2")
       .then((response) => {
         console.log(response.data);
         setName(response.data.nickname);
@@ -77,7 +87,7 @@ const MyPage: React.FC = (): JSX.Element => {
       .catch((error) => {
         console.error("데이터 요청 실패:", error);
       });
-  }, []);
+  };
 
   const handleMonthChange = (monthData) => {
     const { year, month } = monthData;
@@ -119,9 +129,9 @@ const MyPage: React.FC = (): JSX.Element => {
       const walkId = selectedItem.walkIdList[selectedIndex];
       console.log(walkId);
       axios
-        .get(`http://10.0.2.2:8080/walk/${walkId}`, {
+        .get(`https://j9b304.p.ssafy.io/api/walk/${walkId}`, {
           // .get("http://10.0.2.2:8080/walk/10", {
-          headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
+          headers: { Authorization: `Bearer ${accessToken}` },
         })
         .then((response) => {
           console.log(response.data);
@@ -161,13 +171,13 @@ const MyPage: React.FC = (): JSX.Element => {
   };
 
   const getGeoAddress = async (latitude, longitude) => {
-    const apiKey = "";
+    // const apiKey = "";
     const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}`;
 
     try {
       const response = await axios.get(url, {
         headers: {
-          Authorization: `KakaoAK ${apiKey}`,
+          Authorization: `KakaoAK ${kakao_api}`,
         },
       });
 
@@ -240,7 +250,7 @@ const MyPage: React.FC = (): JSX.Element => {
               ); // 현재 날짜와 일치하는 항목 찾기
 
               const today = date.month + "월 " + date.day + "일";
-              console.log(today);
+              // console.log(today);
               return (
                 <TouchableOpacity
                   onPress={() => toggleModal(todayWalkItem, today)}
