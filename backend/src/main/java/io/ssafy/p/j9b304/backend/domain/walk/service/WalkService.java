@@ -18,12 +18,10 @@ import io.ssafy.p.j9b304.backend.domain.walk.repository.RouteRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.ThemeRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkSpotRepository;
-import io.ssafy.p.j9b304.backend.global.entity.File;
 import io.ssafy.p.j9b304.backend.global.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -59,28 +57,28 @@ public class WalkService {
 
         // 산책 스팟 저장
         List<Long> spotIdList = walkAddRequestDto.getSpotList();
-        if(spotIdList!=null) {
+        if (spotIdList != null) {
             for (Long spotId : spotIdList) {
                 Spot spot = spotRepository.findSpotById(spotId)
                         .orElseThrow(() -> new IllegalArgumentException("해당 스팟이 없습니다."));
                 walkSpotRepository.save(WalkSpot.builder().walk(walkInit).spot(spot).build());
             }
         }
-        System.out.println(walkAddRequestDto.getStartLongitude()+", " +walkAddRequestDto.getStartLatitude()+", " +
-                walkAddRequestDto.getEndLongitude()+", " + walkAddRequestDto.getEndLatitude()+", " +
-                walkAddRequestDto.getEstimatedTime()+", " +walkAddRequestDto.getThemeId());
+        System.out.println(walkAddRequestDto.getStartLongitude() + ", " + walkAddRequestDto.getStartLatitude() + ", " +
+                walkAddRequestDto.getEndLongitude() + ", " + walkAddRequestDto.getEndLatitude() + ", " +
+                walkAddRequestDto.getEstimatedTime() + ", " + walkAddRequestDto.getThemeId());
 
         final Map<String, Object> resultRouteMap = routeService.getRecommendedRoute(walkAddRequestDto.getStartLongitude(), walkAddRequestDto.getStartLatitude(),
                 walkAddRequestDto.getEndLongitude(), walkAddRequestDto.getEndLatitude(),
                 walkAddRequestDto.getEstimatedTime(), walkAddRequestDto.getThemeId());
-        List<Point> recommendedRoute= (List<Point>)resultRouteMap.get("recommendedRoute");
+        List<Point> recommendedRoute = (List<Point>) resultRouteMap.get("recommendedRoute");
 
-        walk.setEstimatedDistance((Double)resultRouteMap.get("totalDistance"));
-        walk.setEstimatedTime((int)resultRouteMap.get("totalMinute"));
+        walk.setEstimatedDistance((Double) resultRouteMap.get("totalDistance"));
+        walk.setEstimatedTime((int) resultRouteMap.get("totalMinute"));
 
         char state = '0';
         int sequence = 1;
-        if(recommendedRoute!=null) {
+        if (recommendedRoute != null) {
             for (Point point : recommendedRoute) {
                 Route route = Route.builder()
                         .state(state)
@@ -93,7 +91,7 @@ public class WalkService {
                 routeRepository.save(route);
                 sequence++;
             }
-        }else{
+        } else {
             throw new IllegalArgumentException("경로를 생성할 수 없습니다.");
         }
 
@@ -253,7 +251,7 @@ public class WalkService {
                 .build();
     }
 
-    public Walk scrapWalk(HttpServletRequest httpServletRequest, WalkModifyRequestDto walkModifyRequestDto, MultipartFile multipartFile) {
+    public Walk scrapWalk(HttpServletRequest httpServletRequest, WalkModifyRequestDto walkModifyRequestDto/*, MultipartFile multipartFile*/) {
         User walker = jwtTokenProvider.extractUserFromToken(httpServletRequest);
 
         Walk walk = walkRepository.findById(walkModifyRequestDto.getWalkId())
@@ -265,10 +263,10 @@ public class WalkService {
             throw new IllegalArgumentException("이미 스크랩 된 산책입니다.");
         }
 
-        if (multipartFile != null) {
-            File file = fileService.addFile(multipartFile);
-            walk.setImageId(file.getFileId());
-        }
+//        if (multipartFile != null) {
+//            File file = fileService.addFile(multipartFile);
+//            walk.setImageId(file.getFileId());
+//        }
 
         walk.scrap(walkModifyRequestDto.getName());
 
@@ -297,7 +295,6 @@ public class WalkService {
                 .calorie(walkCalorie)
                 .build();
     }
-
 
 
 }
