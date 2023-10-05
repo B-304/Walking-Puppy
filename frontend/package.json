@@ -26,6 +26,7 @@
     "react-native": "0.72.4",
     "react-native-calendars": "^1.1301.0",
     "react-native-flipper": "^0.212.0",
+    "react-native-gesture-handler": "^2.13.1",
     "react-native-keyboard-aware-scrollview": "^2.1.0",
     "react-native-maps": "^1.7.1",
     "react-native-modal": "^13.0.1",
