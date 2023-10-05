@@ -2,10 +2,9 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { userActions } from "../../redux/reducer/userSlice";
-
 import axios from "axios";
 import { RootState } from "../../redux/reducer";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native"; // useFocusEffect를 추가로 임포트
 import { accessToken } from "react-native-dotenv";
 
 const HomeScreen: React.FC = (): JSX.Element => {
@@ -18,10 +17,14 @@ const HomeScreen: React.FC = (): JSX.Element => {
     levelRange: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [weatherData, setWeatherData] = useState<any>(null);
+  const [userResponseData, setUserResponseData] = useState<any>({
+    nickname: "",
+    walkCount: 0,
+  });
   const navigation = useNavigation();
 
-  useEffect(() => {
+  // Axios 요청을 함수로 감싸기
+  const fetchData = () => {
     axios
       .get("https://j9b304.p.ssafy.io/api/dog/2", {
         headers: {
@@ -52,20 +55,32 @@ const HomeScreen: React.FC = (): JSX.Element => {
         setLoading(false);
       });
 
-    const lat = 36.35572;
-    const lon = 127.346064;
-    const API_KEY = "";
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
-
     axios
-      .get(apiUrl)
+      .get("https://j9b304.p.ssafy.io/api/2", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then((response) => {
-        setWeatherData(response.data);
+        setUserResponseData(response.data);
+        setLoading(false);
       })
       .catch((error) => {
-        console.error("날씨 데이터를 가져오는데 실패했습니다:", error);
+        console.error("사용자 데이터 가져오기 실패:", error);
+        setLoading(false);
       });
-  }, []);
+  };
+
+  useEffect(() => {
+    fetchData(); // 초기 데이터 가져오기
+
+    // useFocusEffect를 사용하여 화면이 포커스를 얻을 때 데이터를 다시 가져옵니다.
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const nickname = useSelector(
     (state: RootState) => state.user.user.nickname as string,
@@ -80,32 +95,32 @@ const HomeScreen: React.FC = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      {loading ? ( // 데이터 로딩 중인 경우 "로딩 중" 메시지 표시
+      {loading ? (
         <Text>Loading...</Text>
       ) : (
         <View style={styles.dataContainer}>
-          <Text style={styles.title}>{nickname} 님, 안녕하세요</Text>
+          <Text style={styles.title}>
+            {userResponseData.nickname} 님, 안녕하세요
+          </Text>
           <Text style={styles.greetingText}>오늘의 산책 기록</Text>
 
           <View style={styles.horizontalTextContainer}>
             <View style={styles.textWithDivider}>
-              <Text style={styles.walkdataText}>
-                {" "}
-                걸음수 {"\n\n"} {dailyWalkData ? dailyWalkData.walkCount : 0}{" "}
-                걸음
+              <Text style={styles.walkdataTitle}> 걸음수</Text>
+              <Text style={styles.walkdataContent}>
+                {dailyWalkData ? dailyWalkData.walkCount : 0} 걸음
               </Text>
             </View>
             <View style={styles.textWithDivider}>
-              <Text style={styles.walkdataText}>
-                {" "}
-                이동거리 {"\n\n"} {dailyWalkData ? dailyWalkData.distance : 0}{" "}
-                km
+              <Text style={styles.walkdataTitle}> 이동거리</Text>
+              <Text style={styles.walkdataContent}>
+                {dailyWalkData ? dailyWalkData.distance : 0} km
               </Text>
             </View>
             <View style={styles.textWithDivider2}>
-              <Text style={styles.walkdataText}>
-                {" "}
-                칼로리 {"\n\n"} {dailyWalkData ? dailyWalkData.calorie : 0} kcal
+              <Text style={styles.walkdataTitle}> 칼로리</Text>
+              <Text style={styles.walkdataContent}>
+                {dailyWalkData ? dailyWalkData.calorie : 0} kcal
               </Text>
             </View>
           </View>
@@ -133,15 +148,6 @@ const HomeScreen: React.FC = (): JSX.Element => {
           >
             <Text style={styles.buttonText}>산책 시작하기</Text>
           </TouchableOpacity>
-          {/* <View style={styles.weather}>
-            <Text style={styles.city}>{weatherData.name}</Text>
-            <Text style={styles.weatherDescription}>
-              {weatherData.weather[0].description}
-            </Text>
-            <Text style={styles.temperature}>
-              {Math.round(weatherData.main.temp - 273.15)}°C
-            </Text>
-          </View> */}
         </View>
       )}
     </View>
@@ -200,8 +206,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 10,
   },
-  walkdataText: {
+  walkdataTitle: {
     fontSize: 15,
+    marginTop: 10,
+    marginBottom: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    textAlignVertical: "center",
+    fontWeight: "bold",
+  },
+  walkdataContent: {
+    fontSize: 14.5,
     marginTop: 10,
     marginBottom: 10,
     marginRight: 10,
