@@ -1826,7 +1826,7 @@
     color "^4.2.3"
     warn-once "^0.1.0"
 
-"@react-navigation/native-stack@^6.9.13":
+"@react-navigation/native-stack@^6.9.14":
   version "6.9.14"
   resolved "https://registry.npmjs.org/@react-navigation/native-stack/-/native-stack-6.9.14.tgz"
   integrity sha512-7RiZkvMFN6f0kmANc63B/0m9ttQ2JpDIPWQwPU93FP698s19KTOyu7uxgl7Oi3bvsqHFO5JfiR7B+4h8lh9dxw==
