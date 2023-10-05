@@ -2,6 +2,7 @@ import { View, Text ,StyleSheet,TouchableOpacity,Modal,Button} from 'react-nativ
 import React,{useState} from 'react'
 import Slider from '@react-native-community/slider';
 import axios from 'axios'
+import { useRoute } from '@react-navigation/native';
 
 
 const WalkingSetting:React.FC = (): JSX.Element => {
@@ -12,6 +13,8 @@ const WalkingSetting:React.FC = (): JSX.Element => {
     const [selectedTime, setSelectedTime] = useState(15); // 초기 선택 시간 (예: 15분)
     const [modalVisible, setModalVisible] = useState(false); // 모달 상태 추가
     const [pathData, setPathData] = useState({});
+    const route = useRoute();
+    const {start,end} = route.params;
 
     const minimumValue=15,maximumValue=60;
     const handleTimeChange = (value: number) => {
@@ -22,20 +25,23 @@ const WalkingSetting:React.FC = (): JSX.Element => {
 
     const newPath = () => {
         const updatePathData={
-            startLatitude: 36.3463,
-            startLongitude: 127.2941,
-            endLatitude: 36.3463,
-            endLongitude: 127.2941,
+            startLatitude: start.latitude,
+            startLongitude: start.longitude,
+            endLatitude: end.latitude,
+            endLongitude: end.longitude,
             spotList: [],
             themeId: isSafe ? 1 : isNature ? 2 : null, // 테마에 따라 업데이트
             estimatedTime: selectedTime,
         };
+        console.log(updatePathData)
+
 
         if(updatePathData.themeId ==null){
+
+            
             setModalVisible(true)
             return;
         }
-
 
         setPathData(updatePathData);
         //새로운 경로
@@ -54,7 +60,7 @@ const WalkingSetting:React.FC = (): JSX.Element => {
   
 
   return (
-    <View style={{backgroundColor:"white"}}>
+    <View style={{backgroundColor:"white",height:700}}>
             {/* 모달 컴포넌트 */}
             <Modal
                 animationType="none"
@@ -335,8 +341,7 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         backgroundColor:'#4B9460',
         marginLeft:53,
-        marginTop :50,
-        marginBottom:30,
+        marginTop :70,
         borderRadius :10,
     },
 

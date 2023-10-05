@@ -14,24 +14,28 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/reducer";
 import { setWalkId as setNewWalkId } from "../../redux/action/walkAction";
+import { useRoute } from '@react-navigation/native';
 
 const RouteDetail: React.FC = (): JSX.Element => {
   const [walk, setWalk] = useState([]);
   const [departureAddress, setDepartureAddress] = useState("유성구 덕명동");
   const [arrivalAddress, setArrivalAddress] = useState("유성구 덕명동");
   const [modalVisible, setModalVisible] = useState(false); // 모달 상태 추가
+  const route = useRoute();
+  const walkId = route.params;
 
   const BEARER_TOKEN =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoeW9reW91bmdAa2FrYW8uY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsInR5cGUiOiJBQ0NFU1MiLCJ1c2VySWQiOjMsImV4cCI6MTY5NjQ0NTgxNH0.eAypxIIbsTrnohTkZYnsEtNZKwEhzF7lXnCE1WQfklw";
+    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbWluMzY3MkBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwidHlwZSI6IkFDQ0VTUyIsInVzZXJJZCI6MiwiZXhwIjoxNjk2NjA4NDI2fQ.V6oAsUPGAMxYomvzX25Hny1z1RaJFJMLYXvSizEsyY4";
 
   const walkIdTest = useSelector((state: RootState) => state.walk.walkId);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const walkId = 13;
+    //const walkId = 13;
     console.log("walkIdTest=" + walkIdTest);
+    console.log(walkId)
     axios
-      .get(`http://10.0.2.2:8080/walk/${walkId}`, {
+      .get(`https://j9b304.p.ssafy.io/api/walk/${walkId}`, {
         //   .get("http://10.0.2.2:8080/walk/13", {
         headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
       })

@@ -16,8 +16,8 @@ const ProfileEdit:React.FC = (): JSX.Element => {
       const [modalVisible, setModalVisible] = useState(false); // 모달 상태 추가
 
     useEffect(()=> {
-        //const url = 'https://j9b304.p.ssafy.io/api/2';
-        const url = 'http://10.0.2.2:8080/2';
+        const url = 'https://j9b304.p.ssafy.io/api/2';
+        //const url = 'http://10.0.2.2:8080/2';
         axios.get(url)
         .then((response) => {
             //성공
@@ -40,8 +40,8 @@ const ProfileEdit:React.FC = (): JSX.Element => {
     
       const handleSaveProfile = () => {
         // 수정된 정보를 서버로 전송하는 로직 추가
-       // const url = 'https://j9b304.p.ssafy.io/api/2'; // 실제 API 엔드포인트 URL로 변경해야 합니다.
-       const url = 'http://10.0.2.2:8080/2';
+        const url = 'https://j9b304.p.ssafy.io/api/2'; // 실제 API 엔드포인트 URL로 변경해야 합니다.
+       //const url = 'http://10.0.2.2:8080/2';
         axios
           .patch(url, editedData)
           .then((response) => {
@@ -49,7 +49,7 @@ const ProfileEdit:React.FC = (): JSX.Element => {
             console.log('프로필 수정 성공:', response.data);
             // 수정된 정보를 화면에 반영
             setUserData(response.data);
-            navigation.navigate('ProfileEdit');
+            navigation.navigate('마이페이지');
           })
           .catch((error) => {
             // 오류 발생 시의 처리
@@ -70,8 +70,8 @@ const ProfileEdit:React.FC = (): JSX.Element => {
     
       const handleWithdraw = () => {
 
-        //const url = 'https://j9b304.p.ssafy.io/api/2'; // 탈퇴 API 엔드포인트 URL로 변경해야 합니다.
-        const url = 'http://10.0.2.2:8080/2';
+        const url = 'https://j9b304.p.ssafy.io/api/2'; // 탈퇴 API 엔드포인트 URL로 변경해야 합니다.
+        //const url = 'http://10.0.2.2:8080/2';
         axios
           .delete(url)
           .then((response) => {
@@ -91,7 +91,7 @@ const ProfileEdit:React.FC = (): JSX.Element => {
 
   return (
 
-    <View style={{backgroundColor:'white',height:800}}>
+    <View style={{backgroundColor:'white',height:700}}>
                   {/* 모달 컴포넌트 */}
                   <Modal
                 animationType="none"
@@ -128,7 +128,9 @@ const ProfileEdit:React.FC = (): JSX.Element => {
             <View style= {styles.userContainer}>
               <View style = {styles.profile}>
                 <Avatar.Image
+                  source={require("./assets/image-user.png")}
                   style = {styles.image}
+                  size={100}
                 />
               </View>
               <View style ={styles.lineContainer}>
@@ -236,13 +238,11 @@ modalButtonText:{
 
   },
 
-
-
     image:{
       backgroundColor:'#D9D9D9',
-      height:100,
-      width:100,
       borderRadius:50,
+      marginLeft:20,
+      marginRight:20,
       
 
     },

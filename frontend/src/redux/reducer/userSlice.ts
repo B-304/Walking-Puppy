@@ -7,7 +7,7 @@ const initialState = {
   isLoggedIn: false,
   user: {
     userId: null,
-    nickname: "홍길동",
+    nickname: "",
     point: 0,
     emojiId: null,
     oauthProvider: "",
