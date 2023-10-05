@@ -18,6 +18,8 @@ import io.ssafy.p.j9b304.backend.domain.walk.repository.RouteRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.ThemeRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkRepository;
 import io.ssafy.p.j9b304.backend.domain.walk.repository.WalkSpotRepository;
+import io.ssafy.p.j9b304.backend.global.entity.File;
+import io.ssafy.p.j9b304.backend.global.repository.FileRepository;
 import io.ssafy.p.j9b304.backend.global.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,7 @@ public class WalkService {
     private final RouteRepository routeRepository;
     private final SpotRepository spotRepository;
     private final WalkSpotRepository walkSpotRepository;
+    private final FileRepository fileRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final DogService dogService;
     private final FileService fileService;
@@ -185,10 +188,17 @@ public class WalkService {
             }
         }
 
+        File file = null;
+        if (walk.getImageId() != null) {
+            file = fileRepository.findById(walk.getImageId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 파일이 없습니다."));
+        }
+
         return WalkGetDetailResponseDto.builder()
                 .walk(walk)
                 .routeList(routeList)
                 .spotList(spotList)
+                .file(file)
                 .build();
     }
 
