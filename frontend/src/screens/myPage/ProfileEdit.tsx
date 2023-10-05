@@ -49,7 +49,7 @@ const ProfileEdit:React.FC = (): JSX.Element => {
             console.log('프로필 수정 성공:', response.data);
             // 수정된 정보를 화면에 반영
             setUserData(response.data);
-            navigation.navigate('ProfileEdit');
+            navigation.navigate('마이페이지');
           })
           .catch((error) => {
             // 오류 발생 시의 처리
