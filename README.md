@@ -1,3 +1,5 @@
+<img src = "images/introduce.png" width="800px"><br>
+
 ## 프로젝트 개요
 
 다른 길로 산책을 수행하고 싶을 때 산책하기에 적합하지 않은 최적의 경로만을 판단하여 추천하기만 할 때
@@ -65,6 +67,8 @@ IDE
 ## 프로젝트 구조
 
 **시스템 아키텍처**
+
+<img src = "images/architecture.png" width="550px"><br>
 
 **ERD**
 
