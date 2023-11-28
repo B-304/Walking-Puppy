@@ -74,96 +74,173 @@ IDE
 
 ```
 backend
-│ src
+│  .gitignore
+│  build.gradle
+│  Dockerfile
+│  gradlew
+│  gradlew.bat
+│  Jenkinsfile
+│  settings.gradle
+│
+├─.idea
+│      .gitignore
+│      gradle.xml
+│      misc.xml
+│      vcs.xml
+│
+├─gradle
+│  └─wrapper
+│          gradle-wrapper.jar
+│          gradle-wrapper.properties
+│
+└─src
     ├─main
       └─java
-          └─com
+          └─io
               └─ssafy
-                  └─B306
-                      │  B306Application.java
-                      │
-                      └─domain
-                          ├─exception
-                          │      CustomException.java
-                          │      ErrorCode.java
-                          │      ErrorResponseDto.java
-                          │      ExceptionManager.java
-                          │      JwtExceptionResponse.java
-                          │
-                          ├─ImageUpload
-                          │      ImageController.java
-                          │      ImageUploadService.java
-                          │
-                          ├─OAuth
-                          │      OAuthController.java
-                          │      OAuthService.java
-                          │
-                          ├─quiz
-                          │  │  Quiz.java
-                          │  │  QuizController.java
-                          │  │  QuizRepository.java
-                          │  │  QuizService.java
-                          │  │
-                          │  └─dto
-                          │          QuizRequestSaveDto.java
-                          │          QuizResponseDto.java
-                          │
-                          ├─quizbook
-                          │  │  QuizBook.java
-                          │  │  QuizBookController.java
-                          │  │  QuizBookRepository.java
-                          │  │  QuizBookService.java
-                          │  │
-                          │  └─dto
-                          │          QuizBookListResponseDto.java
-                          │          QuizBookModifyRequestDto.java
-                          │          QuizBookResponseDto.java
-                          │          QuizBookSaveRequestDto.java
-                          │
-                          ├─s3
-                          │      AwsSesConfig.java
-                          │      S3Controller.java
-                          │      S3Service.java
-                          │
-                          ├─security
-                          │  │  JwtAuthenticationFilter.java
-                          │  │  JwtAuthenticationProvider.java
-                          │  │  JwtExceptionFilter.java
-                          │  │  JwtToken.java
-                          │  │  JwtUtil.java
-                          │  │
-                          │  └─config
-                          │          CorsConfig.java
-                          │          SecurityConfig.java
-                          │
-                          ├─template
-                          │  │  Template.java
-                          │  │  TemplateController.java
-                          │  │  TemplateRepository.java
-                          │  │  TemplateService.java
-                          │  │
-                          │  └─dto
-                          │          TemplateResponseDto.java
-                          │          TemplateSaveDto.java
-                          │
-                          └─user
-                              │  RedisConfig.java
-                              │  RedisUtil.java
-                              │  User.java
-                              │  UserController.java
-                              │  UserRepository.java
-                              │  UserService.java
+                  └─p
+                      └─j9b304
+                          └─backend
+                              │  BackendApplication.java
                               │
-                              └─dto
-                                      EmailAuthRequestDto.java
-                                      EmailRequestDto.java
-                                      UserDto.java
-                                      UserLoginRequestDto.java
-                                      UserLoginResponseDto.java
-                                      UserModifyRequestDto.java
-                                      UserRegisterRequestDto.java
-                                      UserSignUpResponseDto.java
-
+                              ├─config
+                              │      OpenApiConfig.java
+                              │
+                              ├─domain
+                              │  ├─dog
+                              │  │  ├─controller
+                              │  │  │      DogController.java
+                              │  │  │
+                              │  │  ├─dto
+                              │  │  │      DogGetResponseDto.java
+                              │  │  │      DogModifyRequestDto.java
+                              │  │  │
+                              │  │  ├─entity
+                              │  │  │      Dog.java
+                              │  │  │      DogLevel.java
+                              │  │  │      DogType.java
+                              │  │  │
+                              │  │  ├─repository
+                              │  │  │      DogLevelRepository.java
+                              │  │  │      DogRepository.java
+                              │  │  │
+                              │  │  └─service
+                              │  │          DogService.java
+                              │  │
+                              │  ├─security
+                              │  │  ├─config
+                              │  │  │      CorsConfig.java
+                              │  │  │      SecurityConfig.java
+                              │  │  │
+                              │  │  ├─jwt
+                              │  │  │      JwtAuthenticationFilter.java
+                              │  │  │      JwtToken.java
+                              │  │  │      JwtTokenProvider.java
+                              │  │  │
+                              │  │  └─oAuth
+                              │  │          KakaoProfile.java
+                              │  │          OauthToken.java
+                              │  │
+                              │  ├─spot
+                              │  │  ├─controller
+                              │  │  │      SpotController.java
+                              │  │  │
+                              │  │  ├─dto
+                              │  │  │      AddRequestDto.java
+                              │  │  │      GetHotSpotResponseDto.java
+                              │  │  │      GetResponseDto.java
+                              │  │  │      ModifyRequestDto.java
+                              │  │  │
+                              │  │  ├─entity
+                              │  │  │      Spot.java
+                              │  │  │
+                              │  │  ├─repository
+                              │  │  │      SpotRepository.java
+                              │  │  │
+                              │  │  └─service
+                              │  │          SpotService.java
+                              │  │
+                              │  ├─user
+                              │  │  ├─controller
+                              │  │  │      UserController.java
+                              │  │  │
+                              │  │  ├─dto
+                              │  │  │  ├─request
+                              │  │  │  │      UserModifyRequestDto.java
+                              │  │  │  │
+                              │  │  │  └─response
+                              │  │  │          UserGetDetailResponseDto.java
+                              │  │  │          UserGetWalkDetailResponseDto.java
+                              │  │  │          UserGetWalkListResponseDto.java
+                              │  │  │
+                              │  │  ├─entity
+                              │  │  │      User.java
+                              │  │  │
+                              │  │  ├─repository
+                              │  │  │      UserRepository.java
+                              │  │  │
+                              │  │  └─service
+                              │  │          UserService.java
+                              │  │
+                              │  └─walk
+                              │      ├─controller
+                              │      │      WalkController.java
+                              │      │
+                              │      ├─dto
+                              │      │  ├─request
+                              │      │  │      DijkstraResult.java
+                              │      │  │      Edge.java
+                              │      │  │      PathResult.java
+                              │      │  │      Point.java
+                              │      │  │      RouteAddRequestDto.java
+                              │      │  │      WalkAddRequestDto.java
+                              │      │  │      WalkExistPathAddRequestDto.java
+                              │      │  │      WalkModifyRequestDto.java
+                              │      │  │      WalkSaveRequestDto.java
+                              │      │  │
+                              │      │  └─response
+                              │      │          RouteGetResponseDto.java
+                              │      │          WalkGetDetailResponseDto.java
+                              │      │          WalkGetListResponseDto.java
+                              │      │          WalkGetTodayResponseDto.java
+                              │      │          WalkInitialInfoResponseDto.java
+                              │      │          WalkSaveResponseDto.java
+                              │      │
+                              │      ├─entity
+                              │      │      Path.java
+                              │      │      Route.java
+                              │      │      Theme.java
+                              │      │      Walk.java
+                              │      │      WalkSpot.java
+                              │      │
+                              │      ├─repository
+                              │      │      RouteRepository.java
+                              │      │      SafePathRepository.java
+                              │      │      ThemeRepository.java
+                              │      │      WalkRepository.java
+                              │      │      WalkSpotRepository.java
+                              │      │
+                              │      └─service
+                              │              RouteService.java
+                              │              WalkService.java
+                              │
+                              └─global
+                                  ├─config
+                                  │      OpenApiConfig.java
+                                  │      S3Config.java
+                                  │
+                                  ├─controller
+                                  │      FileController.java
+                                  │
+                                  ├─entity
+                                  │      File.java
+                                  │
+                                  ├─repository
+                                  │      FileRepository.java
+                                  │
+                                  └─service
+                                          FileService.java
+                                          S3Service.java
 
 ```
 
@@ -171,107 +248,128 @@ backend
 
 ```
 frontend
-│  src
-    │  App.css
-    │  App.js
-    │  App.test.js
-    │  globalStyles.js
-    │  index.css
-    │  index.js
-    │  logo.svg
-    │  registerServiceWorker.js
-    │  reportWebVitals.js
-    │  setupTests.js
-    │  user.js
-    │
-    ├─assets
-    │  └─images
-    │
-    ├─components
-    │  │  imageUploader.js
-    │  │  secCounter.js
-    │  │  VideoRoomComponent.css
-    │  │  VideoRoomComponent.js
-    │  │
-    │  ├─api
-    │  │      tokenHttp.js
-    │  │
-    │  ├─auth
-    │  │      AuthForm.js
-    │  │      AuthMail.js
-    │  │      AuthTemplate.js
-    │  │      Logout.js
-    │  │      PhotoUpload.js
-    │  │      RegisterForm.js
-    │  │      UserInfo.js
-    │  │
-    │  ├─chat
-    │  │      ChatComponent.css
-    │  │      ChatComponent.js
-    │  │
-    │  ├─common
-    │  │      Button.js
-    │  │      CodedState.js
-    │  │      Grid.js
-    │  │      Image.js
-    │  │      Input.js
-    │  │
-    │  ├─dialog-extension
-    │  │      DialogExtension.css
-    │  │      DialogExtension.js
-    │  │
-    │  ├─Fonts
-    │  │      BMEULJIRO.otf
-    │  │      BMEuljiro10yearslaterOTF.otf
-    │  │      BMEuljirooraeoraeOTF.otf
-    │  │      BMHANNAProOTF.otf
-    │  │      Font.css
-    │  │      JSArirang.otf
-    │  │      PFstardust.ttf
-    │  │
-    │  ├─game
-    │  │      Check.js
-    │  │      CheckSafe copy.js
-    │  │      CheckSafe 원본.js
-    │  │      GameInvite.js
-    │  │      QuizText.js
-    │  │      Scoring.js
-    │  │
-    │  ├─stream
-    │  │      OvVideo.js
-    │  │      StreamComponent.css
-    │  │      StreamComponent.js
-    │  │
-    │  └─toolbar
-    │          ToolbarComponent.css
-    │          ToolbarComponent.js
-    │
-    ├─layout
-    │      openvidu-layout.js
-    │
-    ├─lib
-    │  └─styles
-    │          palette.js
-    │
-    ├─models
-    │      user-model.js
-    │
-    ├─page
-    │      GameCreate.js
-    │      GameCreate.module.css
-    │      LoginPage.js
-    │      MainPage.js
-    │      MyPage.js
-    │      SignupPage.js
-    │
-    └─redux
-        ├─config
-        │      AuthMiddleware.js
-        │      store.js
-        │
-        └─modules
-                authSlice.js
-                photoSlice.js
+│  .eslintrc.js
+│  .gitignore
+│  .prettierrc
+│  .prettierrc.js
+│  .watchmanconfig
+│  app.json
+│  App.tsx
+│  AppInner.tsx
+│  babel.config.js
+│  Gemfile
+│  index.js
+│  jest.config.js
+│  metro.config.js
+│  package-lock.json
+│  package.json
+│  README.md
+│  tsconfig.json
+│  yarn.lock
+├─.bundle
+│      config
+├─.vscode
+│      settings.json
+├─android
+│  │  build.gradle
+│  │  Dockerfile
+│  │  gradle.properties
+│  │  gradlew
+│  │  gradlew.bat
+│  │  Jenkinsfile
+│  │  settings.gradle
+│
+├─ios
+│  │  .xcode.env
+│  │  Podfile
+│  │
+│  ├─front
+│  │  │  AppDelegate.h
+│  │  │  AppDelegate.mm
+│  │  │  Info.plist
+│  │  │  LaunchScreen.storyboard
+│  │  │  main.m
+│  │  │
+│  │  └─Images.xcassets
+│  │      │  Contents.json
+│  │      │
+│  │      └─AppIcon.appiconset
+│  │              Contents.json
+│  │
+│  ├─front.xcodeproj
+│  │  │  project.pbxproj
+│  │  │
+│  │  └─xcshareddata
+│  │      └─xcschemes
+│  │              front.xcscheme
+│  │
+│  └─frontTests
+│          frontTests.m
+│          Info.plist
+├─src
+  ├─assets
+  │      dogFace.png
+  │      dog_body.png
+  │      kakao_login_button.png
+  │      main_background.png
+  │      route.png
+  │      stopmap.png
+  │      walk.png
+  │      walkroute.png
+  │
+  ├─components
+  │      DismissKeyboardView.tsx
+  │      react-native-keyboard-aware-scrollview.d.ts
+  │
+  ├─redux
+  │  │  reducer.ts
+  │  │  store.ts
+  │  │
+  │  ├─action
+  │  │      walkAction.ts
+  │  │
+  │  └─reducer
+  │          userSlice.ts
+  │          walkReducer.ts
+  │
+  └─screens
+      ├─home
+      │      HomeMain.tsx
+      │      HomeScreen.tsx
+      │
+      ├─loginStart
+      │      LoginScreen.tsx
+      │
+      ├─myPage
+      │  │  MyPage.tsx
+      │  │  MyPageDetail.tsx
+      │  │  MypageMain.tsx
+      │  │  ProfileEdit.tsx
+      │  │
+      │  └─assets
+      │          image-user.png
+      │          modify-user.png
+      │          walkroute.png
+      │
+      ├─popularSpot
+      │      PopularSpot.tsx
+      │
+      ├─scrap
+      │      RouteDetail.tsx
+      │      ScrapMain.tsx
+      │      WalkingSavedScreen.tsx
+      │
+      └─walking
+              NewWalkingSetting.tsx
+              SavedWalkingSetting.tsx
+              SpotSavedScreen.tsx
+              StartDesMap.tsx
+              TimeThemeSetting.tsx
+              WalkingMain.tsx
+              WalkingMap.tsx
+              WalkingSetting.tsx
+
+
 ```
 
 ## 주요 기능
