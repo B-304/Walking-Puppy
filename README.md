@@ -1,4 +1,6 @@
+<div align="center">
 <img src = "images/introduce.png" width="800px"><br>
+</div>
 
 ## 프로젝트 개요
 
@@ -68,12 +70,15 @@ IDE
 
 **시스템 아키텍처**
 
-<img src = "images/architecture.png" width="550px"><br>
+<div align="center">
+<img src = "images/architecture.png" width="650px"><br>
+</div>
 
 **ERD**
 
+<div align="center">
 <img src = "images/ERD.png" width="700px"><br>
-
+</div>
 **Backend**
 
 ```
