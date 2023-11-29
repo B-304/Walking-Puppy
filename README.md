@@ -179,7 +179,6 @@
 ### Backend (Spring Boot)
 
 ```
-backend
 │  .gitignore
 │  build.gradle
 │  Dockerfile
@@ -574,7 +573,7 @@ backend
 ### 와이어프레임
 
 <div align="center">
-<img src = "images/fgima.png" width="800px"><br>
+<img src = "images/figma.png" width="800px"><br>
 </div>
 <br/>
 
