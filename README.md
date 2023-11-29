@@ -82,8 +82,11 @@
 
 ### 산책 설정
 
-<img src="images/address.gif" height="600px" >
-<img src="images/theme.gif" height="600px" > <br>
+<div style="display: flex; justify-content: space-between;">
+    <img src="images/address.gif" height="600px">
+    <img src="images/theme.gif" height="600px">
+</div>
+<br>
 
 - 출발지와 도착지 위치, 테마, 소요시간을 설정하면 해당 데이터를 기반으로 산책 경로를 생성합니다.
 
@@ -539,7 +542,7 @@ backend
 
 | [안도희](https://github.com/doheeahn) | [이효경](https://github.com/HyoKyoung1004) | [이서연](https://github.com/sylee723) | [홍지민](https://github.com/ZIM-H) | [안준영](https://github.com/Yangjunyeong) |
 | :-----------------------------------: | :----------------------------------------: | :-----------------------------------: | :--------------------------------: | :---------------------------------------: |
-|    ![안도희](./images/안도희.png)     |       ![이효경](./images/이효경.png)       |    ![이서연](./images/이서연.png)     |   ![홍지민](./images/홍지민.png)   |      ![안준영](./images/안준영.png)       |
+|    ![안도희](./images/안도희.png)     |       ![이효경](./images/이효경.png)       |    ![이서연](./images/이서연.png)     |   ![홍지민](./images/홍지민.jpg)   |      ![안준영](./images/안준영.png)       |
 |              데이터 분석              |                데이터 분석                 |           BackEnd<br>Infra            |              BackEnd               |                 FrontEnd                  |
 
 <br/><br/>
