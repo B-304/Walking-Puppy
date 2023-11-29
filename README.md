@@ -577,6 +577,3 @@
 </div>
 <br/>
 
-### 프로젝트 발표자료
-
-- [최종발표 Presentation](images/특화 최종 발표 자료.pdf)
