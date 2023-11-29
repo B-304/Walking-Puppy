@@ -1,11 +1,10 @@
-# 아는 개 산책
-
-## 프로젝트 개요
-
 <div align="center">
 <img src = "images/introduce.png" width="800px"><br>
 </div>
 
+<br>
+
+## 프로젝트 개요
 📆 개발 기간 : 2023.10.09 ~ 2023.11.17
 
 <br/>
